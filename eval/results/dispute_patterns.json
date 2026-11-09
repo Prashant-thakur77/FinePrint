@@ -1,0 +1,103 @@
+{
+  "command": "npx tsx eval/run_fineprint.ts patterns 3 200",
+  "model": "claude-sonnet-4-5",
+  "level": "patterns",
+  "repeats": 3,
+  "n": 200,
+  "positives": 100,
+  "summary": {
+    "accuracy": {
+      "mean": 0.492,
+      "min": 0.482,
+      "max": 0.497
+    },
+    "f1": {
+      "mean": 0.191,
+      "min": 0.18,
+      "max": 0.205
+    },
+    "precision": {
+      "mean": 0.468,
+      "min": 0.444,
+      "max": 0.481
+    },
+    "recall": {
+      "mean": 0.12,
+      "min": 0.111,
+      "max": 0.13
+    },
+    "topBucketPrecision": {
+      "mean": 0.483,
+      "min": 0.475,
+      "max": 0.5
+    }
+  },
+  "runs": [
+    {
+      "n": 199,
+      "accuracy": 0.4824120603015075,
+      "precision": 0.4444444444444444,
+      "recall": 0.12,
+      "f1": 0.1889763779527559,
+      "topBucketPrecision": 0.475,
+      "topBucketN": 40
+    },
+    {
+      "n": 200,
+      "accuracy": 0.495,
+      "precision": 0.48148148148148145,
+      "recall": 0.13,
+      "f1": 0.20472440944881887,
+      "topBucketPrecision": 0.475,
+      "topBucketN": 40
+    },
+    {
+      "n": 199,
+      "accuracy": 0.49748743718592964,
+      "precision": 0.4782608695652174,
+      "recall": 0.1111111111111111,
+      "f1": 0.18032786885245902,
+      "topBucketPrecision": 0.5,
+      "topBucketN": 40
+    }
+  ],
+  "byCategory": {
+    "sports": {
+      "n": 125,
+      "accuracy": 0.488
+    },
+    "other": {
+      "n": 34,
+      "accuracy": 0.441
+    },
+    "politics": {
+      "n": 16,
+      "accuracy": 0.625
+    },
+    "tech": {
+      "n": 4,
+      "accuracy": 0.75
+    },
+    "crypto": {
+      "n": 10,
+      "accuracy": 0.5
+    },
+    "economics": {
+      "n": 6,
+      "accuracy": 0.333
+    },
+    "culture": {
+      "n": 4,
+      "accuracy": 0
+    }
+  },
+  "withPrecedents": {
+    "n": 199,
+    "accuracy": 0.482
+  },
+  "withoutPrecedents": {
+    "n": 0,
+    "accuracy": null
+  },
+  "citedShare": 0.99
+}

@@ -1,0 +1,217 @@
+{
+  "command": "npx tsx eval/analysis.ts",
+  "recallSignal": {
+    "disputedTestMarkets": {
+      "recalledDisputedShare": 0.46,
+      "nearestDisputed": 0.52
+    },
+    "cleanTestMarkets": {
+      "recalledDisputedShare": 0.436,
+      "nearestDisputed": 0.47
+    }
+  },
+  "rules": {
+    "auc": 0.488,
+    "highShare": 0.08,
+    "byNearestDistance": [
+      {
+        "nearestDistance": "0-0.3",
+        "n": 19,
+        "accuracy": 0.474,
+        "disputed": 11
+      },
+      {
+        "nearestDistance": "0.3-0.45",
+        "n": 109,
+        "accuracy": 0.523,
+        "disputed": 52
+      },
+      {
+        "nearestDistance": "0.45-max",
+        "n": 72,
+        "accuracy": 0.5,
+        "disputed": 37
+      }
+    ],
+    "byPattern": [
+      {
+        "pattern": "deadline+confirmation-lag",
+        "n": 12,
+        "accuracy": 0.417,
+        "disputed": 10,
+        "highShare": 0.25
+      },
+      {
+        "pattern": "consensus-of-reporting",
+        "n": 90,
+        "accuracy": 0.578,
+        "disputed": 40,
+        "highShare": 0.067
+      },
+      {
+        "pattern": "official-source-only",
+        "n": 74,
+        "accuracy": 0.568,
+        "disputed": 33,
+        "highShare": 0.068
+      },
+      {
+        "pattern": "appearance/subjective",
+        "n": 10,
+        "accuracy": 0.8,
+        "disputed": 2,
+        "highShare": 0
+      },
+      {
+        "pattern": "date-in-title-timezone",
+        "n": 128,
+        "accuracy": 0.523,
+        "disputed": 64,
+        "highShare": 0.07
+      },
+      {
+        "pattern": "sports-postponement",
+        "n": 128,
+        "accuracy": 0.531,
+        "disputed": 59,
+        "highShare": 0.039
+      }
+    ]
+  },
+  "precedents": {
+    "auc": 0.518,
+    "highShare": 0.196,
+    "byNearestDistance": [
+      {
+        "nearestDistance": "0-0.3",
+        "n": 19,
+        "accuracy": 0.474,
+        "disputed": 11
+      },
+      {
+        "nearestDistance": "0.3-0.45",
+        "n": 109,
+        "accuracy": 0.514,
+        "disputed": 52
+      },
+      {
+        "nearestDistance": "0.45-max",
+        "n": 71,
+        "accuracy": 0.479,
+        "disputed": 36
+      }
+    ],
+    "byPattern": [
+      {
+        "pattern": "deadline+confirmation-lag",
+        "n": 12,
+        "accuracy": 0.667,
+        "disputed": 10,
+        "highShare": 0.667
+      },
+      {
+        "pattern": "consensus-of-reporting",
+        "n": 90,
+        "accuracy": 0.533,
+        "disputed": 40,
+        "highShare": 0.178
+      },
+      {
+        "pattern": "official-source-only",
+        "n": 74,
+        "accuracy": 0.527,
+        "disputed": 33,
+        "highShare": 0.216
+      },
+      {
+        "pattern": "appearance/subjective",
+        "n": 10,
+        "accuracy": 0.3,
+        "disputed": 2,
+        "highShare": 0.5
+      },
+      {
+        "pattern": "date-in-title-timezone",
+        "n": 127,
+        "accuracy": 0.496,
+        "disputed": 63,
+        "highShare": 0.165
+      },
+      {
+        "pattern": "sports-postponement",
+        "n": 128,
+        "accuracy": 0.531,
+        "disputed": 59,
+        "highShare": 0.133
+      }
+    ]
+  },
+  "patterns": {
+    "auc": 0.515,
+    "highShare": 0.136,
+    "byNearestDistance": [
+      {
+        "nearestDistance": "0-0.3",
+        "n": 19,
+        "accuracy": 0.421,
+        "disputed": 11
+      },
+      {
+        "nearestDistance": "0.3-0.45",
+        "n": 109,
+        "accuracy": 0.505,
+        "disputed": 52
+      },
+      {
+        "nearestDistance": "0.45-max",
+        "n": 71,
+        "accuracy": 0.465,
+        "disputed": 37
+      }
+    ],
+    "byPattern": [
+      {
+        "pattern": "deadline+confirmation-lag",
+        "n": 12,
+        "accuracy": 0.583,
+        "disputed": 10,
+        "highShare": 0.417
+      },
+      {
+        "pattern": "consensus-of-reporting",
+        "n": 89,
+        "accuracy": 0.551,
+        "disputed": 40,
+        "highShare": 0.09
+      },
+      {
+        "pattern": "official-source-only",
+        "n": 73,
+        "accuracy": 0.534,
+        "disputed": 33,
+        "highShare": 0.123
+      },
+      {
+        "pattern": "appearance/subjective",
+        "n": 10,
+        "accuracy": 0.3,
+        "disputed": 2,
+        "highShare": 0.5
+      },
+      {
+        "pattern": "date-in-title-timezone",
+        "n": 127,
+        "accuracy": 0.48,
+        "disputed": 64,
+        "highShare": 0.094
+      },
+      {
+        "pattern": "sports-postponement",
+        "n": 127,
+        "accuracy": 0.528,
+        "disputed": 59,
+        "highShare": 0.055
+      }
+    ]
+  }
+}

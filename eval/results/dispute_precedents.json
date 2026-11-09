@@ -1,0 +1,85 @@
+{
+  "command": "npx tsx eval/run_fineprint.ts precedents 1 200",
+  "model": "claude-sonnet-4-5",
+  "level": "precedents",
+  "repeats": 1,
+  "n": 200,
+  "positives": 100,
+  "summary": {
+    "accuracy": {
+      "mean": 0.497,
+      "min": 0.497,
+      "max": 0.497
+    },
+    "f1": {
+      "mean": 0.275,
+      "min": 0.275,
+      "max": 0.275
+    },
+    "precision": {
+      "mean": 0.487,
+      "min": 0.487,
+      "max": 0.487
+    },
+    "recall": {
+      "mean": 0.192,
+      "min": 0.192,
+      "max": 0.192
+    },
+    "topBucketPrecision": {
+      "mean": 0.475,
+      "min": 0.475,
+      "max": 0.475
+    }
+  },
+  "runs": [
+    {
+      "n": 199,
+      "accuracy": 0.49748743718592964,
+      "precision": 0.48717948717948717,
+      "recall": 0.1919191919191919,
+      "f1": 0.2753623188405797,
+      "topBucketPrecision": 0.475,
+      "topBucketN": 40
+    }
+  ],
+  "byCategory": {
+    "sports": {
+      "n": 125,
+      "accuracy": 0.504
+    },
+    "other": {
+      "n": 34,
+      "accuracy": 0.471
+    },
+    "politics": {
+      "n": 16,
+      "accuracy": 0.688
+    },
+    "tech": {
+      "n": 4,
+      "accuracy": 0.5
+    },
+    "crypto": {
+      "n": 10,
+      "accuracy": 0.5
+    },
+    "economics": {
+      "n": 6,
+      "accuracy": 0.333
+    },
+    "culture": {
+      "n": 4,
+      "accuracy": 0
+    }
+  },
+  "withPrecedents": {
+    "n": 199,
+    "accuracy": 0.497
+  },
+  "withoutPrecedents": {
+    "n": 0,
+    "accuracy": null
+  },
+  "citedShare": 0.995
+}
