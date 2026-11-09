@@ -1,0 +1,66 @@
+{
+  "command": "npx tsx eval/mstr_story.ts",
+  "source": "https://clob.polymarket.com/prices-history (fidelity=1), Gamma /markets/2169995 and /markets/516926",
+  "market": {
+    "id": "2169995",
+    "question": "MicroStrategy sells any Bitcoin by May 31, 2026?",
+    "conditionId": "0x3733a1b647e7364095736ab0966465d896a84cf3b6bc1695ca1f26c3239b3868",
+    "uma": [
+      "proposed",
+      "disputed",
+      "proposed",
+      "disputed"
+    ],
+    "closedTime": "2026-06-04T00:34:19.000Z",
+    "outcomePrices": [
+      0,
+      1
+    ]
+  },
+  "twin": {
+    "id": "516926",
+    "question": "MicroStrategy sells any Bitcoin in 2025?",
+    "uma": [
+      "proposed",
+      "disputed",
+      "proposed",
+      "disputed"
+    ],
+    "closedTime": "2026-01-05T04:22:25.000Z",
+    "outcome": "No",
+    "sameRulesText": true
+  },
+  "baselineBefore1145": 0.1125,
+  "spike": {
+    "firstAtOrAbove80c": "12:12",
+    "price": 0.8105
+  },
+  "price1220": 0.812,
+  "window": {
+    "from": "12:12",
+    "to": "16:59",
+    "minutes": 286.98333333333335,
+    "hoursMinutes": "4h 47m",
+    "low": 0.4115,
+    "high": 0.843
+  },
+  "window1220": {
+    "from": "12:20",
+    "to": "16:59",
+    "minutes": 279.06666666666666,
+    "hoursMinutes": "4h 39m",
+    "low": 0.4115,
+    "high": 0.823
+  },
+  "cliff": {
+    "from": "16:59",
+    "fromPrice": 0.532,
+    "to": "17:01",
+    "toPrice": 0.006,
+    "minutes": 2.066666666666667,
+    "at1659": 0.532,
+    "at1700": 0.411,
+    "at1701": 0.006
+  },
+  "points": 840
+}

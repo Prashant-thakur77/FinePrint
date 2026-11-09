@@ -4,19 +4,88 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Fine Print</title>
-<meta name="description" content="Checks a prediction market's rules against past rulings before you buy.">
+<meta name="description" content="Fine Print checks a market's rules against past rulings before you buy.">
 <link rel="icon" href="/icon.svg" type="image/svg+xml">
+<script>try{var t=localStorage.getItem("fp-theme");if(t)document.documentElement.dataset.theme=t}catch(e){}document.documentElement.classList.add("js")</script>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600&family=JetBrains+Mono:wght@400;700&family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=Libre+Caslon+Display&family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/assets/site.css">
 </head>
 <body>
 <div data-mast></div>
-<main class="wrap">
-<h1>Read the fine print before you buy.</h1>
-<p class="lede">Fine Print checks a market's rules against how past markets with the same wording were ruled, and pins the risk on the price chart.</p>
+<main class="page">
+
+  <section class="file" aria-label="Check a market">
+    <p class="tagline">Fine Print checks a market's rules against past rulings before you buy.</p>
+    <div>
+      <form id="file" role="search">
+        <label for="ref" class="sr-only">Polymarket link, slug, market id or condition id</label>
+        <input id="ref" name="m" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Paste a Polymarket link or id">
+        <button class="btn" type="submit">Check the rules</button>
+      </form>
+      <div class="hint" style="margin-top:8px"><span><kbd>/</kbd> to type</span><button type="button" data-demo>Replay the MicroStrategy case</button></div>
+    </div>
+  </section>
+
+  <section class="caption" id="caption" aria-live="polite">
+    <div><div class="in-re">IN RE</div><h1>Loading the case…</h1></div>
+  </section>
+
+  <section class="exhibit" aria-labelledby="exh-title">
+    <h2 id="exh-title" class="sr-only">Exhibit A: price of YES over time</h2>
+    <div class="exhibit-frame">
+      <div class="sticker" aria-hidden="true">Exhibit<b>A</b></div>
+      <div class="chart" id="chart" tabindex="0" aria-describedby="chart-help">
+        <div class="chart-host" id="chart-host"></div>
+        <div class="chart-over" id="chart-over" aria-hidden="true"></div>
+        <div class="chart-status" id="chart-status">Loading the price record…</div>
+        <span class="sr-only" id="chart-help">Arrow keys move along the price line. Shift moves faster.</span>
+        <span class="sr-only" id="chart-live" aria-live="polite"></span>
+      </div>
+      <span class="vlabel" aria-hidden="true">Exhibit A · YES price in cents · UTC</span>
+    </div>
+    <div class="exhibit-cap">
+      <ol class="notes" id="notes" aria-label="What is pinned on the chart"></ol>
+    </div>
+    <div class="exhibit-cap one">
+      <p class="honest" id="honest" hidden>Replays use only precedents whose market closed before the replay time.</p>
+      <div style="display:flex;gap:12px;align-items:start;justify-content:space-between;flex-wrap:wrap"><p class="src" id="src" style="flex:1 1 220px;min-width:0"></p><button class="btn ghost" type="button" id="replay" style="flex:none" hidden>Replay the day</button></div>
+    </div>
+  </section>
+
+  <section class="entry" id="ruling" aria-labelledby="ruling-h">
+    <div class="entry-side">
+      <span class="label">The ruling</span>
+      <h2 id="ruling-h">What the court says today</h2>
+      <p id="ruling-note">Flip memory off and the judge reads the rule text alone. Leave it on and it reads the case law first.</p>
+    </div>
+    <div style="display:grid;gap:16px;min-width:0">
+      <div class="switch" role="group" aria-label="Memory">
+        <button type="button" data-mem="on" aria-pressed="true"><span class="dot"></span>Memory on</button>
+        <button type="button" data-mem="off" aria-pressed="false"><span class="dot"></span>Memory off</button>
+      </div>
+      <div class="compare" id="compare"></div>
+      <div id="receipt" aria-live="polite"></div>
+    </div>
+  </section>
+
+  <section class="entry" id="rules" aria-labelledby="rules-h">
+    <div class="entry-side">
+      <span class="label">The fine print</span>
+      <h2 id="rules-h">The rules, as written</h2>
+      <p>The clause the court found riskiest is highlighted.</p>
+    </div>
+    <div style="display:grid;gap:22px;min-width:0">
+      <div class="tags" id="tags"></div>
+      <p class="fineprint" id="rules-text"></p>
+      <div><div class="label" style="margin-bottom:8px">Rule versions</div><div id="versions"></div></div>
+      <div><div class="label" style="margin-bottom:8px">Docket: earlier rulings on this market</div><div id="docket"></div></div>
+    </div>
+  </section>
+
 </main>
 <div data-foot></div>
 <script src="/assets/shell.js"></script>
+<script src="/assets/trader.js"></script>
 </body>
 </html>
