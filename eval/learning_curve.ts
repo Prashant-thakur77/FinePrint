@@ -40,26 +40,36 @@ const months = [...new Set(ordered.map((r) => month(rulingTime(r))))].sort();
 
 for (const mo of months) {
   const batch = ordered.filter((r) => month(rulingTime(r)) === mo && !doneRows.has(r.id));
-  for (const r of batch) {
-    const asOf = rulingTime(r);
-    const hits = await recall("PRECEDENTS", NS.precedents, `${r.question}\n${r.rules.slice(0, 600)}`, 60);
-    const all = filterPrecedents(hits, { asOf, k: 8, excludeMarket: r.id });
-    const stat = filterPrecedents(hits.filter((h) => seeded.has(fields(h.text).market)), { asOf, k: 8, excludeMarket: r.id });
-    const patterns = await recallPatterns(r.patterns);
-    const [js, jl] = await Promise.all([
-      judge({ title: r.question, rules: r.rules, level: "patterns", precedents: stat, patterns }),
-      judge({ title: r.question, rules: r.rules, level: "patterns", precedents: all, patterns }),
-    ]);
-    const learned = jl.cites.map((c) => all.find((p) => p.blobId === c && testIds.has(p.market))).filter(Boolean) as typeof all;
-    const row: State["rows"][number] = { id: r.id, month: mo, label: r.disputed, staticV: js.verdict, learnV: jl.verdict, staticP: js.pDispute, learnP: jl.pDispute, nStatic: stat.length, nLearn: all.length, learnedCites: learned.length, rulingTime: asOf, learnedCite: learned[0]?.blobId, learnedCiteMarket: learned[0]?.market };
-    // When memory changed the court's mind, seal both rulings so the change is verifiable on Walrus.
-    if (js.verdict !== jl.verdict && learned.length) {
-      const seal = async (v: typeof js, tag: string) => (await rememberAndWait("COURT", "replay-rulings", rulingText({ market: r.id, at: asOf, verdict: v.verdict, pattern: r.patterns, cites: v.cites, pricePaid: 0, payer: `replay-${tag}`, digest: "", reason: v.reasons[0] ?? "" }))).blobId;
-      try { row.staticRuling = await seal(js, "static"); row.learnRuling = await seal(jl, "learning"); } catch (err) { console.error(`seal failed: ${(err as Error).message.slice(0, 100)}`); }
+  // Pattern memories don't change during the replay; reuse the eval's recall of them.
+  const patternCache = readJson<Record<string, { patterns: { blobId: string; text: string }[] }>>(new URL("recall_cache.json", DATA), {});
+  let nextIdx = 0;
+  await Promise.all(Array.from({ length: 4 }, async () => {
+    for (let k = nextIdx++; k < batch.length; k = nextIdx++) {
+      const r = batch[k];
+      const asOf = rulingTime(r);
+      let hits: Awaited<ReturnType<typeof recall>> = [];
+      for (let i = 0; i < 5; i++) { try { hits = await recall("PRECEDENTS", NS.precedents, `${r.question}\n${r.rules.slice(0, 600)}`, 60); break; } catch { await new Promise((s) => setTimeout(s, 8000 * (i + 1))); } }
+      const all = filterPrecedents(hits, { asOf, k: 8, excludeMarket: r.id });
+      const stat = filterPrecedents(hits.filter((h) => seeded.has(fields(h.text).market)), { asOf, k: 8, excludeMarket: r.id });
+      const patterns = patternCache[r.id]?.patterns ?? (await recallPatterns(r.patterns));
+      let js, jl;
+      try {
+        [js, jl] = await Promise.all([
+          judge({ title: r.question, rules: r.rules, level: "patterns", precedents: stat, patterns }),
+          judge({ title: r.question, rules: r.rules, level: "patterns", precedents: all, patterns }),
+        ]);
+      } catch (err) { console.error(`${r.id}: ${(err as Error).message.slice(0, 100)}`); continue; }
+      const learned = jl.cites.map((c) => all.find((p) => p.blobId === c && testIds.has(p.market))).filter(Boolean) as typeof all;
+      const row: State["rows"][number] = { id: r.id, month: mo, label: r.disputed, staticV: js.verdict, learnV: jl.verdict, staticP: js.pDispute, learnP: jl.pDispute, nStatic: stat.length, nLearn: all.length, learnedCites: learned.length, rulingTime: asOf, learnedCite: learned[0]?.blobId, learnedCiteMarket: learned[0]?.market };
+      // When memory changed the court's mind, seal both rulings so the change is verifiable on Walrus.
+      if (js.verdict !== jl.verdict && learned.length) {
+        const seal = async (v: typeof js, tag: string) => (await rememberAndWait("COURT", "replay-rulings", rulingText({ market: r.id, at: asOf, verdict: v.verdict, pattern: r.patterns, cites: v.cites, pricePaid: 0, payer: `replay-${tag}`, digest: "", reason: v.reasons[0] ?? "" }))).blobId;
+        try { row.staticRuling = await seal(js, "static"); row.learnRuling = await seal(jl, "learning"); } catch (err) { console.error(`seal failed: ${(err as Error).message.slice(0, 100)}`); }
+      }
+      state.rows.push(row);
+      writeJson(STATE, state);
     }
-    state.rows.push(row);
-    writeJson(STATE, state);
-  }
+  }));
   // Outcomes of test markets that closed this month become case law for the months after.
   const closing = test.filter((r) => month(r.closedTime) === mo && !written.has(r.id));
   for (let i = 0; i < closing.length && state.written.length < maxWrites; i += 10) {
