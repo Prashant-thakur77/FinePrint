@@ -13,6 +13,7 @@ import { cachedPreview, gradeOpen, issue, resolveJobs, rowToIssued, type RulingR
 import { tagMarket } from "./patterns/patterns.js";
 import { challenge, PaymentError, settle } from "./pay/x402.js";
 import { refund } from "./pay/refund.js";
+import { payNetwork } from "./pay/network.js";
 import { snapshotRules } from "./rules/poll.js";
 import { drainSamples, summarise } from "./tatum/latency.js";
 import { listAll, type AccountName } from "./memory/client.js";
@@ -85,7 +86,7 @@ app.get("/api/ruling/free/:ref", async (c) => {
   return c.json({ ruling: await issue(c.env.DB, m, level, null) });
 });
 
-/** The paid court endpoint for bots: x402 over Sui mainnet USDC. */
+/** The paid court endpoint for bots: x402, USDC on Sui (PAY_NETWORK). */
 app.get("/api/ruling", async (c) => {
   const ref = c.req.query("market");
   if (!ref) return c.json({ error: "market query parameter is required" }, 400);
@@ -107,7 +108,7 @@ app.get("/api/ruling", async (c) => {
     const crowd = Number(c.req.query("yes"));
     const asOf = c.req.query("asOf");
     const ruling = await issue(c.env.DB, m, "patterns", { price: Number(paid.amount), payer: paid.payer, digest: paid.digest }, Number.isFinite(crowd) && crowd > 0 ? crowd : null, asOf && !Number.isNaN(Date.parse(asOf)) ? new Date(asOf).toISOString() : null);
-    c.header(X402_PAYMENT_RESPONSE_HEADER, encodeX402Response({ success: true, network: "sui:mainnet", transaction: paid.digest, payer: paid.payer }));
+    c.header(X402_PAYMENT_RESPONSE_HEADER, encodeX402Response({ success: true, network: `sui:${payNetwork()}`, transaction: paid.digest, payer: paid.payer }));
     return c.json({ ruling, payment: paid });
   } catch (err) {
     // Settle-then-serve: no ruling, no charge.
@@ -149,7 +150,7 @@ app.get("/api/proof", async (c) => {
     live: { rulingsSealed: rulings, paidRulings: paid, usdcReceived: usdc, rulingsGraded: graded, gradedCorrect: correct, refunds },
     memoryJobs: jobs, recentBlobs, digests,
     latency: summarise(lat.map((l) => ({ ...l, ok: Boolean(l.ok) }))),
-    accounts: { server: config.serverAddress },
+    accounts: { server: config.serverAddress }, payNetwork: payNetwork(),
   });
 });
 

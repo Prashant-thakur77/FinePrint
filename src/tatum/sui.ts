@@ -12,12 +12,18 @@ import { SuiGrpcClient } from "@mysten/sui/grpc";
 import { addresses, config } from "../config.js";
 import { throttledFetch } from "./limit.js";
 
-let tatum: SuiGraphQLClient | null = null;
+export type SuiNet = "mainnet" | "testnet";
+const clients = new Map<SuiNet, SuiGraphQLClient>();
 let publicNode: SuiGrpcClient | null = null;
 
-export function tatumSui(): SuiGraphQLClient {
-  tatum ??= new SuiGraphQLClient({ network: "mainnet", url: addresses.sui.tatumGraphql, headers: { "x-api-key": config.tatumKey }, fetch: throttledFetch });
-  return tatum;
+const urlFor = (net: SuiNet) => (net === "mainnet" ? addresses.sui.tatumGraphql : addresses.sui.tatumGraphqlTestnet);
+const keyFor = (net: SuiNet) => (net === "mainnet" ? config.tatumKey : process.env.TATUM_API_KEY_TESTNET || config.tatumKey);
+
+/** Tatum's Sui GraphQL gateway. Memory lives on mainnet; payments run on PAY_NETWORK. */
+export function tatumSui(net: SuiNet = "mainnet"): SuiGraphQLClient {
+  let c = clients.get(net);
+  if (!c) { c = new SuiGraphQLClient({ network: net, url: urlFor(net), headers: { "x-api-key": keyFor(net) }, fetch: throttledFetch }); clients.set(net, c); }
+  return c;
 }
 
 /** Mysten's public fullnode, used only as a fallback and for cross-checks. */
@@ -27,15 +33,15 @@ export function publicSui(): SuiGrpcClient {
 }
 
 /** Raw query against Tatum's Sui GraphQL, for fields the SDK reads a different way. */
-export async function tatumGraphql<T>(query: string, variables: Record<string, unknown> = {}): Promise<T> {
-  const r = await throttledFetch(addresses.sui.tatumGraphql, { method: "POST", headers: { "content-type": "application/json", "x-api-key": config.tatumKey }, body: JSON.stringify({ query, variables }) });
+export async function tatumGraphql<T>(query: string, variables: Record<string, unknown> = {}, net: SuiNet = "mainnet"): Promise<T> {
+  const r = await throttledFetch(urlFor(net), { method: "POST", headers: { "content-type": "application/json", "x-api-key": keyFor(net) }, body: JSON.stringify({ query, variables }) });
   const body = (await r.json()) as { data?: T; errors?: { message: string }[] };
   if (!body.data) throw new Error(`Tatum Sui GraphQL: ${body.errors?.map((e) => e.message).join("; ") ?? r.status}`);
   return body.data;
 }
 
 /** The chain identifier (genesis checkpoint digest) and current epoch. */
-export async function chainAndEpoch(): Promise<{ chain: string; epoch: string }> {
-  const d = await tatumGraphql<{ chainIdentifier: string; epoch: { epochId: number } }>("{ chainIdentifier epoch { epochId } }");
+export async function chainAndEpoch(net: SuiNet = "mainnet"): Promise<{ chain: string; epoch: string }> {
+  const d = await tatumGraphql<{ chainIdentifier: string; epoch: { epochId: number } }>("{ chainIdentifier epoch { epochId } }", {}, net);
   return { chain: d.chainIdentifier, epoch: String(d.epoch.epochId) };
 }

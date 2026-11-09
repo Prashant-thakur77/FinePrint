@@ -1,6 +1,6 @@
 /**
  * Reliability: real paid calls against the deployed court endpoint. Each call
- * goes 402 → signed USDC payment on Sui mainnet → settled through Tatum gRPC
+ * goes 402 → signed USDC payment on Sui (PAY_NETWORK) → settled through Tatum
  * → cited ruling. Rotates over a few live markets (so previews are not reused).
  *
  *   npx tsx scripts/soak.ts [calls=50] [concurrency=2]

@@ -1,13 +1,12 @@
 /**
  * A bot's side of Fine Print: ask for a ruling, get a 402, pay 0.02 USDC on
  * Sui mainnet with a signed gasless transfer (x402 "exact"), retry, receive
- * the cited ruling.
+ * the cited ruling. The network is PAY_NETWORK (testnet by default).
  */
 import { Ed25519Keypair } from "@mysten/sui/keypairs/ed25519";
 import { Transaction, coinWithBalance } from "@mysten/sui/transactions";
 import { buildX402SignedPayment, X402_PAYMENT_HEADER, X402_PAYMENT_RESPONSE_HEADER, type X402Requirements } from "@suimpp/mpp/x402";
-import { USDC } from "@suimpp/mpp";
-import { tatumSui } from "../tatum/sui.js";
+import { payCurrency, paySui } from "../pay/network.js";
 
 export interface PaidRuling { ruling: any; payment: { digest: string; payer: string; amount: string }; ms: { challenge: number; pay: number; total: number }; requirements: X402Requirements }
 
@@ -31,20 +30,21 @@ export async function buyRuling(base: string, market: string, signer: Ed25519Key
 
 /** USDC the address can spend through x402 (its address balance) and in coin objects. */
 export async function usdcBalances(address: string) {
-  const b = await tatumSui().getBalance({ owner: address, coinType: USDC.type });
+  const b = await paySui().getBalance({ owner: address, coinType: payCurrency().type });
   const bal = b.balance as unknown as { balance: string; coinBalance?: string; addressBalance?: string };
   return { total: Number(bal.balance) / 1e6, coins: Number(bal.coinBalance ?? 0) / 1e6, address: Number(bal.addressBalance ?? 0) / 1e6 };
 }
 
 /** Moves USDC coin objects into the address balance, which x402's gasless transfer spends from. */
 export async function depositToAddressBalance(signer: Ed25519Keypair, amount: number): Promise<string> {
+  const USDC = payCurrency();
   const raw = BigInt(Math.round(amount * 1e6));
   const tx = new Transaction();
   tx.setSender(signer.toSuiAddress());
   const coin = tx.add(coinWithBalance({ type: USDC.type, balance: raw, useGasCoin: false }));
   const bal = tx.moveCall({ target: "0x2::coin::into_balance", typeArguments: [USDC.type], arguments: [coin] });
   tx.moveCall({ target: "0x2::balance::send_funds", typeArguments: [USDC.type], arguments: [bal, tx.pure.address(signer.toSuiAddress())] });
-  const res = await tatumSui().signAndExecuteTransaction({ transaction: tx, signer, include: { effects: true } });
+  const res = await paySui().signAndExecuteTransaction({ transaction: tx, signer, include: { effects: true } });
   const t = res.Transaction ?? res.FailedTransaction;
   if (!t?.effects?.status.success) throw new Error(`deposit failed: ${JSON.stringify(t?.effects?.status ?? res).slice(0, 300)}`);
   return t.digest;

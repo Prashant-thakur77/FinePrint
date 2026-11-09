@@ -26,5 +26,6 @@ enabled = true
 [vars]
 LLM_MODEL = "claude-sonnet-4-5"
 RULING_PRICE_USDC = "0.02"
+PAY_NETWORK = "testnet"
 MEMWAL_SERVER_URL = "https://relayer.memory.walrus.xyz"
 PUBLIC_URL = "https://fineprint.prashantthakur.dev"

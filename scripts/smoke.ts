@@ -15,6 +15,7 @@ import { recall, rememberAndWait } from "../src/memory/client.js";
 import { gammaMarket } from "../src/polymarket/gamma.js";
 import { buyRuling, usdcBalances } from "../src/bot/client.js";
 import { confirmDigest } from "../src/pay/x402.js";
+import { payExplorerTx, payNetwork } from "../src/pay/network.js";
 import { peekSamples, summarise } from "../src/tatum/latency.js";
 
 const which = process.argv[2] ?? "all";
@@ -90,12 +91,13 @@ await step("memwal", async () => {
 
 await step("x402", async () => {
   const bot = Ed25519Keypair.fromSecretKey(config.botKey);
+  out(`Payment network: sui:${payNetwork()}`);
   out(`Bot ${bot.toSuiAddress()} USDC: ${JSON.stringify(await usdcBalances(bot.toSuiAddress()))}`);
   const base = process.env.FINEPRINT_URL ?? config.publicUrl;
   const r = await buyRuling(base, MSTR, bot);
-  out(`402 → paid ${r.payment.amount} USDC, digest ${r.payment.digest} (https://suiscan.xyz/mainnet/tx/${r.payment.digest})`);
+  out(`402 → paid ${r.payment.amount} USDC, digest ${r.payment.digest} (${payExplorerTx(r.payment.digest)})`);
   out(`Ruling: ${r.ruling.verdict} p=${r.ruling.pDispute} cites=${(r.ruling.cites ?? []).map((c: any) => c.blobId).join(",")}`);
-  out(`Server-side re-check of the digest through Tatum Sui GraphQL: ${await confirmDigest(r.payment.digest, r.payment.amount)}`);
+  out(`Server-side re-check of the digest through Tatum Sui GraphQL (${payNetwork()}): ${await confirmDigest(r.payment.digest, r.payment.amount)}`);
   out(`Timings: challenge ${r.ms.challenge} ms, pay+ruling ${r.ms.pay} ms`);
 });
 

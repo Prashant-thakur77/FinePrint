@@ -1,7 +1,7 @@
 /**
  * Demo buyer bot. A deliberately simple news-spike strategy: when a market's
  * YES price jumps by at least `jump` within an hour, it wants to buy YES.
- * Before buying, it pays Fine Print 0.02 USDC on Sui mainnet for a ruling and
+ * Before buying, it pays Fine Print 0.02 USDC on Sui (PAY_NETWORK) for a ruling and
  * skips the trade when the ruling is HIGH. Trades are paper trades (logged,
  * not sent to Polymarket); the ruling payments are real.
  *
@@ -15,12 +15,13 @@ import { Ed25519Keypair } from "@mysten/sui/keypairs/ed25519";
 import { config } from "../config.js";
 import { pmHistory, pmMarkets, type PmMarket } from "../tatum/pm.js";
 import { buyRuling } from "./client.js";
+import { payExplorerTx } from "../pay/network.js";
 
 const BASE = process.env.FINEPRINT_URL ?? config.publicUrl;
 const LOG = new URL("../../eval/results/bot_log.jsonl", import.meta.url);
 mkdirSync(new URL("../../eval/results/", import.meta.url), { recursive: true });
 const signer = () => Ed25519Keypair.fromSecretKey(config.botKey);
-const suiscan = (d: string) => `https://suiscan.xyz/mainnet/tx/${d}`;
+const suiscan = payExplorerTx;
 
 function record(entry: Record<string, unknown>) {
   appendFileSync(LOG, JSON.stringify({ at: new Date().toISOString(), ...entry }) + "\n");

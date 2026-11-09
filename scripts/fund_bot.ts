@@ -8,15 +8,15 @@
 import "dotenv/config";
 import { Ed25519Keypair } from "@mysten/sui/keypairs/ed25519";
 import { Transaction, coinWithBalance } from "@mysten/sui/transactions";
-import { USDC } from "@suimpp/mpp";
 import { config } from "../src/config.js";
-import { tatumSui } from "../src/tatum/sui.js";
+import { payCurrency, payExplorerTx, paySui } from "../src/pay/network.js";
 import { depositToAddressBalance, usdcBalances } from "../src/bot/client.js";
 
 const [sui = "1", usdc = "3"] = process.argv.slice(2);
 const server = Ed25519Keypair.fromSecretKey(config.serverKey);
 const bot = Ed25519Keypair.fromSecretKey(config.botKey);
-const client = tatumSui();
+const client = paySui();
+const USDC = payCurrency();
 
 const tx = new Transaction();
 tx.setSender(server.toSuiAddress());
@@ -25,9 +25,9 @@ tx.transferObjects([gas, coinWithBalance({ type: USDC.type, balance: BigInt(Math
 const res = await client.signAndExecuteTransaction({ transaction: tx, signer: server, include: { effects: true } });
 const t = res.Transaction ?? res.FailedTransaction;
 if (!t?.effects?.status.success) throw new Error(`transfer failed: ${JSON.stringify(t?.effects?.status ?? res).slice(0, 300)}`);
-console.log(`server → bot: ${sui} SUI + ${usdc} USDC  https://suiscan.xyz/mainnet/tx/${t.digest}`);
+console.log(`server → bot: ${sui} SUI + ${usdc} USDC  ${payExplorerTx(t.digest)}`);
 await client.waitForTransaction({ digest: t.digest });
 
 const dep = await depositToAddressBalance(bot, Number(usdc));
-console.log(`bot USDC → address balance  https://suiscan.xyz/mainnet/tx/${dep}`);
+console.log(`bot USDC → address balance  ${payExplorerTx(dep)}`);
 console.log("bot USDC:", await usdcBalances(bot.toSuiAddress()));
