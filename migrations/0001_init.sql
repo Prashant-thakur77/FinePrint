@@ -31,6 +31,7 @@ CREATE TABLE IF NOT EXISTS rulings (
   cites TEXT NOT NULL,
   reasons TEXT NOT NULL,
   clause TEXT,
+  crowd_yes REAL,
   at INTEGER NOT NULL,
   price TEXT,
   payer TEXT,
