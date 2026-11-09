@@ -81,6 +81,7 @@ app.get("/api/ruling/free/:ref", async (c) => {
   const cached = await cachedPreview(c.env.DB, m.id, level);
   if (cached) return c.json({ ruling: cached });
   if (limited(c)) return c.json({ error: "Too many previews from your network. Try again in a minute." }, 429);
+  if (level !== "rules" && !config.account("PRECEDENTS").accountId) return c.json({ error: "Walrus Memory is not connected yet, so only the rule-text ruling is available." }, 503);
   return c.json({ ruling: await issue(c.env.DB, m, level, null) });
 });
 

@@ -1,0 +1,1 @@
+ALTER TABLE rulings ADD COLUMN asof TEXT;

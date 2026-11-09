@@ -52,10 +52,10 @@ export async function issue(db: D1Database, market: MarketInfo, level: Level, sa
       log.error("ruling.seal_failed", err, { market: market.id });
     }
   }
-  await db.prepare(`INSERT INTO rulings (id, market, question, level, verdict, p_dispute, patterns, cites, reasons, clause, crowd_yes, at, price, payer, digest, job_id)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`).bind(
+  await db.prepare(`INSERT INTO rulings (id, market, question, level, verdict, p_dispute, patterns, cites, reasons, clause, crowd_yes, at, price, payer, digest, job_id, asof)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`).bind(
     id, market.id, market.question, level, r.verdict, r.pDispute, JSON.stringify(r.patterns), JSON.stringify(toIssued(id, r, at, jobId, sale).cites),
-    JSON.stringify(r.reasons), r.clause, crowdYes, at, sale ? String(sale.price) : null, sale?.payer ?? null, sale?.digest ?? null, jobId,
+    JSON.stringify(r.reasons), r.clause, crowdYes, at, sale ? String(sale.price) : null, sale?.payer ?? null, sale?.digest ?? null, jobId, asOf,
   ).run();
   if (sale) await db.prepare("UPDATE payments SET ruling_id = ? WHERE digest = ?").bind(id, sale.digest).run();
   return { ...toIssued(id, r, at, jobId, sale), asOf };
@@ -63,18 +63,19 @@ export async function issue(db: D1Database, market: MarketInfo, level: Level, sa
 
 /** A recent preview for the same market and level, so page views do not each cost an LLM call. */
 export async function cachedPreview(db: D1Database, market: string, level: Level, maxAgeMs = 30 * 60_000): Promise<IssuedRuling | null> {
-  const row = await db.prepare("SELECT * FROM rulings WHERE market = ? AND level = ? AND at > ? ORDER BY at DESC LIMIT 1").bind(market, level, Date.now() - maxAgeMs).first<RulingRow>();
+  const row = await db.prepare("SELECT * FROM rulings WHERE market = ? AND level = ? AND at > ? AND asof IS NULL ORDER BY at DESC LIMIT 1").bind(market, level, Date.now() - maxAgeMs).first<RulingRow>();
   return row ? { ...rowToIssued(row), cached: true } : null;
 }
 
 export interface RulingRow {
   id: string; market: string; question: string; level: Level; verdict: Verdict; p_dispute: number; patterns: string; cites: string; reasons: string;
   clause: string | null; crowd_yes: number | null; at: number; price: string | null; payer: string | null; digest: string | null; job_id: string | null; blob_id: string | null;
-  status: string; outcome: string | null; disputed: number | null; correct: number | null; refund_digest: string | null; grade_job_id: string | null; grade_blob_id: string | null; graded_at: number | null;
+  status: string; asof: string | null; outcome: string | null; disputed: number | null; correct: number | null; refund_digest: string | null; grade_job_id: string | null; grade_blob_id: string | null; graded_at: number | null;
 }
 
-export function rowToIssued(r: RulingRow): IssuedRuling {
+export function rowToIssued(r: RulingRow): IssuedRuling & { asOf: string | null } {
   return {
+    asOf: r.asof ?? null,
     id: r.id, market: r.market, question: r.question, level: r.level, verdict: r.verdict, pDispute: r.p_dispute, patterns: JSON.parse(r.patterns),
     cites: JSON.parse(r.cites), reasons: JSON.parse(r.reasons), clause: r.clause ?? "", at: r.at, jobId: r.job_id, blobId: r.blob_id,
     sale: r.digest ? { price: Number(r.price), payer: r.payer ?? "", digest: r.digest } : null, cached: false, precedentsConsidered: 0,
