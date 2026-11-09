@@ -16,7 +16,7 @@ import "dotenv/config";
 import { existsSync } from "node:fs";
 import { rememberBulkAndWait } from "../src/memory/client.js";
 import { NS, patternText } from "../src/memory/types.js";
-import { distil, patternEvidence } from "../src/precedents/distil.js";
+import { distil } from "../src/precedents/distil.js";
 import { DATA, readJson, RESULTS, writeJson } from "../eval/lib.js";
 import type { Row } from "../eval/build_dataset.js";
 
@@ -50,9 +50,6 @@ async function write(kind: Entry["kind"], items: { ref: string; text: string; na
   console.log(`${kind}: wrote ${res.filter((r) => r.status === "done").length}/${items.length} (${done.size} total)`);
 }
 
-const pool = readJson<Row[]>(new URL("pool.json", DATA), []);
-if (!pool.length) throw new Error("run eval/build_dataset.ts first");
-
 if (prepareOnly) {
   const list = readJson<Row[]>(new URL("precedents.json", DATA), []).slice(0, max);
   for (let i = 0; i < list.length; i += 6) await Promise.all(list.slice(i, i + 6).map(textFor));
@@ -60,12 +57,13 @@ if (prepareOnly) {
   process.exit(0);
 }
 
-// 1. Patterns (first version, evidence from the whole pool).
-const ev = patternEvidence(pool);
-writeJson(new URL("pattern_evidence.json", RESULTS), { command: "npx tsx scripts/seed_precedents.ts", poolSize: pool.length, baseRate: ev.base, patterns: ev.perPattern });
-const patternItems = ev.perPattern.filter((p) => !done.has(`pattern:${p.tag}`)).map((p) => ({
+// 1. Patterns (first version). Evidence is counted over the whole pool by eval/build_dataset.ts.
+const ev = readJson<{ poolSize: number; baseRate: number; patterns: { tag: string; rule: string; disputed: number; total: number; rate: number }[] } | null>(new URL("pattern_evidence.json", DATA), null);
+if (!ev) throw new Error("run eval/build_dataset.ts first");
+writeJson(new URL("pattern_evidence.json", RESULTS), { command: "npx tsx eval/build_dataset.ts", ...ev });
+const patternItems = ev.patterns.filter((p) => !done.has(`pattern:${p.tag}`)).map((p) => ({
   ref: p.tag, namespace: NS.patterns,
-  text: patternText({ tag: p.tag, rule: `${p.rule} Pool dispute rate ${(p.rate * 100).toFixed(2)}% vs base ${(ev.base * 100).toFixed(2)}%.`, disputed: p.disputed, total: p.total, firstSeen: "seed", supersedes: "none" }),
+  text: patternText({ tag: p.tag, rule: `${p.rule} Pool dispute rate ${(p.rate * 100).toFixed(2)}% vs base ${(ev.baseRate * 100).toFixed(2)}%.`, disputed: p.disputed, total: p.total, firstSeen: "seed", supersedes: "none" }),
 }));
 if (patternItems.length) await write("pattern", patternItems);
 

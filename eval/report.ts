@@ -38,7 +38,7 @@ P("## Dataset");
 P(`Command: ${cmd(ds)}`);
 P();
 if (ds) {
-  P(`- Markets crawled from Gamma: ${ds.crawled}; kept (binary, resolved through a UMA adapter, with rules): ${ds.kept}`);
+  P(`- Markets crawled from Gamma (unique): ${ds.crawledUnique}; kept (binary, resolved through a UMA adapter, with rules): ${ds.kept}`);
   P(`- Disputed (UMA status sequence contains "disputed"): ${ds.disputeRateAll.disputed} of ${ds.disputeRateAll.total} (${pct(ds.disputeRateAll.disputed / ds.disputeRateAll.total)})`);
   P(`- Precedent pool (closed before 2026-01-01): ${ds.pool.total} markets, ${ds.pool.disputed} disputed`);
   P(`- Held-out test window (closed 2026-01-01 to 2026-10-31): ${ds.testWindow.total} markets, ${ds.testWindow.disputed} disputed`);

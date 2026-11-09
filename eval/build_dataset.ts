@@ -13,7 +13,10 @@
  *
  *   npx tsx eval/build_dataset.ts [testPerClass=150] [precedents=400]
  */
+import { createReadStream } from "node:fs";
+import { createInterface } from "node:readline";
 import { categoryOf, outcomeOf, type MarketRecord } from "../src/polymarket/gamma.js";
+import { PATTERNS } from "../src/patterns/patterns.js";
 import { tagMarket } from "../src/patterns/patterns.js";
 import { DATA, readJson, readJsonl, RESULTS, rng, shuffle, writeJson } from "./lib.js";
 
@@ -29,14 +32,39 @@ export interface Row {
   outcome: string; uma: string[]; disputed: boolean; labelSource: string; volume: number;
 }
 
-const byId = new Map<string, MarketRecord>();
-for (const m of readJsonl<MarketRecord>(new URL("markets.jsonl", DATA))) byId.set(m.id, m);
+// Stream the crawl (it is millions of lines): dedupe by id, keep every disputed
+// market, keep a seeded reservoir of clean ones per stratum, and count pattern
+// evidence over the whole pool on the way.
+const POOL_END = "2026-01-01", TEST_START = "2026-01-01", TEST_END = "2026-11-01";
 const onchain = readJson<Record<string, boolean>>(new URL("onchain_disputes.json", DATA), {});
-
-const rows: Row[] = [];
+const seenIds = new Set<string>();
 const drop: Record<string, number> = {};
 const skip = (why: string) => { drop[why] = (drop[why] ?? 0) + 1; };
-for (const m of byId.values()) {
+let crawled = 0, kept = 0, keptDisputed = 0;
+const poolCount = { total: 0, disputed: 0 }, windowCount = { total: 0, disputed: 0 };
+const evidence = new Map<string, { disputed: number; total: number }>();
+const poolDisputedRows: Row[] = [], windowDisputedRows: Row[] = [];
+const RES_CAP = 400;
+const reservoirs = new Map<string, { seen: number; rows: Row[] }>();
+const resRand = rng(3);
+function reservoir(key: string, r: Row) {
+  const b = reservoirs.get(key) ?? { seen: 0, rows: [] };
+  b.seen++;
+  if (b.rows.length < RES_CAP) b.rows.push(r);
+  else { const j = Math.floor(resRand() * b.seen); if (j < RES_CAP) b.rows[j] = r; }
+  reservoirs.set(key, b);
+}
+const keepTwinDemo: Row[] = [];
+
+const rl = createInterface({ input: createReadStream(new URL("markets.jsonl", DATA)), crlfDelay: Infinity });
+for await (const line of rl) {
+  if (!line) continue;
+  const idEnd = line.indexOf('"', 7);
+  const id = line.slice(7, idEnd);
+  if (seenIds.has(id)) continue;
+  seenIds.add(id);
+  crawled++;
+  const m = JSON.parse(line) as MarketRecord;
   if (m.outcomes.length !== 2) { skip("not binary"); continue; }
   if (!m.closedTime) { skip("no close time"); continue; }
   const outcome = outcomeOf(m);
@@ -45,16 +73,26 @@ for (const m of byId.values()) {
   if (!m.uma.length) { skip("no UMA status history"); continue; }
   if (!m.description || m.description.length < 40) { skip("no rules text"); continue; }
   const chain = m.questionId ? onchain[m.questionId.toLowerCase()] : undefined;
-  rows.push({
+  const r: Row = {
     id: m.id, question: m.question, rules: m.description, conditionId: m.conditionId, questionId: m.questionId, tokens: m.tokens,
     createdAt: m.createdAt, closedTime: m.closedTime, category: categoryOf(m), patterns: tagMarket(m.question, m.description),
     outcome, uma: m.uma, disputed: chain ?? m.uma.includes("disputed"), labelSource: chain === undefined ? "gamma:umaResolutionStatuses" : "polygon:DisputePrice", volume: m.volume,
-  });
+  };
+  kept++; if (r.disputed) keptDisputed++;
+  if (r.id === TWIN || r.id === DEMO) keepTwinDemo.push(r);
+  if (r.closedTime < POOL_END) {
+    poolCount.total++; if (r.disputed) poolCount.disputed++;
+    for (const t of r.patterns) { const e = evidence.get(t) ?? { disputed: 0, total: 0 }; e.total++; if (r.disputed) e.disputed++; evidence.set(t, e); }
+    if (r.disputed) poolDisputedRows.push(r); else reservoir(`pool|${r.category}|${r.patterns.slice().sort().join("+")}`, r);
+  } else if (r.closedTime >= TEST_START && r.closedTime < TEST_END) {
+    windowCount.total++; if (r.disputed) windowCount.disputed++;
+    if (r.disputed) windowDisputedRows.push(r); else reservoir(`win|${r.category}`, r);
+  }
+  if (crawled % 200_000 === 0) console.error(`streamed ${crawled}`);
 }
-
-const POOL_END = "2026-01-01", TEST_START = "2026-01-01", TEST_END = "2026-11-01";
-const pool = rows.filter((r) => r.closedTime < POOL_END);
-const window = rows.filter((r) => r.closedTime >= TEST_START && r.closedTime < TEST_END);
+const pool = [...poolDisputedRows, ...[...reservoirs].filter(([k]) => k.startsWith("pool|")).flatMap(([, b]) => b.rows)];
+const window = [...windowDisputedRows, ...[...reservoirs].filter(([k]) => k.startsWith("win|")).flatMap(([, b]) => b.rows)];
+const rows = [...pool, ...window, ...keepTwinDemo.filter((r) => !pool.includes(r) && !window.includes(r))];
 
 // Balanced, category-stratified test set.
 const rand = rng(7);
@@ -91,15 +129,17 @@ const demo = rows.find((r) => r.id === DEMO);
 const count = (xs: Row[]) => ({ total: xs.length, disputed: xs.filter((r) => r.disputed).length });
 const catMix = (xs: Row[]) => Object.fromEntries([...xs.reduce((m, r) => m.set(r.category, (m.get(r.category) ?? 0) + 1), new Map<string, number>())].sort((a, b) => b[1] - a[1]));
 
-writeJson(new URL("pool.json", DATA), pool);
+const poolBase = poolCount.total ? poolCount.disputed / poolCount.total : 0;
+writeJson(new URL("pattern_evidence.json", DATA), { poolSize: poolCount.total, poolDisputed: poolCount.disputed, baseRate: poolBase, patterns: PATTERNS.map((p) => { const e = evidence.get(p.tag) ?? { disputed: 0, total: 0 }; return { tag: p.tag, rule: p.rule, ...e, rate: e.total ? e.disputed / e.total : 0 }; }) });
 writeJson(new URL("test.json", DATA), test);
 writeJson(new URL("precedents.json", DATA), precedents);
 const summary = {
   command: "npx tsx eval/build_dataset.ts " + process.argv.slice(2).join(" "),
-  crawled: byId.size, kept: rows.length, dropped: drop,
-  disputeRateAll: count(rows),
-  pool: { ...count(pool), closedBefore: POOL_END },
-  testWindow: { ...count(window), from: TEST_START, to: TEST_END },
+  crawledUnique: crawled, kept, dropped: drop,
+  disputeRateAll: { total: kept, disputed: keptDisputed },
+  pool: { ...poolCount, closedBefore: POOL_END },
+  testWindow: { ...windowCount, from: TEST_START, to: TEST_END },
+  sampling: "all disputed markets kept; clean markets reservoir-sampled (400 per stratum, seed 3) before selection",
   test: { ...count(test), categories: catMix(test) },
   precedents: { ...count(precedents), categories: catMix(precedents), includesTwin: picked.has(TWIN) || Boolean(twin) },
   labelSources: test.reduce((m, r) => ({ ...m, [r.labelSource]: (m[r.labelSource] ?? 0) + 1 }), {} as Record<string, number>),
