@@ -61,9 +61,9 @@
 
   function showRevoke(x, fresh) {
     $("#revoke-out").innerHTML = `<article class="receipt"><div class="r-top"><span>${fresh ? "Delegate key revoked" : "Last revoke"}</span><span>${x.at ? fmt.stamp(x.at) : ""}</span></div>
-      <h4>Removal transaction</h4><div>${tx(x.digest)}</div>
+      <h4>Removal transaction</h4><div>${tx(x.digest, "mainnet")}</div>
       <h4>Key removed</h4><div class="mono small" style="overflow-wrap:anywhere">${esc(x.removedKey || "–")}</div>
-      ${x.nextKey ? `<h4>Replacement key</h4><div class="mono small" style="overflow-wrap:anywhere">${esc(x.nextKey)}</div><div style="margin-top:6px">${tx(x.nextDigest)}</div>` : `<h4>Replacement key</h4><div class="small muted">Not added yet. The next press retries.</div>`}
+      ${x.nextKey ? `<h4>Replacement key</h4><div class="mono small" style="overflow-wrap:anywhere">${esc(x.nextKey)}</div><div style="margin-top:6px">${tx(x.nextDigest, "mainnet")}</div>` : `<h4>Replacement key</h4><div class="small muted">Not added yet. The next press retries.</div>`}
       <div class="r-foot"><span>Account</span>${obj(x.account)}<span>Memories saved before removal stay readable by the old key.</span></div></article>`;
   }
 

@@ -23,7 +23,7 @@
     const correct = L.rulingsGraded ? ` <span class="muted" style="font-size:.4em">of ${fmt.n(L.rulingsGraded)}</span>` : "";
     $("#counts").innerHTML = `<div class="figs three">
       ${fig(fmt.n(L.rulingsSealed), "rulings sealed", "Rulings with memory, paid or previewed")}
-      ${fig(fmt.n(L.paidRulings), "paid rulings", "Payments settled on Sui mainnet")}
+      ${fig(fmt.n(L.paidRulings), "paid rulings", "Payments settled on Sui testnet")}
       ${fig(`${fmt.usdc(L.usdcReceived)}`, "USDC received", "Sum of settled payments")}
       ${fig(fmt.n(L.rulingsGraded), "rulings graded", "Markets that resolved after the ruling")}
       ${fig(fmt.n(L.gradedCorrect) + correct, "graded correct", "HIGH means a dispute was predicted")}

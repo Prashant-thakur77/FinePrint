@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>The court · Fine Print</title>
-<meta name="description" content="Rulings sold to bots over x402 on Sui mainnet, live, with per-pattern prices and refunds.">
+<meta name="description" content="Rulings sold to bots over x402 (USDC on Sui testnet), live, with per-pattern prices and refunds.">
 <link rel="icon" href="/icon.svg" type="image/svg+xml">
 <script>try{var t=localStorage.getItem("fp-theme");if(t)document.documentElement.dataset.theme=t}catch(e){}document.documentElement.classList.add("js")</script>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -20,7 +20,7 @@
     <div class="paren" aria-hidden="true">)<br>)<br>)<br>)</div>
     <dl id="court-dl">
       <dt>Endpoint</dt><dd>GET /api/ruling?market=&lt;id&gt;</dd>
-      <dt>Payment</dt><dd>USDC on Sui mainnet, x402</dd>
+      <dt>Payment</dt><dd>USDC on Sui testnet, x402</dd>
       <dt>Base price</dt><dd id="base">–</dd>
       <dt>Refund rule</dt><dd>LOW ruling, then a dispute</dd>
     </dl>
@@ -76,7 +76,7 @@
       <ol class="steps">
         <li><span class="n">1</span><div>Call <code>GET /api/ruling?market=&lt;id&gt;</code></div></li>
         <li><span class="n">2</span><div>Get <code>402</code> with the price and the Sui address to pay.</div></li>
-        <li><span class="n">3</span><div>Sign a USDC payment on Sui mainnet and retry with the <code>X-PAYMENT</code> header.</div></li>
+        <li><span class="n">3</span><div>Sign a USDC payment on Sui testnet and retry with the <code>X-PAYMENT</code> header.</div></li>
         <li><span class="n">4</span><div>The server checks the digest on chain, then returns the ruling with its precedents.</div></li>
       </ol>
       <div>

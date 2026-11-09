@@ -30,7 +30,7 @@
   if (foot) {
     foot.outerHTML = `<footer class="foot"><div class="page">
       <p class="mark">Fine Print<i>.</i></p>
-      <p class="terms"><b>The fine print.</b> Fine Print gives risk opinions, not financial advice. A ruling says how likely a market is to be disputed, not how it will resolve. Precedents and rulings are stored on Walrus mainnet; market data and payment checks go through Tatum; payments are USDC on Sui mainnet. Every number on this site comes from the server or a published data file. Anything not measured yet says pending. Replays use only precedents whose market closed before the replay time. A paid LOW ruling that is followed by a dispute is refunded in USDC, and the refund is public.</p>
+      <p class="terms"><b>The fine print.</b> Fine Print gives risk opinions, not financial advice. A ruling says how likely a market is to be disputed, not how it will resolve. Precedents and rulings are stored on Walrus mainnet; market data and payment checks go through Tatum; payments are USDC on Sui testnet for this entry. Every number on this site comes from the server or a published data file. Anything not measured yet says pending. Replays use only precedents whose market closed before the replay time. A paid LOW ruling that is followed by a dispute is refunded in USDC, and the refund is public.</p>
       <nav aria-label="About"><a href="/how">How it works</a><a href="/security">Security</a><a href="/privacy">Privacy</a></nav>
     </div></footer>`;
   }
@@ -95,20 +95,23 @@
 
   const verdictClass = (v) => (/^(HIGH|MED|LOW)$/.test(v || "") ? v.toLowerCase() : "none");
 
+  const PAY_NET = "testnet";
   window.FP = {
     API, esc, short, fmt, api, store, reveal, verdictClass,
     reduced: () => matchMedia("(prefers-reduced-motion: reduce)").matches,
     walrus: (id) => `https://walruscan.com/mainnet/blob/${encodeURIComponent(id)}`,
-    suiscan: (d) => `https://suiscan.xyz/mainnet/tx/${encodeURIComponent(d)}`,
+    /** Ruling payments and refunds settle on this Sui network; memory lives on mainnet. */
+    PAY_NET,
+    suiscan: (d, net = PAY_NET) => `https://suiscan.xyz/${net}/tx/${encodeURIComponent(d)}`,
     /** One Walrus blob, always a link. Without a blob id: a pending chip (job id shown if known). */
     chip: (blobId, jobId) => blobId
       ? `<a class="chip" href="https://walruscan.com/mainnet/blob/${esc(encodeURIComponent(blobId))}" target="_blank" rel="noopener" title="Walrus blob ${esc(blobId)}"><span class="k">blob</span>${esc(short(blobId))}</a>`
       : `<span class="chip pending" title="${jobId ? `Memory job ${esc(jobId)} is still being written to Walrus` : "No blob yet"}">${jobId ? `<span class="k">job</span>${esc(short(jobId, 4, 4))} · pending` : "blob pending"}</span>`,
-    tx: (digest) => digest
-      ? `<a class="chip tx" href="https://suiscan.xyz/mainnet/tx/${esc(encodeURIComponent(digest))}" target="_blank" rel="noopener" title="Sui transaction ${esc(digest)}"><span class="k">tx</span>${esc(short(digest))}</a>`
+    tx: (digest, net = PAY_NET) => digest
+      ? `<a class="chip tx" href="https://suiscan.xyz/${net}/tx/${esc(encodeURIComponent(digest))}" target="_blank" rel="noopener" title="Sui ${net} transaction ${esc(digest)}"><span class="k">tx${net === "testnet" ? " · testnet" : ""}</span>${esc(short(digest))}</a>`
       : `<span class="chip pending">pending</span>`,
-    addr: (a) => a
-      ? `<a class="chip tx" href="https://suiscan.xyz/mainnet/account/${esc(encodeURIComponent(a))}" target="_blank" rel="noopener" title="Sui address ${esc(a)}">${esc(short(a))}</a>`
+    addr: (a, net = PAY_NET) => a
+      ? `<a class="chip tx" href="https://suiscan.xyz/${net}/account/${esc(encodeURIComponent(a))}" target="_blank" rel="noopener" title="Sui address ${esc(a)}">${esc(short(a))}</a>`
       : "–",
     stamp: (v, size = "") => `<span class="stamp ${size} ${verdictClass(v)}">${v ? esc(v) : "Pending"}</span>`,
   };
