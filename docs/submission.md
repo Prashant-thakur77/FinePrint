@@ -18,7 +18,7 @@ Where to submit: https://recall-tatum-walrus.vercel.app/ and press "Submit Proje
 | Demo video URL ("YouTube or other link") | https://youtu.be/hbxfgCPWMHo |
 | Description ("What it does, how it uses Tatum + Walrus Memory") | the "Description (long)" section below |
 | Additional docs ("Docs, blog, deck URL") | https://dev.to/prashant_thakur_d5db1fc78/fine-print-checking-a-prediction-markets-rules-against-its-own-case-law-2b6a (blog), https://fineprint.prashantthakur.dev (live app), https://github.com/Prashant-thakur77/FinePrint/blob/main/eval/REPORT.md (every number with its command) |
-| Social posts ("X, LinkedIn, etc.") | the links to your X and LinkedIn posts from `docs/social.md` |
+| Social posts ("X, LinkedIn, etc.") | https://x.com/2730Thakur12618/status/2119855357917077833 (add your LinkedIn post link here too) |
 | First Web3 project? | your answer |
 | How did you hear about it | your answer |
 | Walrus Memory experience | the "Feedback on Walrus Memory" section below |
