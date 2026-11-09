@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>How Fine Print works</title>
+<meta name="description" content="How Fine Print recalls precedents from Walrus Memory, rules on a market and sells the ruling to bots over x402.">
+<link rel="icon" href="/icon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600&family=JetBrains+Mono:wght@400;700&family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/site.css">
+</head>
+<body>
+<div data-mast></div>
+<main class="wrap">
+<h1>How it works</h1>
+<div class="prose">
+<p class="lede">One engine with three surfaces: the trader view, a paid court endpoint for bots, and a feed of rule versions.</p>
+<h2>1. Precedents live in Walrus Memory</h2>
+<p>Every resolved Polymarket market we have read is distilled into one memory: its key rule clause, its resolution source, the crowd price before the ruling, the UMA status sequence and the outcome. Those memories are written to a MemWal account on Sui mainnet and stored as encrypted blobs on Walrus. Each one has a blob ID you can open on Walruscan.</p>
+<h2>2. A ruling cites its precedents</h2>
+<p>When you open a market, Fine Print fetches its rules and price history through Tatum's Prediction Market API, recalls the closest precedents and learned wording patterns, and asks a judge model for a verdict: HIGH, MED or LOW dispute risk. The judge has to cite the blob IDs it relied on, and a ruling without citations is refused. The market text is passed in as untrusted data, so instructions hidden in a description are ignored.</p>
+<h2>3. Rulings are sealed before the outcome</h2>
+<p>Every ruling is written to memory before the market resolves. When it resolves, the ruling is graded, the grade is written next to it, and the wording pattern's track record moves. The price of a ruling for that pattern follows its accuracy.</p>
+<h2>4. Bots pay per ruling, and get refunds</h2>
+<p><code>GET /api/ruling?market=&lt;id&gt;</code> answers HTTP 402. A bot pays in USDC on Sui mainnet using the x402 protocol, and the server checks the payment through Tatum's Sui gRPC gateway before it answers. If a LOW ruling is followed by a dispute, the fee goes back to the payer in USDC, and the refund digest is public.</p>
+<h2>5. Rule versions</h2>
+<p>Rule text is hashed and stored as a new version whenever it changes. Historical clarifications are read from the UMA adapter's bulletin board on Polygon through Tatum's Polygon RPC.</p>
+<p><strong>Replays use only precedents whose market closed before the replay time.</strong></p>
+</div>
+</main>
+<div data-foot></div>
+<script src="/assets/shell.js"></script>
+</body>
+</html>
