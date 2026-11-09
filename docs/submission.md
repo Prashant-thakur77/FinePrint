@@ -17,7 +17,7 @@ Where to submit: https://recall-tatum-walrus.vercel.app/ and press "Submit Proje
 | Repo URL | https://github.com/Prashant-thakur77/FinePrint |
 | Demo video URL ("YouTube or other link") | your YouTube link after uploading `docs/video/fineprint-demo.mp4` |
 | Description ("What it does, how it uses Tatum + Walrus Memory") | the "Description (long)" section below |
-| Additional docs ("Docs, blog, deck URL") | your dev.to link, then a space, then https://fineprint.prashantthakur.dev (live app) and https://github.com/Prashant-thakur77/FinePrint/blob/main/eval/REPORT.md |
+| Additional docs ("Docs, blog, deck URL") | https://dev.to/prashant_thakur_d5db1fc78/fine-print-checking-a-prediction-markets-rules-against-its-own-case-law-2b6a (blog), https://fineprint.prashantthakur.dev (live app), https://github.com/Prashant-thakur77/FinePrint/blob/main/eval/REPORT.md (every number with its command) |
 | Social posts ("X, LinkedIn, etc.") | the links to your X and LinkedIn posts from `docs/social.md` |
 | First Web3 project? | your answer |
 | How did you hear about it | your answer |
@@ -40,7 +40,7 @@ Repository: https://github.com/Prashant-thakur77/FinePrint
 
 Video: (paste the YouTube link after uploading `docs/video/`)
 
-Blog post: (paste the dev.to link after publishing `docs/blog.md`)
+Blog post: https://dev.to/prashant_thakur_d5db1fc78/fine-print-checking-a-prediction-markets-rules-against-its-own-case-law-2b6a
 
 ## IDs
 

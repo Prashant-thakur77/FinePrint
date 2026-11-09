@@ -1,6 +1,6 @@
 ---
 title: "Fine Print: checking a prediction market's rules against its own case law"
-published: false
+published: true
 tags: walrus, sui, ai, blockchain
 cover_image: https://raw.githubusercontent.com/Prashant-thakur77/FinePrint/main/docs/img/mstr-exhibit.png
 ---

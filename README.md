@@ -2,7 +2,7 @@
 
 Fine Print checks a market's rules against past rulings before you buy.
 
-Live: https://fineprint.prashantthakur.dev · Report: [eval/REPORT.md](eval/REPORT.md) · Smoke tests: [docs/smoke.md](docs/smoke.md)
+Live: https://fineprint.prashantthakur.dev · Blog: https://dev.to/prashant_thakur_d5db1fc78/fine-print-checking-a-prediction-markets-rules-against-its-own-case-law-2b6a · Report: [eval/REPORT.md](eval/REPORT.md) · Smoke tests: [docs/smoke.md](docs/smoke.md)
 
 ## The trade that started it
 
