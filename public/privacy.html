@@ -6,23 +6,35 @@
 <title>Privacy at Fine Print</title>
 <meta name="description" content="What data Fine Print collects.">
 <link rel="icon" href="/icon.svg" type="image/svg+xml">
+<script>try{var t=localStorage.getItem("fp-theme");if(t)document.documentElement.dataset.theme=t}catch(e){}document.documentElement.classList.add("js")</script>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600&family=JetBrains+Mono:wght@400;700&family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=Libre+Caslon+Display&family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/assets/site.css">
 </head>
 <body>
 <div data-mast></div>
-<main class="wrap">
-<h1>Privacy</h1>
-<div class="prose">
-<p class="lede">Fine Print reads public market data and stores public facts about public markets.</p>
+<main class="page">
+  <article class="doc">
+    <div>
+      <div class="doc-head"><div class="label">In re · Your data</div><h1 class="display">Privacy</h1><p class="lede">Fine Print reads public market data and stores public facts about public markets.</p></div>
+      <aside class="toc" aria-label="On this page"><div class="label">On this page</div><ol><li><a href="#collect">What we keep</a></li><li><a href="#send">What we send</a></li></ol></aside>
+      <div class="prose">
+
+<div class="sec-row"><div><h2 id="collect"><span class="sec">§ 1</span>What we keep</h2>
 <ul>
-<li>We store no accounts, emails or cookies. Visitors are not tracked.</li>
+<li>No accounts, emails or tracking cookies. Visitors are not tracked. The theme you pick is kept in your own browser.</li>
 <li>Precedents and rulings describe public Polymarket markets. They are stored encrypted on Walrus, and the blob IDs are public.</li>
-<li>Paid rulings record the paying Sui address and the transaction digest, both already public on-chain.</li>
-<li>Market text is sent to the judge model (Anthropic API) to produce a ruling.</li>
-</ul>
+<li>Paid rulings record the paying Sui address and the transaction digest, both already public on chain.</li>
+</ul></div><aside class="mnote">Your theme choice is stored in your browser under the key fp-theme. Nothing else is.</aside></div>
+
+<div class="sec-row"><div><h2 id="send"><span class="sec">§ 2</span>What we send</h2>
+<ul>
+<li>Market text is sent to the judge model's API provider to produce a ruling.</li>
+</ul></div></div>
+
 </div>
+    </div>
+  </article>
 </main>
 <div data-foot></div>
 <script src="/assets/shell.js"></script>
