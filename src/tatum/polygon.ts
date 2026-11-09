@@ -68,14 +68,28 @@ export async function blockTime(n: number): Promise<number> {
   return parseInt(b.timestamp, 16);
 }
 
-/** First block at or after a unix time (binary search, ~25 calls). */
+/**
+ * First block at or after a unix time. Interpolation (secant) search: Polygon
+ * blocks are close to evenly spaced, so this converges in a handful of calls,
+ * which keeps a Worker request well under its subrequest limit.
+ */
 export async function blockAt(unix: number): Promise<number> {
-  let lo = 1, hi = await blockNumber();
-  while (lo < hi) {
-    const mid = Math.floor((lo + hi) / 2);
-    if ((await blockTime(mid)) < unix) lo = mid + 1; else hi = mid;
+  let hi = await blockNumber(), tHi = await blockTime(hi);
+  if (unix >= tHi) return hi;
+  let lo = Math.max(1, hi - Math.ceil((tHi - unix) / 1.5) - 50_000), tLo = await blockTime(lo);
+  for (let i = 0; i < 12 && hi - lo > 1; i++) {
+    if (tLo > unix) { lo = Math.max(1, lo - 200_000); tLo = await blockTime(lo); continue; }
+    const guess = Math.min(hi - 1, Math.max(lo + 1, lo + Math.round(((unix - tLo) / Math.max(1, tHi - tLo)) * (hi - lo))));
+    const tG = await blockTime(guess);
+    if (tG < unix) { lo = guess; tLo = tG; } else { hi = guess; tHi = tG; }
+    if (hi - lo <= 64) break;
   }
-  return lo;
+  // Finish with a binary search over the last few dozen blocks (≤ 6 calls).
+  while (hi - lo > 1) {
+    const mid = Math.floor((lo + hi) / 2);
+    if ((await blockTime(mid)) < unix) lo = mid; else hi = mid;
+  }
+  return hi;
 }
 
 /** Decodes one ABI `bytes` value starting at a word offset inside `data`. */

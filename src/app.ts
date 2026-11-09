@@ -14,7 +14,7 @@ import { tagMarket } from "./patterns/patterns.js";
 import { challenge, PaymentError, settle } from "./pay/x402.js";
 import { refund } from "./pay/refund.js";
 import { payNetwork } from "./pay/network.js";
-import { snapshotRules } from "./rules/poll.js";
+import { recordLineage, snapshotRules } from "./rules/poll.js";
 import { drainSamples, summarise } from "./tatum/latency.js";
 import { listAll, type AccountName } from "./memory/client.js";
 import { lastRevoke, revokeGuest } from "./memory/revoke.js";
@@ -196,6 +196,17 @@ app.post("/api/revoke", async (c) => {
     const status = (err as { status?: number }).status === 429 ? 429 : 500;
     if (status === 500) log.error("revoke.failed", err);
     return c.json({ error: (err as Error).message.slice(0, 200) }, status);
+  }
+});
+
+app.post("/api/admin/lineage/:ref", async (c) => {
+  if (!authorised(c.req.header("authorization"))) return c.json({ error: "unauthorised" }, 401);
+  try {
+    const m = await loadMarket(c.req.param("ref"));
+    const body = (await c.req.json()) as { versions: { seen: number; rules: string; source: string }[] };
+    return c.json(await recordLineage(c.env.DB, m, body.versions ?? []));
+  } catch (err) {
+    return c.json({ error: (err as Error).message.slice(0, 500), stack: (err as Error).stack?.split("\n").slice(0, 4) }, 500);
   }
 });
 

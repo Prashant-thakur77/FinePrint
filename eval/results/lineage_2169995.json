@@ -1,0 +1,47 @@
+{
+  "command": "npx tsx scripts/lineage.ts 2169995",
+  "market": "2169995",
+  "questionId": "0x0382b71b4df8e161d7947966fef8e5f6cc2d29b0285f87761e569b043e68f83d",
+  "range": [
+    86452339,
+    87943116
+  ],
+  "updates": 2,
+  "versions": [
+    {
+      "seen": 1778024721015,
+      "rules": "This market will resolve to \"Yes\" if MicroStrategy sells any of its Bitcoin by 11:59 PM ET on the date specified in the title. Otherwise, this market will resolve to \"No\".\n\nThe primary resolution source for this market will be information from MSTR and on-chain data, however a consensus of credible reporting will also be used.",
+      "source": "gamma:created"
+    },
+    {
+      "seen": 1780323190000,
+      "rules": "This market will resolve to \"Yes\" if MicroStrategy sells any of its Bitcoin by 11:59 PM ET on the date specified in the title. Otherwise, this market will resolve to \"No\".\n\nThe primary resolution source for this market will be information from MSTR and on-chain data, however a consensus of credible reporting will also be used.\n\nUpdate 2026-06-01T14:13:10.000Z: We’re aware of the dispute on this market. If a clarification is to be issued, it will be at 1:00 PM ET on June 1. If no statement is issued at that time, then there will be no clarification by the Polymarket team. The orderbook will be cleared at 1:00 PM ET, regardless of whether a clarification is made.\n",
+      "source": "polygon:AncillaryDataUpdated tx 0xbd0bf99bdb0488e772c8c90abf18913871d449d19322bc05839fd43ceaa6ffbd block 87761982 owner 0xf43d55f3a8b7484ed4b6931f93cb6f9ef5dd369d"
+    },
+    {
+      "seen": 1780333216000,
+      "rules": "This market will resolve to \"Yes\" if MicroStrategy sells any of its Bitcoin by 11:59 PM ET on the date specified in the title. Otherwise, this market will resolve to \"No\".\n\nThe primary resolution source for this market will be information from MSTR and on-chain data, however a consensus of credible reporting will also be used.\n\nUpdate 2026-06-01T14:13:10.000Z: We’re aware of the dispute on this market. If a clarification is to be issued, it will be at 1:00 PM ET on June 1. If no statement is issued at that time, then there will be no clarification by the Polymarket team. The orderbook will be cleared at 1:00 PM ET, regardless of whether a clarification is made.\n\n\nUpdate 2026-06-01T17:00:16.000Z: No information from MSTR, on-chain data, or consensus of credible reporting confirmed that MicroStrategy sold Bitcoin within the market's timeframe. \n\nConfirmation achieved outside of the market's time frame does not qualify.",
+      "source": "polygon:AncillaryDataUpdated tx 0x739e6133c031f5d1cdb4eb998fd3b037ee6fbc6829479a51154f4072c70c4239 block 87767711 owner 0xf43d55f3a8b7484ed4b6931f93cb6f9ef5dd369d"
+    }
+  ],
+  "recorded": {
+    "skipped": false,
+    "added": [
+      {
+        "n": 1,
+        "seen": "2026-05-05T23:45:21.015Z",
+        "jobId": "4add356c-5ca7-47cb-993d-fd41f785e8c8"
+      },
+      {
+        "n": 2,
+        "seen": "2026-06-01T14:13:10.000Z",
+        "jobId": "99464879-aedb-4b31-b4cd-81f9329d9433"
+      },
+      {
+        "n": 3,
+        "seen": "2026-06-01T17:00:16.000Z",
+        "jobId": "5b823c10-e60e-4bb1-b396-23e3202af825"
+      }
+    ]
+  }
+}
