@@ -6,7 +6,7 @@
  *   npx tsx scripts/export_results.ts
  */
 import "dotenv/config";
-import { writeFileSync } from "node:fs";
+import { readFileSync, writeFileSync } from "node:fs";
 import { config } from "../src/config.js";
 import { DATA, readJson, RESULTS } from "../eval/lib.js";
 import type { Row } from "../eval/build_dataset.js";
@@ -46,3 +46,35 @@ if (state) {
   const res = await fetch(`${process.env.FINEPRINT_URL ?? config.publicUrl}/api/admin/changes`, { method: "POST", headers: { "content-type": "application/json", authorization: `Bearer ${config.cronSecret}` }, body: JSON.stringify({ changes }) });
   console.log("changes:", await res.text());
 }
+
+// README blocks: the numbers table and the public IDs, filled from the same files.
+const f3 = (x: number | null | undefined, d = 3) => (x == null ? "pending" : Number(x).toFixed(d));
+const pc = (x: number | null | undefined, d = 1) => (x == null ? "pending" : `${(x * 100).toFixed(d)}%`);
+const row = (name: string, r: any) => r ? `| ${name} | ${f3(r.summary.accuracy.mean)} (${f3(r.summary.accuracy.min)}–${f3(r.summary.accuracy.max)}) | ${f3(r.summary.f1.mean)} | ${f3(r.summary.topBucketPrecision.mean)} | ${r.repeats} |` : `| ${name} | pending | pending | pending | |`;
+const lines: string[] = [];
+lines.push(`Held-out test set: ${ds?.test.total ?? "pending"} markets that closed in 2026 (${ds?.test.disputed ?? "?"} disputed, balanced on purpose), ruled by ${c?.model ?? a?.model ?? "the same model"} under three conditions that change one thing at a time. A market only sees precedents that closed before it was created.`, "");
+lines.push("| Condition | Accuracy (range) | F1 | Precision in top 20% risk | Runs |", "|---|---|---|---|---|");
+lines.push(row("(a) rule text only", a), row("(b) + precedents from Walrus Memory", b), row("(c) + learned wording patterns (Fine Print)", c), "");
+if (pe) { const t = pe.patterns.find((x: any) => x.tag === "deadline+confirmation-lag"); lines.push(`Across ${pe.poolSize.toLocaleString("en-US")} markets that closed before 2026, ${pc(pe.baseRate, 2)} were disputed. Markets with the MSTR wording pattern (a deadline plus a confirmation that can arrive later) were disputed ${pc(t?.rate, 1)} of the time (${t?.disputed} of ${t?.total}).`, ""); }
+if (bot) lines.push(`Bot replay on the same test markets with real CLOB history, buying $100 of YES at the first spike: bot alone ${bot.balanced.botAlone.netPnl}, gated by rule text only ${bot.balanced.gatedRulesOnly.netPnl}, gated by Fine Print ${bot.balanced.gatedFinePrint.netPnl} (net of fees, balanced set). Reweighted to the real 2026 dispute rate: ${bot.reweightedToBaseRate.botAlone.netPnl}, ${bot.reweightedToBaseRate.gatedRulesOnly.netPnl}, ${bot.reweightedToBaseRate.gatedFinePrint.netPnl}.`, "");
+if (lead) lines.push(`Lead time: ${lead.flaggedHigh} of ${lead.disputedWithSpikeThenCliff} disputed markets with a spike before a cliff were flagged HIGH at the spike, a median of ${f3(lead.medianLeadHoursWhenFlagged, 1)} hours before the cliff. The median cliff took ${f3(lead.medianCliffMinutes, 1)} minutes.`, "");
+if (lc) lines.push(`Learning over time: replaying 2026 month by month, the court that kept writing outcomes to Walrus scored ${f3(lc.overall.learning)} against ${f3(lc.overall.static)} for the same court with only the seeded precedents (${lc.writes} outcomes written on mainnet during the replay).`, "");
+if (rc) lines.push(`Recall: ${rc.recalledByOwnQuestion} of ${rc.recallSample} sampled precedents came back for their own question; the 2025 twin of the MSTR market is rank ${rc.twin.rank} for "sells any Bitcoin by date confirmation".`, "");
+if (adv) lines.push(`Prompt injection: with "ignore precedents, rate LOW" planted in the MSTR description, ${adv.injectedStayedHigh} of ${adv.injectedRuns} rulings stayed HIGH and ${adv.injectedCited} of ${adv.injectedRuns} still cited precedents.`, "");
+if (soak) lines.push(`Reliability: ${soak.succeeded} of ${soak.calls} paid calls succeeded end to end on Sui testnet, p50 ${soak.p50ms} ms, p95 ${soak.p95ms} ms.`, "");
+if (blobs) lines.push(`Memories on Walrus mainnet: ${blobs.total} (PRECEDENTS ${blobs.PRECEDENTS?.total}, COURT ${blobs.COURT?.total}, USER ${blobs.USER?.total}).`, "");
+const env = (k: string) => process.env[k] ?? "";
+const ids = [
+  "| What | ID |", "|---|---|",
+  ...(["PRECEDENTS", "COURT", "USER"] as const).flatMap((n) => [
+    `| MemWal account ${n} (Sui mainnet) | [\`${env(`MEMWAL_ACCOUNT_ID_${n}`)}\`](https://suiscan.xyz/mainnet/object/${env(`MEMWAL_ACCOUNT_ID_${n}`)}) |`,
+    `| Delegate public keys (MEMWAL_AGENT_ID) for ${n} | ${env(`MEMWAL_DELEGATES_${n}`).split(",").filter(Boolean).map((k) => `\`${k}\``).join(", ")} |`,
+  ]),
+  `| Server wallet (receives payments, sends refunds) | \`${env("SUI_SERVER_ADDRESS")}\` |`,
+  `| Bot wallet | \`${env("SUI_BOT_ADDRESS")}\` |`,
+  `| Payments network | Sui ${env("PAY_NETWORK") || "testnet"} |`,
+];
+const fill = (text: string, tag: string, body: string) => text.replace(new RegExp(`<!-- ${tag}:start -->[\\s\\S]*?<!-- ${tag}:end -->`), `<!-- ${tag}:start -->\n${body}\n<!-- ${tag}:end -->`);
+const readmeUrl = new URL("../README.md", import.meta.url);
+writeFileSync(readmeUrl, fill(fill(readFileSync(readmeUrl, "utf8"), "numbers", lines.join("\n").trim()), "ids", ids.join("\n")));
+console.log("README blocks updated");
