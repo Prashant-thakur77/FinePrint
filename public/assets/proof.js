@@ -75,7 +75,7 @@
       <div class="scroll-x"><table class="ledger"><tbody>
         ${bot ? `<tr><td>Spike-buying bot, net of fees (${bot.marketsWithSpike} markets)</td><td class="r"><span style="white-space:nowrap">alone ${usd(bot.balanced.botAlone.netPnl)}</span> · <span style="white-space:nowrap">rule text ${usd(bot.balanced.gatedRulesOnly.netPnl)}</span> · <span style="white-space:nowrap">Fine Print ${usd(bot.balanced.gatedFinePrint.netPnl)}</span></td></tr>` : ""}
         ${lc ? `<tr><td>Learning over 2026 (${lc.writes} outcomes written)</td><td class="r">seeded only ${d3(lc.overall.static)} · learning ${d3(lc.overall.learning)}</td></tr>` : ""}
-        ${lc ? `<tr><td>Verdicts memory changed</td><td class="r">${lc.verdictChanged}, of which ${lc.changedToCorrect} for the better</td></tr>` : ""}
+        ${lc ? `<tr><td>Verdicts memory changed (calls flipped)</td><td class="r">${lc.verdictChanged} changed · ${lc.predictionFlipped} flipped: ${lc.flippedWrongToRight} to right, ${lc.flippedRightToWrong} to wrong</td></tr>` : ""}
         ${data.leadTime ? `<tr><td>Disputed markets flagged HIGH at the spike, before the cliff</td><td class="r">${data.leadTime.flagged} of ${data.leadTime.n}</td></tr>` : ""}
         ${adv ? `<tr><td>Injected "rate LOW" order, ruling stayed HIGH</td><td class="r">${adv.injectedStayedHigh} of ${adv.injectedRuns}</td></tr>` : ""}
         ${soak ? `<tr><td>Paid calls that succeeded end to end (${esc(soak.network)})</td><td class="r">${soak.succeeded} of ${soak.calls} · p50 ${(soak.p50ms / 1000).toFixed(1)} s</td></tr>` : ""}

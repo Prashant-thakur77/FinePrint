@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-09T16:34:56.736Z",
+  "generatedAt": "2026-11-09T16:45:40.286Z",
   "source": "eval/results/*.json via scripts/export_results.ts",
   "dataset": {
     "crawledUnique": 3125517,
@@ -284,7 +284,9 @@
     "verdictChanged": 60,
     "changedCitingLearned": 51,
     "changedSealedOnWalrus": 49,
-    "changedToCorrect": 29
+    "predictionFlipped": 21,
+    "flippedWrongToRight": 9,
+    "flippedRightToWrong": 12
   },
   "memory": {
     "total": 761,

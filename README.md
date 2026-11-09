@@ -52,11 +52,13 @@ Walrus Memory holds everything the court knows, on Sui mainnet, in three MemWal 
 
 | Account | Namespaces | What a memory is |
 |---|---|---|
-| PRECEDENTS | `precedents`, `patterns` | one resolved market distilled (key clause, source, crowd price 24h before close, UMA status sequence, outcome), and one learned wording pattern with its evidence count |
+| PRECEDENTS | `precedents`, `patterns` | one resolved market distilled (key clause, source, crowd price 24h before close, UMA status sequence, outcome), and one wording pattern with its evidence count, re-versioned as graded markets add evidence |
 | COURT | `rulings`, `track`, `replay-rulings` | a ruling sealed before the outcome, and its grade |
 | USER | `rules/<conditionId>` | one version of a market's rules |
 
 Recall is semantic only, so the close date lives inside each memory's text and the leakage guard filters on it after recall.
+
+Two things were put there by hand. The ten wording patterns are regular expressions I wrote, some with the MSTR case in mind (the deadline pattern looks for words like "8-K" and "confirm"); only their evidence counts come from data, counted over the 159,502-market pool. And market 516926, the MSTR twin, closed on 5 January 2026, after the pool's cutoff, so I added it to the seed set explicitly. The replay still only sees it because it closed before 1 June.
 
 Tatum does three jobs. Its Prediction Market API gives rules, outcomes and minute history (`source=midpoint`). Its Polygon RPC reads the UMA adapters' bulletin board and the Optimistic Oracle's `DisputePrice` events. Its Sui GraphQL gateway settles and re-checks every payment.
 
@@ -73,7 +75,7 @@ Held-out test set: 200 markets that closed in 2026 (100 disputed, balanced on pu
 |---|---|---|---|---|
 | (a) rule text only | 0.510 (0.505–0.515) | 0.160 | 0.492 | 3 |
 | (b) + precedents from Walrus Memory | 0.497 (0.497–0.497) | 0.275 | 0.475 | 1 |
-| (c) + learned wording patterns (Fine Print) | 0.492 (0.482–0.497) | 0.191 | 0.483 | 3 |
+| (c) + wording patterns with dispute counts (Fine Print) | 0.492 (0.482–0.497) | 0.191 | 0.483 | 3 |
 
 Across 159,502 markets that closed before 2026, 0.47% were disputed. Markets with the MSTR wording pattern (a deadline plus a confirmation that can arrive later) were disputed 3.5% of the time (73 of 2084).
 
@@ -83,7 +85,7 @@ Lead time, a negative result: none of the 32 disputed test markets with a spike 
 
 Where the wording is the risk: on the 12 test markets with the MSTR pattern, accuracy was 0.417 on rule text, 0.667 with precedents and 0.583 with patterns. That is a small sample. Across all 200, recall carries little signal: 46% of precedents recalled for disputed markets were disputed, against 44% for clean ones.
 
-Learning over time: replaying 2026 month by month, the court that kept writing outcomes to Walrus scored 0.487 against 0.503 for the same court with only the seeded precedents (150 outcomes written on mainnet during the replay). Learning changed the verdict on some markets, but not for the better on balance. Monthly accuracy rises through the year for both courts alike, so that rise comes from the mix of markets, not from memory. Chart: [docs/learning-curve.svg](docs/learning-curve.svg).
+Learning over time: replaying 2026 month by month, the court that kept writing outcomes to Walrus scored 0.487 against 0.503 for the same court with only the seeded precedents (150 outcomes written on mainnet during the replay). Learning changed 60 verdicts; 21 of those flipped the call (HIGH or not), 9 from wrong to right and 12 from right to wrong. Monthly accuracy rises through the year for both courts alike, so that rise comes from the mix of markets, not from memory. Chart: [docs/learning-curve.svg](docs/learning-curve.svg).
 
 Recall: 60 of 60 sampled precedents came back for their own question; the 2025 twin of the MSTR market is rank 3 for "sells any Bitcoin by date confirmation".
 

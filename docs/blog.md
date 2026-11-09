@@ -44,7 +44,7 @@ Tatum's Sui GraphQL gateway settles and re-checks every payment. I started on gR
 
 ## Did memory help?
 
-I tested this on 200 markets that closed in 2026 and that the court had never seen, half of them disputed. Same model, three conditions, one change at a time: rule text only, then precedents from Walrus, then learned wording patterns on top. A market only sees precedents that closed before it was created.
+I tested this on 200 markets that closed in 2026 and that the court had never seen, half of them disputed. Same model, three conditions, one change at a time: rule text only, then precedents from Walrus, then wording patterns with their dispute counts on top. A market only sees precedents that closed before it was created.
 
 | Condition | Accuracy | F1 |
 |---|---|---|
@@ -52,11 +52,13 @@ I tested this on 200 markets that closed in 2026 and that the court had never se
 | + precedents | 0.497 | 0.275 |
 | + patterns (Fine Print) | 0.492 | 0.191 |
 
+Rule text and Fine Print are the mean of three runs; the precedents-only condition ran once.
+
 Memory doesn't help on average. It makes the court flag more disputes, so recall of disputed markets goes up, but precision drops with it, and accuracy stays near a coin flip. The reason is visible in the recall itself. For disputed test markets, 46% of the recalled precedents were disputed. For clean test markets, 44%. Semantic search finds markets that look alike, and most look-alikes are the same template (every NBA game resembles every other NBA game), not the same risk.
 
 The lift shows up where the wording itself is the risk. Across 159,502 markets that closed before 2026, 0.47% were disputed. Markets with the MSTR pattern, a deadline plus a confirmation that can arrive after it, were disputed 3.5% of the time. On the 12 test markets with that pattern, accuracy went from 0.417 on rule text to 0.667 with precedents. Twelve markets is a hint, not a result.
 
-I also replayed a news-spike bot that buys $100 of YES on the first sharp rise. It loses money on these markets whatever you do (spikes before a dispute are bad entries), but gating it with Fine Print lost the least: -$7,050 against -$7,196 gated by rule text and -$7,260 ungated, over 120 trades, net of fees.
+I also replayed a news-spike bot that buys $100 of YES on the first sharp rise. It loses money on these markets whatever you do (spikes before a dispute are bad entries), Gated by Fine Print it lost -$7,050, against -$7,196 gated by rule text and -$7,260 ungated, over 120 trades net of fees. That gap is small: the gate skipped 7 losing trades and 7 winning ones.
 
 ## How it learned over time
 
@@ -64,7 +66,7 @@ To test whether the court gets better as case law piles up, I replayed 2026 in o
 
 ![Accuracy per replayed month, seeded precedents only vs learning](https://raw.githubusercontent.com/Prashant-thakur77/FinePrint/main/docs/learning-curve.png)
 
-It didn't learn its way to better calls. Over 197 rulings each, the court with only seeded precedents scored 0.503 and the learning court 0.487. Learning changed the verdict on 60 markets, 51 of them citing a precedent it had just written, and 29 of those 60 changes were for the better. Both lines climb through the year together, which tells you the climb comes from the mix of markets in each month, not from memory.
+It didn't learn its way to better calls. Over 197 rulings each, the court with only seeded precedents scored 0.503 and the learning court 0.487. Learning changed the verdict on 60 markets, 51 of them citing a precedent it had just written. Most of those were LOW to MED or back, which doesn't change the call. 21 changes flipped the call itself: 9 from wrong to right and 12 from right to wrong. Both lines climb through the year together, which tells you the climb comes from the mix of markets in each month, not from memory.
 
 When the court did change its mind, both rulings were sealed on Walrus, so each change is checkable: the old ruling, the precedent that moved it, and the new ruling, all by blob ID. 49 of them are on the memory page of the app.
 

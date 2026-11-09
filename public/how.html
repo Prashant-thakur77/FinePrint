@@ -24,7 +24,7 @@
 <p>Every resolved Polymarket market we read becomes one memory: its key rule clause, its resolution source, the crowd price before the ruling, the UMA status sequence and the outcome. Memories are written to a MemWal account on Sui mainnet and stored as encrypted blobs on Walrus. Each one has a blob ID you can open on Walruscan.</p></div><aside class="mnote">Every blob ID on this site opens on <a href="https://walruscan.com/mainnet" target="_blank" rel="noopener">Walruscan</a>. The latest ones are listed on <a href="/proof">Proof</a>.</aside></div>
 
 <div class="sec-row"><div><h2 id="ruling"><span class="sec">§ 2</span>A ruling cites its precedents</h2>
-<p>When you open a market, Fine Print fetches its rules and price history through Tatum's Prediction Market API, recalls the closest precedents and learned wording patterns, and asks a judge model for a verdict: HIGH, MED or LOW dispute risk. The judge must cite the blob IDs it relied on. A ruling without citations is refused.</p>
+<p>When you open a market, Fine Print fetches its rules and price history through Tatum's Prediction Market API, recalls the closest precedents and wording patterns with their dispute counts, and asks a judge model for a verdict: HIGH, MED or LOW dispute risk. The judge must cite the blob IDs it relied on. A ruling without citations is refused.</p>
 <p>Market text is passed in as untrusted data, so instructions hidden in a description are ignored.</p></div><aside class="mnote">Rules and prices come from Tatum first. If Tatum has no data, Polymarket Gamma and CLOB are the fallback, and the chart says which one it used.</aside></div>
 
 <div class="sec-row"><div><h2 id="sealed"><span class="sec">§ 3</span>Rulings are sealed before the outcome</h2>

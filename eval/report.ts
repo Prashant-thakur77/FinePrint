@@ -47,11 +47,11 @@ if (ds) {
 }
 P();
 P("## 1. Dispute prediction on unseen 2026 markets");
-P("Same model for all three conditions; one change at a time. Positive class = disputed. Mean of 3 runs, range in brackets. Leakage guard: a test market only sees precedents that closed before it was created.");
+P("Same model for all three conditions; one change at a time. Positive class = disputed. Mean of the runs shown (3 for (a) and (c), 1 for (b)), range in brackets. Rulings that errored after retries are excluded from their run. Leakage guard: a test market only sees precedents that closed before it was created.");
 P();
 P("| Condition | Accuracy | F1 | Precision (top 20% risk) | Command |");
 P("|---|---|---|---|---|");
-for (const [name, r] of [["(a) rule text only", a], ["(b) + precedent recall", b], ["(c) + learned patterns (Fine Print)", c]] as const) {
+for (const [name, r] of [["(a) rule text only", a], ["(b) + precedent recall", b], ["(c) + wording patterns with dispute counts (Fine Print)", c]] as const) {
   P(r ? `| ${name} | ${num(r.summary.accuracy.mean)} [${num(r.summary.accuracy.min)}–${num(r.summary.accuracy.max)}] | ${num(r.summary.f1.mean)} [${num(r.summary.f1.min)}–${num(r.summary.f1.max)}] | ${num(r.summary.topBucketPrecision.mean)} | ${cmd(r)} |` : `| ${name} | pending | pending | pending | pending |`);
 }
 P();
@@ -59,7 +59,8 @@ P("For reference, a published study reports 0.570 accuracy for Claude-Sonnet-4.5
 if (c) {
   P();
   P(`Per category, condition (c), run 1: ${Object.entries(c.byCategory).map(([k, v]: any) => `${k} ${num(v.accuracy)} (n=${v.n})`).join("; ")}`);
-  P(`Markets with at least one precedent recalled: ${c.withPrecedents.n}, accuracy ${num(c.withPrecedents.accuracy)}; with none: ${c.withoutPrecedents.n}, accuracy ${num(c.withoutPrecedents.accuracy)}. Rulings citing a blob: ${pct(c.citedShare)}.`);
+  const errs = (c.n ?? 0) - c.withPrecedents.n - c.withoutPrecedents.n;
+  P(`Every test market had at least one precedent recalled (${c.withPrecedents.n} scored in run 1, accuracy ${num(c.withPrecedents.accuracy)}${errs > 0 ? `; ${errs} ruling${errs > 1 ? "s" : ""} errored after retries and ${errs > 1 ? "are" : "is"} excluded from that run` : ""}). Rulings citing a blob: ${pct(c.citedShare)}.`);
 }
 P();
 P("### Where memory helps and where it doesn't");
@@ -107,13 +108,15 @@ P();
 P("## 3. Lead time");
 P(`Command: ${cmd(lead)}`);
 P();
-P(lead ? `Disputed test markets with a spike before a cliff: ${lead.disputedWithSpikeThenCliff}; flagged HIGH at the spike: ${lead.flaggedHigh}. Median lead time when flagged: ${num(lead.medianLeadHoursWhenFlagged, 1)} h at a median price of ${num(lead.medianFlagPrice, 2)}. Median cliff duration: ${num(lead.medianCliffMinutes, 1)} minutes.` : "pending");
+P(lead ? (lead.flaggedHigh ? `Disputed test markets with a spike before a cliff: ${lead.disputedWithSpikeThenCliff}; flagged HIGH at the spike: ${lead.flaggedHigh}. Median lead time when flagged: ${num(lead.medianLeadHoursWhenFlagged, 1)} h at a median price of ${num(lead.medianFlagPrice, 2)}. Median cliff duration: ${num(lead.medianCliffMinutes, 1)} minutes.` : `Negative result: of ${lead.disputedWithSpikeThenCliff} disputed test markets with a spike before a price cliff, none was flagged HIGH at the spike. Median cliff duration: ${num(lead.medianCliffMinutes, 1)} minutes.`) : "pending");
 P();
 P("## 4. Learning over time (time-machine replay)");
 P(`Command: ${cmd(lc)}`);
 P();
 if (lc) {
   P(`Outcomes written to Walrus mainnet during the replay: ${lc.writes}. Overall accuracy: static ${num(lc.overall.static)}, learning ${num(lc.overall.learning)}.`);
+  const lch = load("learning_changes.json");
+  if (lch) P(`Learning changed ${lch.verdictChanged} verdicts; ${lch.predictionFlipped} flipped the call (HIGH or not): ${lch.flippedWrongToRight} from wrong to right, ${lch.flippedRightToWrong} from right to wrong. ${lch.changedSealedOnWalrus} changes with a learned citation have both rulings sealed on Walrus (namespace replay-rulings). Both arms improve month by month together, so that rise comes from the market mix, not memory. Command for these counts: \`${lch.command}\`.`);
   P();
   P("| Month ruled | Markets | Static | Learning | Learned precedents available | Rulings citing a learned precedent |");
   P("|---|---|---|---|---|---|");
@@ -129,7 +132,7 @@ if (blobs) {
 } else P("pending");
 if (live) P(`- Rulings sold: ${live.paidRulings}, graded: ${live.rulingsGraded} (${live.gradedCorrect} correct), refunds: ${live.refunds}, USDC received: ${live.usdcReceived}`);
 P();
-P("## 6. Reliability (paid calls on mainnet)");
+P("## 6. Reliability (paid calls, Sui testnet)");
 P(`Command: ${cmd(soak)}`);
 P();
 P(soak ? `${soak.succeeded} of ${soak.calls} paid calls succeeded (${pct(soak.successRate)}) on ${soak.network ?? "Sui testnet"}; p50 ${soak.p50ms} ms, p95 ${soak.p95ms} ms end to end (402, payment, settlement through Tatum's Sui gateway, ruling). Test USDC spent: ${soak.usdcSpent}.${soak.serverAudit ? ` Server-side audit (\`${soak.serverAudit.command}\`): ${soak.serverAudit.paymentsWithoutRuling} payments without a ruling; the ${soak.serverAudit.failedCalls} failed calls were "${soak.serverAudit.failedCallErrors.join(", ")}" on the test machine and never paid.` : ""}` : "pending");

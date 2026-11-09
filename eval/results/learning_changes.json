@@ -1,0 +1,16 @@
+{
+  "command": "npx tsx scripts/export_results.ts",
+  "source": "eval/data/learning_state.json (written by eval/learning_curve.ts)",
+  "writes": 150,
+  "overall": {
+    "static": 0.503,
+    "learning": 0.487
+  },
+  "rulings": 197,
+  "verdictChanged": 60,
+  "changedCitingLearned": 51,
+  "changedSealedOnWalrus": 49,
+  "predictionFlipped": 21,
+  "flippedWrongToRight": 9,
+  "flippedRightToWrong": 12
+}

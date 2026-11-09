@@ -2,11 +2,11 @@
  * The court as a service: issue rulings (sold or previewed), track the memory
  * jobs that seal them on Walrus, and grade them when markets resolve.
  */
-import { fields, gradeText, NS, precedentText, type Verdict } from "../memory/types.js";
+import { fields, gradeText, NS, patternText, precedentText, type Verdict } from "../memory/types.js";
 import { jobStatus, rememberAsync, type AccountName } from "../memory/client.js";
 import { loadMarket, type MarketInfo } from "../market.js";
 import { log } from "../log.js";
-import { tagMarket } from "../patterns/patterns.js";
+import { patternRule, tagMarket } from "../patterns/patterns.js";
 import { refund } from "../pay/refund.js";
 import { gammaMarket } from "../polymarket/gamma.js";
 import { recordGrade, trackFor } from "./board.js";
@@ -95,6 +95,10 @@ export async function resolveJobs(db: D1Database, max = 25) {
         if (j.kind === "grade") await db.prepare("UPDATE rulings SET grade_blob_id = ? WHERE id = ?").bind(s.blob_id, j.ref).run();
         if (j.kind === "rules") { const [market, n] = j.ref.split("#"); await db.prepare("UPDATE rule_versions SET blob_id = ? WHERE market = ? AND n = ?").bind(s.blob_id, market, Number(n)).run(); }
         if (j.kind === "precedent") await db.prepare("UPDATE changes SET cause_blob = ? WHERE cause_blob = ?").bind(s.blob_id, `job:${j.job_id}`).run();
+        if (j.kind === "pattern") {
+          const row = await db.prepare("SELECT v FROM kv WHERE k = ?").bind(`pattern:${j.ref}`).first<{ v: string }>();
+          if (row) { const st = JSON.parse(row.v); if (st.latest === `job:${j.job_id}`) { st.latest = s.blob_id; await db.prepare("UPDATE kv SET v = ? WHERE k = ?").bind(JSON.stringify(st), `pattern:${j.ref}`).run(); } }
+        }
         done++;
       } else if (s.status === "failed" || s.status === "not_found") {
         await db.prepare("UPDATE memory_jobs SET status = ? WHERE job_id = ?").bind(s.status, j.job_id).run();
@@ -152,7 +156,8 @@ export async function gradeOpen(db: D1Database, max = 10) {
       await recordGrade(db, pats, correct);
       graded.push({ ruling: r.id, market: marketId, correct, refund: refundDigest });
     }
-    // The resolution becomes case law, once per market, when a live ruling preceded it.
+    // The resolution becomes case law, once per market, when a live ruling preceded it,
+    // and each of its wording patterns gets a new memory version with the updated evidence.
     const already = await db.prepare("SELECT 1 FROM memory_jobs WHERE kind = 'precedent' AND ref = ?").bind(g.id).first();
     if (!live.length || already) continue;
     try {
@@ -163,6 +168,7 @@ export async function gradeOpen(db: D1Database, max = 10) {
       const prev = live[live.length - 1];
       await db.prepare("INSERT INTO changes (market, question, old_ruling, old_verdict, new_ruling, new_verdict, cause_blob, cause, at) VALUES (?, ?, ?, ?, NULL, NULL, ?, ?, ?)")
         .bind(g.id, g.question, prev.blob_id ?? prev.id, prev.verdict, `job:${job}`, `resolved ${outcome}${disputed ? " after a dispute" : ""}`, Date.now()).run();
+      for (const tag of pats) await bumpPattern(db, tag, disputed);
     } catch (err) { log.error("precedent.write_failed", err, { market: marketId }); }
   }
   return { graded };
@@ -170,3 +176,23 @@ export async function gradeOpen(db: D1Database, max = 10) {
 
 export async function marketFor(ref: string) { return loadMarket(ref); }
 export { fields };
+
+interface PatternState { disputed: number; total: number; firstSeen: string; latest: string }
+
+/**
+ * Adds one graded market to a wording pattern's evidence and writes the new
+ * PATTERN memory version, which names the version it supersedes. Recall reads
+ * the most recent version, so later rulings see the updated counts.
+ */
+export async function bumpPattern(db: D1Database, tag: string, disputed: boolean) {
+  const row = await db.prepare("SELECT v FROM kv WHERE k = ?").bind(`pattern:${tag}`).first<{ v: string }>();
+  if (!row) return null; // not initialised from the seed (see POST /api/admin/patterns)
+  const st = JSON.parse(row.v) as PatternState;
+  const next: PatternState = { ...st, disputed: st.disputed + (disputed ? 1 : 0), total: st.total + 1 };
+  const text = patternText({ tag, rule: `${patternRule(tag)} Evidence updated by a graded market.`, disputed: next.disputed, total: next.total, firstSeen: st.firstSeen, supersedes: st.latest });
+  const job = await rememberAsync("PRECEDENTS", NS.patterns, text);
+  await trackJob(db, job, "PRECEDENTS", NS.patterns, "pattern", tag);
+  next.latest = `job:${job}`;
+  await db.prepare("UPDATE kv SET v = ?, updated_at = ? WHERE k = ?").bind(JSON.stringify(next), Date.now(), `pattern:${tag}`).run();
+  return { tag, ...next, job };
+}

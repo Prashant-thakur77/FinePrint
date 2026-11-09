@@ -82,6 +82,8 @@ app.get("/api/ruling/free/:ref", async (c) => {
   const cached = await cachedPreview(c.env.DB, m.id, level);
   if (cached) return c.json({ ruling: cached });
   if (limited(c)) return c.json({ error: "Too many previews from your network. Try again in a minute." }, 429);
+  const today = await c.env.DB.prepare("SELECT COUNT(*) AS n FROM rulings WHERE payer IS NULL AND at > ?").bind(Date.now() - 86_400_000).first<{ n: number }>();
+  if ((today?.n ?? 0) >= Number(process.env.FREE_PREVIEWS_PER_DAY ?? 300)) return c.json({ error: "Today's free previews are used up. Paid rulings still work." }, 429);
   if (level !== "rules" && !config.account("PRECEDENTS").accountId) return c.json({ error: "Walrus Memory is not connected yet, so only the rule-text ruling is available." }, 503);
   return c.json({ ruling: await issue(c.env.DB, m, level, null) });
 });
@@ -122,7 +124,7 @@ app.get("/api/ruling", async (c) => {
 app.get("/api/board", async (c) => c.json({ board: await board(c.env.DB), base: config.rulingPriceUsdc }));
 
 app.get("/api/changes", async (c) => {
-  const rows = (await c.env.DB.prepare("SELECT * FROM changes ORDER BY at DESC LIMIT 30").all()).results;
+  const rows = (await c.env.DB.prepare("SELECT * FROM changes ORDER BY at DESC LIMIT 60").all()).results;
   return c.json({ changes: rows });
 });
 
@@ -206,8 +208,26 @@ app.post("/api/admin/lineage/:ref", async (c) => {
     const body = (await c.req.json()) as { versions: { seen: number; rules: string; source: string }[] };
     return c.json(await recordLineage(c.env.DB, m, body.versions ?? []));
   } catch (err) {
-    return c.json({ error: (err as Error).message.slice(0, 500), stack: (err as Error).stack?.split("\n").slice(0, 4) }, 500);
+    log.error("admin.lineage_failed", err);
+    return c.json({ error: (err as Error).message.slice(0, 300) }, 500);
   }
+});
+
+/** Initialises each wording pattern's evidence and latest memory version from the seed. */
+app.post("/api/admin/patterns", async (c) => {
+  if (!authorised(c.req.header("authorization"))) return c.json({ error: "unauthorised" }, 401);
+  const body = (await c.req.json()) as { patterns: { tag: string; disputed: number; total: number; blobId: string }[] };
+  for (const p of body.patterns ?? []) {
+    const v = JSON.stringify({ disputed: p.disputed, total: p.total, firstSeen: p.blobId, latest: p.blobId });
+    await c.env.DB.prepare("INSERT INTO kv (k, v, updated_at) VALUES (?, ?, ?) ON CONFLICT(k) DO NOTHING").bind(`pattern:${p.tag}`, v, Date.now()).run();
+  }
+  const rows = (await c.env.DB.prepare("SELECT k, v FROM kv WHERE k LIKE 'pattern:%'").all<{ k: string; v: string }>()).results;
+  return c.json({ patterns: rows.map((r) => ({ tag: r.k.slice(8), ...JSON.parse(r.v) })) });
+});
+
+app.get("/api/patterns", async (c) => {
+  const rows = (await c.env.DB.prepare("SELECT k, v, updated_at FROM kv WHERE k LIKE 'pattern:%'").all<{ k: string; v: string; updated_at: number }>()).results;
+  return c.json({ patterns: rows.map((r) => ({ tag: r.k.slice(8), ...JSON.parse(r.v), updatedAt: r.updated_at })) });
 });
 
 /** Records "changed its mind" cases (old ruling → new precedent → new ruling) produced by the time-machine replay. */

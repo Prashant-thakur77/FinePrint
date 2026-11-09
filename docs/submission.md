@@ -46,7 +46,7 @@ Fine Print is the check that would have. You give it a market. It reads the rule
 
 Bots can buy the same ruling for 0.02 USDC over x402. Every ruling is sealed as a memory before the market resolves, graded when it does, and a wrong LOW ruling is refunded. The price per wording pattern follows the court's graded accuracy. Rule versions are rebuilt from the UMA adapter's bulletin board on Polygon (read through Tatum), so the chart shows which version of the rules you bought under.
 
-Walrus Memory holds 401 seeded precedents and 10 learned wording patterns across three mainnet accounts, plus every ruling, grade and rule version since. Across 159,502 markets that closed before 2026, 0.47% were disputed. Markets with the MSTR wording pattern were disputed 3.5% of the time.
+Walrus Memory holds 401 seeded precedents and 10 wording patterns with dispute counts across three mainnet accounts, plus every ruling, grade and rule version since. Across 159,502 markets that closed before 2026, 0.47% were disputed. Markets with the MSTR wording pattern were disputed 3.5% of the time.
 
 We published the weak spots too. On 200 unseen 2026 markets, half of them disputed, broad precedent recall did not beat rule text alone (accuracy 0.510 rule text, 0.492 Fine Print), because similar-looking markets are mostly the same template, not the same risk. The lift shows up where the wording itself is the risk: on the 12 test markets with the MSTR pattern, accuracy went from 0.417 to 0.667 with precedents. That's a small sample and the report says so. Payments run on Sui testnet because I chose not to spend money on this entry; memory is on mainnet.
 
