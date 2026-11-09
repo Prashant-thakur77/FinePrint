@@ -2,21 +2,23 @@
  * MemWal account setup, done once from scripts/create_accounts.ts.
  *
  * Each account is owned by its own Ed25519 key (one account per address is a
- * contract rule). The server wallet pays the gas through a sponsored
- * transaction, so the owner keys never hold SUI. Delegate keys are derived
- * from DELEGATE_KEY_SEED, so they can be rebuilt but never need to be stored
- * anywhere except .env.
- *
- * Every transaction goes through Tatum's Sui gRPC gateway.
+ * contract rule). Gas is sponsored by the Walrus Memory relayer, the same way
+ * the memory.walrus.xyz playground creates accounts: we send the transaction
+ * kind with a signed sponsor authorization to POST /sponsor, sign the
+ * sponsored bytes it returns, and submit them through POST /sponsor/execute.
+ * The owner keys never hold SUI and nothing is spent. Object inputs are
+ * resolved through Tatum's Sui gateway. Delegate keys are derived from
+ * DELEGATE_KEY_SEED, so they can be rebuilt from .env.
  */
 import { createHmac } from "node:crypto";
 import { Ed25519Keypair } from "@mysten/sui/keypairs/ed25519";
 import { Transaction } from "@mysten/sui/transactions";
+import { toBase64, fromBase64 } from "@mysten/sui/utils";
+import { createSponsorAuthorization } from "@mysten-incubation/memwal";
 import { config } from "../config.js";
 import { tatumSui } from "../tatum/sui.js";
 
 const CLOCK = "0x6";
-const GAS_BUDGET = 20_000_000;
 
 export function delegateFor(accountId: string, index = 0): Ed25519Keypair {
   const seed = process.env.DELEGATE_KEY_SEED;
@@ -27,22 +29,35 @@ export function delegateFor(accountId: string, index = 0): Ed25519Keypair {
 
 export const delegatePublicHex = (kp: Ed25519Keypair) => Buffer.from(kp.getPublicKey().toRawBytes()).toString("hex");
 
-/** Builds, co-signs (owner + sponsor) and executes one move call. Returns the digest and created objects. */
+/** Builds a move call, has the Walrus Memory relayer sponsor its gas, signs and executes it. */
 async function sponsored(owner: Ed25519Keypair, fill: (tx: Transaction) => void) {
-  const client = tatumSui();
-  const sponsor = Ed25519Keypair.fromSecretKey(config.serverKey);
   const tx = new Transaction();
   fill(tx);
   tx.setSender(owner.toSuiAddress());
-  tx.setGasOwner(sponsor.toSuiAddress());
-  tx.setGasBudget(GAS_BUDGET);
-  const bytes = await tx.build({ client });
-  const [a, b] = await Promise.all([owner.signTransaction(bytes), sponsor.signTransaction(bytes)]);
-  const res = await client.executeTransaction({ transaction: bytes, signatures: [a.signature, b.signature], include: { effects: true, objectTypes: true } });
-  const t = res.Transaction ?? res.FailedTransaction;
-  if (!t || !t.effects?.status.success) throw new Error(`transaction failed: ${JSON.stringify(t?.effects?.status ?? res).slice(0, 300)}`);
-  await client.waitForTransaction({ digest: t.digest });
-  return t;
+  const kind = await tx.build({ client: tatumSui(), onlyTransactionKind: true });
+  const sender = owner.toSuiAddress();
+  let last = "";
+  for (let attempt = 1; attempt <= 4; attempt++) {
+    const auth = await createSponsorAuthorization(sender, kind, async (msg) => ({ signature: (await owner.signPersonalMessage(msg)).signature }));
+    const sp = await fetch(`${config.memwalServerUrl}/sponsor`, {
+      method: "POST", headers: { "content-type": "application/json" },
+      body: JSON.stringify({ transactionBlockKindBytes: toBase64(kind), sender, ...auth }),
+    });
+    if (!sp.ok) { last = `sponsor ${sp.status}: ${(await sp.text()).slice(0, 200)}`; await new Promise((r) => setTimeout(r, 2000 * attempt)); continue; }
+    const { bytes, digest } = (await sp.json()) as { bytes: string; digest: string };
+    const { signature } = await owner.signTransaction(fromBase64(bytes));
+    const ex = await fetch(`${config.memwalServerUrl}/sponsor/execute`, {
+      method: "POST", headers: { "content-type": "application/json" },
+      body: JSON.stringify({ digest, sender, signature }),
+    });
+    if (!ex.ok) { last = `execute ${ex.status}: ${(await ex.text()).slice(0, 200)}`; await new Promise((r) => setTimeout(r, 2000 * attempt)); continue; }
+    const done = (await ex.json()) as { digest: string };
+    const t = await tatumSui().waitForTransaction({ digest: done.digest, include: { effects: true, objectTypes: true } });
+    const r = t.Transaction ?? t.FailedTransaction;
+    if (!r?.effects?.status.success) throw new Error(`transaction ${done.digest} failed: ${JSON.stringify(r?.effects?.status).slice(0, 200)}`);
+    return r;
+  }
+  throw new Error(`relayer sponsorship failed: ${last}`);
 }
 
 export async function createAccount(owner: Ed25519Keypair): Promise<{ accountId: string; digest: string }> {
