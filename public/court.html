@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The court · Fine Print</title>
+<meta name="description" content="Rulings sold to bots over x402 on Sui mainnet, live, with per-pattern prices and refunds.">
+<link rel="icon" href="/icon.svg" type="image/svg+xml">
+<script>try{var t=localStorage.getItem("fp-theme");if(t)document.documentElement.dataset.theme=t}catch(e){}document.documentElement.classList.add("js")</script>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=Libre+Caslon+Display&family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/site.css">
+</head>
+<body>
+<div data-mast></div>
+<main class="page">
+
+  <section class="caption">
+    <div><div class="in-re">IN RE · THE COURT</div><h1>Bots pay for rulings here. Every payment is on the record.</h1></div>
+    <div class="paren" aria-hidden="true">)<br>)<br>)<br>)</div>
+    <dl id="court-dl">
+      <dt>Endpoint</dt><dd>GET /api/ruling?market=&lt;id&gt;</dd>
+      <dt>Payment</dt><dd>USDC on Sui mainnet, x402</dd>
+      <dt>Base price</dt><dd id="base">–</dd>
+      <dt>Refund rule</dt><dd>LOW ruling, then a dispute</dd>
+    </dl>
+  </section>
+
+  <section class="entry" aria-labelledby="tick-h">
+    <div class="entry-side">
+      <span class="label">Payments</span>
+      <h2 id="tick-h">The ticker</h2>
+      <p>Every paid ruling, newest first. Checked every 10 seconds.</p>
+      <p><span class="live off" id="live">Connecting</span></p>
+    </div>
+    <div id="ticker" aria-live="polite" style="min-width:0"></div>
+  </section>
+
+  <section class="entry" aria-labelledby="board-h">
+    <div class="entry-side">
+      <span class="label">Price board</span>
+      <h2 id="board-h">Price follows the record</h2>
+      <p>Each wording pattern has its own price. A pattern the court calls well costs more. One it keeps missing gets cheaper.</p>
+    </div>
+    <div style="min-width:0;display:grid;gap:12px">
+      <div id="board"></div>
+      <p class="small muted mono" style="margin:0">accuracy = (correct + 1) / (total + 2), so 50% with no history.<br>price = base × (0.5 + accuracy), kept between 0.01 and 0.05 USDC.</p>
+    </div>
+  </section>
+
+  <section class="entry" aria-labelledby="ref-h">
+    <div class="entry-side">
+      <span class="label">Refunds</span>
+      <h2 id="ref-h">When the court was wrong</h2>
+      <p>A paid LOW ruling followed by a dispute, or by the outcome the crowd priced as less likely, gets its fee back in USDC.</p>
+    </div>
+    <div id="refunds" style="min-width:0"></div>
+  </section>
+
+  <section class="entry" aria-labelledby="docket-h">
+    <div class="entry-side">
+      <span class="label">Docket</span>
+      <h2 id="docket-h">Recent rulings</h2>
+      <p>Sealed rulings, paid or previewed, and how they were graded once the market resolved.</p>
+    </div>
+    <div id="rulings" style="min-width:0"></div>
+  </section>
+
+  <section class="entry" aria-labelledby="bots-h">
+    <div class="entry-side">
+      <span class="label">For bots</span>
+      <h2 id="bots-h">Ask, pay, get a cited ruling</h2>
+      <p>No account and no API key. The 402 answer tells your bot what to pay.</p>
+    </div>
+    <div style="min-width:0;display:grid;gap:22px">
+      <ol class="steps">
+        <li><span class="n">1</span><div>Call <code>GET /api/ruling?market=&lt;id&gt;</code></div></li>
+        <li><span class="n">2</span><div>Get <code>402</code> with the price and the Sui address to pay.</div></li>
+        <li><span class="n">3</span><div>Sign a USDC payment on Sui mainnet and retry with the <code>X-PAYMENT</code> header.</div></li>
+        <li><span class="n">4</span><div>The server checks the digest on chain, then returns the ruling with its precedents.</div></li>
+      </ol>
+      <div>
+        <div class="tabs" role="tablist" aria-label="Example">
+          <button role="tab" id="tab-curl" aria-controls="pane-curl" aria-selected="true">curl</button>
+          <button role="tab" id="tab-ts" aria-controls="pane-ts" aria-selected="false" tabindex="-1">TypeScript</button>
+        </div>
+        <pre class="code" role="tabpanel" id="pane-curl" aria-labelledby="tab-curl" tabindex="0"></pre>
+        <pre class="code" role="tabpanel" id="pane-ts" aria-labelledby="tab-ts" tabindex="0" hidden></pre>
+      </div>
+    </div>
+  </section>
+
+</main>
+<div data-foot></div>
+<script src="/assets/shell.js"></script>
+<script src="/assets/court.js"></script>
+</body>
+</html>
