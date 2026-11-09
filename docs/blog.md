@@ -11,7 +11,9 @@ At 17:00:16 UTC the market's owner posted one line to the UMA adapter's bulletin
 
 Here's the part that bothered me. The year before, Polymarket ran "MicroStrategy sells any Bitcoin in 2025?" with the same rule text. Its UMA history reads proposed, disputed, proposed, disputed, and it resolved NO. Everything a trader needed to know about how this wording behaves at a deadline was already on the record. Nobody puts the record next to the buy button.
 
-So I built Fine Print for the Total Recall hackathon. You give it a market, and it checks the rules against past rulings before you buy.
+So I built Fine Print for the Total Recall hackathon. You give it a market, and it checks the rules against past rulings before you buy. The three-minute demo:
+
+{% youtube hbxfgCPWMHo %}
 
 ![The MSTR day in Fine Print: the replay ruling at 12:20, the window to the cliff, and both rule changes read from Polygon](https://raw.githubusercontent.com/Prashant-thakur77/FinePrint/main/docs/img/mstr-exhibit.png)
 

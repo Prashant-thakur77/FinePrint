@@ -7,7 +7,7 @@ On 1 June a Polymarket MSTR market went 11c to 81c, then a clarification dropped
 Fine Print checks rules against past rulings before you buy.
 
 @Tatum_io @WalrusFoundation
-https://fineprint.prashantthakur.dev
+https://youtu.be/hbxfgCPWMHo
 
 ## X (thread)
 
@@ -21,7 +21,8 @@ https://fineprint.prashantthakur.dev
 
 5/ The honest part: on 200 unseen 2026 markets, precedent recall didn't beat rule text alone (0.492 vs 0.510). Look-alikes are mostly the same template, not the same risk. Where the wording is the risk it helped: 0.417 to 0.667 on 12 MSTR-pattern markets.
 
-6/ Write-up: https://dev.to/prashant_thakur_d5db1fc78/fine-print-checking-a-prediction-markets-rules-against-its-own-case-law-2b6a
+6/ Demo (3 min): https://youtu.be/hbxfgCPWMHo
+Write-up: https://dev.to/prashant_thakur_d5db1fc78/fine-print-checking-a-prediction-markets-rules-against-its-own-case-law-2b6a
 Code, report and every number's script: https://github.com/Prashant-thakur77/FinePrint
 App: https://fineprint.prashantthakur.dev
 
@@ -34,5 +35,6 @@ For the Total Recall hackathon I built Fine Print, a check that reads a market's
 I also published where it falls short. On 200 unseen 2026 markets, half of them disputed, broad precedent recall didn't beat rule text alone, because similar-looking markets are mostly the same template rather than the same risk. Where the wording itself is the risk, it helped, though on a small sample. Every number has its script in the repo.
 
 App: https://fineprint.prashantthakur.dev
+Demo video: https://youtu.be/hbxfgCPWMHo
 Write-up: https://dev.to/prashant_thakur_d5db1fc78/fine-print-checking-a-prediction-markets-rules-against-its-own-case-law-2b6a
 Code: https://github.com/Prashant-thakur77/FinePrint

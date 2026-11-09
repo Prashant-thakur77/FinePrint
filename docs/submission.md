@@ -15,7 +15,7 @@ Where to submit: https://recall-tatum-walrus.vercel.app/ and press "Submit Proje
 | Account ID (MemWal account, "0x3247e3da…" placeholder) | `0x3d46b9637ee3dfc2d297bec29b1bb7d1add07d0c98bd9bea02badabfd5c804b4` |
 | MEMWAL_AGENT_ID ("Public key from Delegate keys") | `48f5418a00a044794707504125eaea08fb4e6c8eaa2c0848156bb9baa5c0ed18` |
 | Repo URL | https://github.com/Prashant-thakur77/FinePrint |
-| Demo video URL ("YouTube or other link") | your YouTube link after uploading `docs/video/fineprint-demo.mp4` |
+| Demo video URL ("YouTube or other link") | https://youtu.be/hbxfgCPWMHo |
 | Description ("What it does, how it uses Tatum + Walrus Memory") | the "Description (long)" section below |
 | Additional docs ("Docs, blog, deck URL") | https://dev.to/prashant_thakur_d5db1fc78/fine-print-checking-a-prediction-markets-rules-against-its-own-case-law-2b6a (blog), https://fineprint.prashantthakur.dev (live app), https://github.com/Prashant-thakur77/FinePrint/blob/main/eval/REPORT.md (every number with its command) |
 | Social posts ("X, LinkedIn, etc.") | the links to your X and LinkedIn posts from `docs/social.md` |
@@ -38,7 +38,7 @@ Demo URL: https://fineprint.prashantthakur.dev
 
 Repository: https://github.com/Prashant-thakur77/FinePrint
 
-Video: (paste the YouTube link after uploading `docs/video/`)
+Video: https://youtu.be/hbxfgCPWMHo
 
 Blog post: https://dev.to/prashant_thakur_d5db1fc78/fine-print-checking-a-prediction-markets-rules-against-its-own-case-law-2b6a
 
