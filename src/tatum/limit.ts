@@ -15,6 +15,9 @@ export async function tatumSlot(): Promise<void> {
 
 /** fetch wrapper that waits for a slot; used by the gRPC transport too. */
 export const throttledFetch: typeof fetch = async (input, init) => {
-  await tatumSlot();
-  return fetch(input, init);
+  for (let attempt = 0; ; attempt++) {
+    await tatumSlot();
+    try { return await fetch(input, init); }
+    catch (err) { if (attempt >= 3) throw err; await new Promise((s) => setTimeout(s, 700 * 2 ** attempt)); }
+  }
 };

@@ -24,12 +24,13 @@ export async function rpc<T>(method: string, params: unknown[]): Promise<T> {
   return timed("tatum.polygon", method, async () => {
     for (let attempt = 0; ; attempt++) {
       await tatumSlot();
-      const r = await fetch(addresses.polygon.tatumRpc, {
+      let r: Response;
+      try { r = await fetch(addresses.polygon.tatumRpc, {
         method: "POST",
         headers: { "content-type": "application/json", "x-api-key": config.tatumKey },
         body: JSON.stringify({ jsonrpc: "2.0", id: ++id, method, params }),
         signal: AbortSignal.timeout(30_000),
-      });
+      }); } catch (err) { if (attempt < 4) { await new Promise((s) => setTimeout(s, 1000 * 2 ** attempt)); continue; } throw err; }
       if ((r.status === 429 || r.status >= 500) && attempt < 4) { await new Promise((s) => setTimeout(s, 1000 * 2 ** attempt)); continue; }
       const body = (await r.json()) as { result?: T; error?: { code: number; message: string } };
       if (body.error) throw Object.assign(new Error(`${method}: ${body.error.message}`), { code: body.error.code });

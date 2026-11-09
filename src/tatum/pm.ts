@@ -43,7 +43,9 @@ async function get<T>(path: string, params: Record<string, string | number | und
   const body = await timed("tatum.pm", path.replace(/0x[0-9a-f]{64}/i, "{id}").replace(/\/\d+/g, "/{id}"), async () => {
     for (let attempt = 0; ; attempt++) {
       await tatumSlot();
-      const r = await fetch(url, { headers: { "x-api-key": config.tatumKey, accept: "application/json" }, signal: AbortSignal.timeout(30_000) });
+      let r: Response;
+      try { r = await fetch(url, { headers: { "x-api-key": config.tatumKey, accept: "application/json" }, signal: AbortSignal.timeout(30_000) }); }
+      catch (err) { if (attempt < 3) { await new Promise((s) => setTimeout(s, 800 * 2 ** attempt)); continue; } throw err; }
       if ((r.status === 429 || r.status >= 500) && attempt < 3) { await new Promise((s) => setTimeout(s, 800 * 2 ** attempt)); continue; }
       if (!r.ok) throw Object.assign(new Error(`Tatum PM ${r.status} ${path}: ${(await r.text()).slice(0, 200)}`), { status: r.status });
       return (await r.json()) as T;
@@ -70,7 +72,7 @@ export async function pmPrice(id: string) {
 const RANGE_CAP_S: Record<Interval, number> = { "1m": 86_400, "5m": 5 * 86_400, "15m": 14 * 86_400, "1h": 30 * 86_400, "4h": 90 * 86_400, "1d": 365 * 86_400, "1w": 3 * 365 * 86_400 };
 
 /** Price history as OHLC candles; long ranges are fetched in chunks under the per-interval cap. */
-export async function pmHistory(id: string, interval: Interval, start: Date, end: Date, source: "candlesticks" | "midpoint" = "candlesticks"): Promise<Candle[]> {
+export async function pmHistory(id: string, interval: Interval, start: Date, end: Date, source: "candlesticks" | "midpoint" = "midpoint"): Promise<Candle[]> {
   const cap = RANGE_CAP_S[interval] * 1000 * 0.95;
   const out: Candle[] = [];
   for (let s = start.getTime(); s < end.getTime(); s += cap) {
@@ -80,6 +82,9 @@ export async function pmHistory(id: string, interval: Interval, start: Date, end
     const r = await get<{ data: { candles: Candle[] } }>(`/markets/${encodeURIComponent(id)}/history`, { interval, start: new Date(s).toISOString(), end: new Date(e).toISOString(), source }, settled ? 86_400 : 60);
     out.push(...r.data.candles);
   }
+  // Midpoint is Polymarket-only and covers resolved markets, where candlesticks
+  // can come back empty; Kalshi has candlesticks only.
+  if (!out.length && source === "midpoint") return pmHistory(id, interval, start, end, "candlesticks");
   const seen = new Set<string>();
   return out.filter((c) => !seen.has(c.timestamp) && seen.add(c.timestamp)).sort((a, b) => a.timestamp.localeCompare(b.timestamp));
 }

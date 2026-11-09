@@ -9,7 +9,7 @@ import { writeFileSync } from "node:fs";
 import { Ed25519Keypair } from "@mysten/sui/keypairs/ed25519";
 import { addresses, config } from "../src/config.js";
 import { pmHistory, pmMarket } from "../src/tatum/pm.js";
-import { tatumSui } from "../src/tatum/sui.js";
+import { chainAndEpoch, tatumSui } from "../src/tatum/sui.js";
 import { blockAt, bulletinUpdates, disputes } from "../src/tatum/polygon.js";
 import { recall, rememberAndWait } from "../src/memory/client.js";
 import { gammaMarket } from "../src/polymarket/gamma.js";
@@ -43,14 +43,14 @@ await step("pm", async () => {
 
 await step("sui", async () => {
   const client = tatumSui();
-  const chain = await client.getChainIdentifier();
+  const chain = { chainIdentifier: (await chainAndEpoch()).chain };
   const obj = await client.getObject({ objectId: addresses.memwal.registryId, include: { previousTransaction: true } });
-  out(`Tatum gRPC GetChainIdentifier: ${chain.chainIdentifier}`);
-  out(`Tatum gRPC GetObject(MemWal registry ${addresses.memwal.registryId.slice(0, 10)}…): version ${obj.object.version}, type ${obj.object.type}`);
+  out(`Tatum Sui GraphQL chainIdentifier: ${chain.chainIdentifier}`);
+  out(`Tatum Sui GraphQL object(MemWal registry ${addresses.memwal.registryId.slice(0, 10)}…): version ${obj.object.version}, type ${obj.object.type}`);
   const digest = (obj.object as { previousTransaction?: string }).previousTransaction;
   if (digest) {
     const tx = await client.getTransaction({ digest, include: { effects: true } });
-    out(`Tatum gRPC GetTransaction(${digest}): success=${(tx.Transaction ?? tx.FailedTransaction)?.effects?.status.success}`);
+    out(`Tatum Sui GraphQL transaction(${digest}): success=${(tx.Transaction ?? tx.FailedTransaction)?.effects?.status.success}`);
   }
   // JSON-RPC, once, for the record.
   const r = await fetch(addresses.sui.tatumJsonRpc, { method: "POST", headers: { "content-type": "application/json", "x-api-key": config.tatumKey }, body: JSON.stringify({ jsonrpc: "2.0", id: 1, method: "sui_getChainIdentifier", params: [] }) });
@@ -95,7 +95,7 @@ await step("x402", async () => {
   const r = await buyRuling(base, MSTR, bot);
   out(`402 → paid ${r.payment.amount} USDC, digest ${r.payment.digest} (https://suiscan.xyz/mainnet/tx/${r.payment.digest})`);
   out(`Ruling: ${r.ruling.verdict} p=${r.ruling.pDispute} cites=${(r.ruling.cites ?? []).map((c: any) => c.blobId).join(",")}`);
-  out(`Server-side re-check of the digest through Tatum gRPC: ${await confirmDigest(r.payment.digest, r.payment.amount)}`);
+  out(`Server-side re-check of the digest through Tatum Sui GraphQL: ${await confirmDigest(r.payment.digest, r.payment.amount)}`);
   out(`Timings: challenge ${r.ms.challenge} ms, pay+ruling ${r.ms.pay} ms`);
 });
 
