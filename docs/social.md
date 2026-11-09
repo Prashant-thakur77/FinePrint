@@ -26,7 +26,7 @@ App: https://fineprint.prashantthakur.dev
 
 ## LinkedIn
 
-On 1 June 2026 a Polymarket trader bought YES on "MicroStrategy sells any Bitcoin by May 31, 2026?" at around 81c, after Strategy's 8-K showed bitcoin sold in late May. At 17:00 UTC the market's owner posted a clarification on Polygon, and YES fell from 53c to 0.6c in two minutes. The same wording had been disputed twice on the 2025 version of the market.
+On 1 June 2026, "MicroStrategy sells any Bitcoin by May 31, 2026?" on Polymarket went from 11c to 81c after Strategy's 8-K showed bitcoin sold in late May. At 17:00 UTC the market's owner posted a clarification on Polygon, and YES fell from 53c to 0.6c in two minutes. The same wording had been disputed twice on the 2025 version of the market.
 
 For the Total Recall hackathon I built Fine Print, a check that reads a market's rules against past rulings before you buy. Precedents live in Walrus Memory on Sui mainnet (@Walrus Foundation), and every ruling cites the blobs it used. Rules, minute prices and the on-chain clarification history come through Tatum (@Tatum). Trading bots can buy the same ruling for 0.02 USDC over x402, with a refund when a LOW ruling turns out wrong.
 
