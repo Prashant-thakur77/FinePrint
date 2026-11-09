@@ -15,8 +15,8 @@
 import "dotenv/config";
 import { judge } from "../src/court/judge.js";
 import { filterPrecedents, recallPatterns } from "../src/court/ruling.js";
-import { recall, rememberBulkAndWait } from "../src/memory/client.js";
-import { fields, NS } from "../src/memory/types.js";
+import { recall, rememberAndWait, rememberBulkAndWait } from "../src/memory/client.js";
+import { fields, NS, rulingText } from "../src/memory/types.js";
 import { distil } from "../src/precedents/distil.js";
 import { DATA, metrics, readJson, RESULTS, round, writeJson } from "./lib.js";
 import type { Row } from "./build_dataset.js";
@@ -30,7 +30,7 @@ const testIds = new Set(test.map((r) => r.id));
 const rulingTime = (r: Row) => new Date(Math.max(Date.parse(r.createdAt ?? r.closedTime), Date.parse(r.closedTime) - 3 * 86_400_000)).toISOString();
 const month = (iso: string) => iso.slice(0, 7);
 
-interface State { written: { id: string; blobId: string; closed: string; at: string }[]; rows: { id: string; month: string; label: boolean; staticV: string; learnV: string; staticP: number; learnP: number; nStatic: number; nLearn: number; learnedCites: number }[] }
+interface State { written: { id: string; blobId: string; closed: string; at: string }[]; rows: { id: string; month: string; label: boolean; staticV: string; learnV: string; staticP: number; learnP: number; nStatic: number; nLearn: number; learnedCites: number; rulingTime?: string; learnedCite?: string; learnedCiteMarket?: string; staticRuling?: string; learnRuling?: string }[] }
 const state = readJson<State>(STATE, { written: [], rows: [] });
 const doneRows = new Set(state.rows.map((r) => r.id));
 const written = new Set(state.written.map((w) => w.id));
@@ -50,7 +50,14 @@ for (const mo of months) {
       judge({ title: r.question, rules: r.rules, level: "patterns", precedents: stat, patterns }),
       judge({ title: r.question, rules: r.rules, level: "patterns", precedents: all, patterns }),
     ]);
-    state.rows.push({ id: r.id, month: mo, label: r.disputed, staticV: js.verdict, learnV: jl.verdict, staticP: js.pDispute, learnP: jl.pDispute, nStatic: stat.length, nLearn: all.length, learnedCites: jl.cites.filter((c) => all.find((p) => p.blobId === c && testIds.has(p.market))).length });
+    const learned = jl.cites.map((c) => all.find((p) => p.blobId === c && testIds.has(p.market))).filter(Boolean) as typeof all;
+    const row: State["rows"][number] = { id: r.id, month: mo, label: r.disputed, staticV: js.verdict, learnV: jl.verdict, staticP: js.pDispute, learnP: jl.pDispute, nStatic: stat.length, nLearn: all.length, learnedCites: learned.length, rulingTime: asOf, learnedCite: learned[0]?.blobId, learnedCiteMarket: learned[0]?.market };
+    // When memory changed the court's mind, seal both rulings so the change is verifiable on Walrus.
+    if (js.verdict !== jl.verdict && learned.length) {
+      const seal = async (v: typeof js, tag: string) => (await rememberAndWait("COURT", "replay-rulings", rulingText({ market: r.id, at: asOf, verdict: v.verdict, pattern: r.patterns, cites: v.cites, pricePaid: 0, payer: `replay-${tag}`, digest: "", reason: v.reasons[0] ?? "" }))).blobId;
+      try { row.staticRuling = await seal(js, "static"); row.learnRuling = await seal(jl, "learning"); } catch (err) { console.error(`seal failed: ${(err as Error).message.slice(0, 100)}`); }
+    }
+    state.rows.push(row);
     writeJson(STATE, state);
   }
   // Outcomes of test markets that closed this month become case law for the months after.

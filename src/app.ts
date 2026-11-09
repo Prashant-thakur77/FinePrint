@@ -210,6 +210,18 @@ app.post("/api/admin/lineage/:ref", async (c) => {
   }
 });
 
+/** Records "changed its mind" cases (old ruling → new precedent → new ruling) produced by the time-machine replay. */
+app.post("/api/admin/changes", async (c) => {
+  if (!authorised(c.req.header("authorization"))) return c.json({ error: "unauthorised" }, 401);
+  const body = (await c.req.json()) as { changes: { market: string; question: string; old_ruling: string; old_verdict: string; new_ruling: string; new_verdict: string; cause_blob: string; cause: string; at: number }[] };
+  await c.env.DB.prepare("DELETE FROM changes WHERE cause LIKE 'replay:%'").run();
+  for (const x of body.changes ?? []) {
+    await c.env.DB.prepare("INSERT INTO changes (market, question, old_ruling, old_verdict, new_ruling, new_verdict, cause_blob, cause, at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)")
+      .bind(x.market, x.question, x.old_ruling, x.old_verdict, x.new_ruling, x.new_verdict, x.cause_blob, `replay: ${x.cause}`, x.at).run();
+  }
+  return c.json({ ok: true, n: body.changes?.length ?? 0 });
+});
+
 export async function runCron(env: Env, which: "poll" | "grade" | "all" = "all") {
   const out: Record<string, unknown> = {};
   if (which !== "grade") {
