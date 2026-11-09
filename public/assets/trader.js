@@ -223,7 +223,7 @@
         text: `${w.hoursMinutes} at ${Math.round(w.low * 100)}–${Math.round(w.high * 100)}c between the warning and the cliff.`, when: `${w.from} → ${w.to} UTC` });
       // One grey pin per rule version posted on-chain during the day (UMA bulletin board).
       const c = story.cliff;
-      const lastUpdate = (v) => { const m = String(v.text || "").split(/\n\nUpdate [^:]+: /); return m.length > 1 ? m[m.length - 1].trim() : ""; };
+      const lastUpdate = (v) => { const m = String(v.text || "").split(/\n\nUpdate \S+: /); return m.length > 1 ? m[m.length - 1].trim() : ""; };
       const later = vers.filter((v) => v.n >= 2 && inWin(Math.floor(v.seen / 1000)));
       if (!later.length) {
         out.push({ kind: "grey", t: tCliff, title: "Rules changed (you bought under v1)", text: `YES went from ${fmt.cents(c.fromPrice)} at ${c.from} to ${fmt.cents(c.toPrice)} at ${c.to}.`, when: `${fmt.time(tCliff)} UTC · rule version`, chips: [chip(null)], place: "right" });
@@ -232,10 +232,11 @@
         const t = Math.floor(v.seen / 1000);
         const quote = lastUpdate(v);
         const isLast = i === later.length - 1;
-        const short = quote.length > 140 ? `${quote.slice(0, 137).replace(/\s+\S*$/, "")}…` : quote;
+        const max = isLast ? 140 : 96;
+        const short = quote.length > max ? `${quote.slice(0, max - 3).replace(/\s+\S*$/, "")}…` : quote;
         out.push({ kind: "grey", t, title: isLast ? `Rules v${v.n} (you bought under v1)` : `Rules v${v.n} · notice`,
           text: isLast ? `“${short}” YES went from ${fmt.cents(c.fromPrice)} at ${c.from} to ${fmt.cents(c.toPrice)} at ${c.to}.` : `“${short}”`,
-          when: `${fmt.time(t)} UTC · posted on Polygon`, chips: [chip(v.blob_id, v.job_id)], place: isLast ? "right" : "auto" });
+          when: `${fmt.time(t)} UTC · posted on Polygon`, chips: [chip(v.blob_id, v.job_id)], place: isLast ? "right" : "low" });
       });
       out.tags = [
         { t: hm(d0, "08:30"), p: story.baselineBefore1145, text: `flat near ${fmt.cents(story.baselineBefore1145)}`, side: "above" },
@@ -303,6 +304,7 @@
       let cardW = Math.min(270, Math.max(200, W * 0.24));
       let left, top;
       if (p.place === "band") { left = x + 12; top = yAt(0.36) ?? H * 0.55; }
+      else if (p.place === "low") { cardW = Math.min(cardW, 230); left = paneW - cardW - 8; top = yAt(0.43) ?? H * 0.5; }
       else if (p.place === "right") { const room = paneW - x - 20; if (room >= 180) { cardW = Math.min(cardW, room); left = x + 12; } else left = x - 12 - cardW; top = 30; }
       else { left = x + 12 + cardW > paneW ? x - 12 - cardW : x + 12; top = 14 + (i % 2) * 120; }
       top = Math.max(8, Math.min(top, H - axis - 160));
