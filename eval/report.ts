@@ -17,7 +17,7 @@ const P = (s = "") => L.push(s);
 
 const ds = load("dataset_summary.json"), a = load("dispute_rules.json"), b = load("dispute_precedents.json"), c = load("dispute_patterns.json");
 const bot = load("bot_replay.json"), lead = load("lead_time.json"), lc = load("learning_curve.json"), blobs = load("blob_counts.json");
-const soak = load("soak.json"), adv = load("adversarial.json"), story = load("mstr_story.json"), seed = load("seed_log.json"), live = load("live_counts.json");
+const soak = load("soak.json"), adv = load("adversarial.json"), story = load("mstr_story.json"), seed = load("seed_log.json"), live = load("live_counts.json"), an = load("analysis.json"), pe = load("pattern_evidence.json"), rc = load("recall_check.json");
 
 P("# Fine Print: evaluation report");
 P();
@@ -60,6 +60,32 @@ if (c) {
   P();
   P(`Per category, condition (c), run 1: ${Object.entries(c.byCategory).map(([k, v]: any) => `${k} ${num(v.accuracy)} (n=${v.n})`).join("; ")}`);
   P(`Markets with at least one precedent recalled: ${c.withPrecedents.n}, accuracy ${num(c.withPrecedents.accuracy)}; with none: ${c.withoutPrecedents.n}, accuracy ${num(c.withoutPrecedents.accuracy)}. Rulings citing a blob: ${pct(c.citedShare)}.`);
+}
+P();
+P("### Where memory helps and where it doesn't");
+P(`Command: ${cmd(an)}`);
+P();
+if (an) {
+  P(`Ranking quality (AUC of p_dispute, run 1): rules only ${num(an.rules?.auc)}, + precedents ${num(an.precedents?.auc)}, + patterns ${num(an.patterns?.auc)}. Share of HIGH verdicts: ${pct(an.rules?.highShare)}, ${pct(an.precedents?.highShare)}, ${pct(an.patterns?.highShare)}.`);
+  P();
+  P(`Why recall carries little signal here: for disputed test markets, ${pct(an.recallSignal.disputedTestMarkets.recalledDisputedShare)} of recalled precedents were disputed; for clean test markets, ${pct(an.recallSignal.cleanTestMarkets.recalledDisputedShare)}. The nearest precedent was disputed for ${pct(an.recallSignal.disputedTestMarkets.nearestDisputed)} of disputed markets and ${pct(an.recallSignal.cleanTestMarkets.nearestDisputed)} of clean ones. Semantic recall finds markets on the same topic and template, and the seeded pool is half disputed by design, so similar-looking precedents are weak evidence on their own.`);
+  P();
+  P("| Wording pattern | Markets | Disputed | Rules only | + precedents | + patterns |");
+  P("|---|---|---|---|---|---|");
+  for (const row of an.rules?.byPattern ?? []) {
+    const b2 = an.precedents?.byPattern?.find((x: any) => x.pattern === row.pattern), c2 = an.patterns?.byPattern?.find((x: any) => x.pattern === row.pattern);
+    P(`| ${row.pattern} | ${row.n} | ${row.disputed} | ${num(row.accuracy)} | ${num(b2?.accuracy)} | ${num(c2?.accuracy)} |`);
+  }
+  P();
+  P("Small groups (fewer than 30 markets) are hints, not results.");
+}
+if (pe) {
+  P();
+  P(`Pattern evidence over the precedent pool (${pe.poolSize} markets closed before 2026, base dispute rate ${pct(pe.baseRate)}): ${[...pe.patterns].sort((x: any, y: any) => y.rate - x.rate).slice(0, 4).map((x: any) => `${x.tag} ${pct(x.rate)} (${x.disputed}/${x.total})`).join("; ")}. Command: \`npx tsx eval/build_dataset.ts 100\`.`);
+}
+if (rc) {
+  P();
+  P(`Recall check (${cmd(rc)}): ${rc.recalledByOwnQuestion} of ${rc.recallSample} sampled seeded precedents came back for their own question; the MSTR twin (market 516926) is rank ${rc.twin.rank} for "${rc.twin.query}".`);
 }
 P();
 P("## 2. Bot replay PnL");
@@ -106,7 +132,7 @@ P();
 P("## 6. Reliability (paid calls on mainnet)");
 P(`Command: ${cmd(soak)}`);
 P();
-P(soak ? `${soak.succeeded} of ${soak.calls} paid calls succeeded (${pct(soak.successRate)}); p50 ${soak.p50ms} ms, p95 ${soak.p95ms} ms end to end (402, payment, settlement through Tatum gRPC, ruling). USDC spent: ${soak.usdcSpent}.` : "pending");
+P(soak ? `${soak.succeeded} of ${soak.calls} paid calls succeeded (${pct(soak.successRate)}) on ${soak.network ?? "Sui testnet"}; p50 ${soak.p50ms} ms, p95 ${soak.p95ms} ms end to end (402, payment, settlement through Tatum's Sui gateway, ruling). Test USDC spent: ${soak.usdcSpent}.${soak.serverAudit ? ` Server-side audit (\`${soak.serverAudit.command}\`): ${soak.serverAudit.paymentsWithoutRuling} payments without a ruling; the ${soak.serverAudit.failedCalls} failed calls were "${soak.serverAudit.failedCallErrors.join(", ")}" on the test machine and never paid.` : ""}` : "pending");
 P();
 P("## 7. Prompt injection");
 P(`Command: ${cmd(adv)}`);
