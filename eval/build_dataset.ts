@@ -46,12 +46,13 @@ const evidence = new Map<string, { disputed: number; total: number }>();
 const poolDisputedRows: Row[] = [], windowDisputedRows: Row[] = [];
 const RES_CAP = 400;
 const reservoirs = new Map<string, { seen: number; rows: Row[] }>();
-const resRand = rng(3);
+const poolRand = rng(3), windowRand = rng(5); // separate streams: new 2026 rows never shift the pool sample
 function reservoir(key: string, r: Row) {
   const b = reservoirs.get(key) ?? { seen: 0, rows: [] };
   b.seen++;
+  const rand = key.startsWith("pool|") ? poolRand : windowRand;
   if (b.rows.length < RES_CAP) b.rows.push(r);
-  else { const j = Math.floor(resRand() * b.seen); if (j < RES_CAP) b.rows[j] = r; }
+  else { const j = Math.floor(rand() * b.seen); if (j < RES_CAP) b.rows[j] = r; }
   reservoirs.set(key, b);
 }
 const keepTwinDemo: Row[] = [];
