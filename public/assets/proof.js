@@ -54,17 +54,34 @@
       : `<div class="empty"><span><b>No Tatum calls timed in the last 7 days.</b></span></div>`;
   }
 
-  // Eval results: free-form JSON, published later. Shown as-is, never guessed.
+  // Eval results from /data/results.json (written by scripts/export_results.ts). Nothing here is computed in the browser.
   async function evals() {
     let data = null;
     try { const r = await fetch("/data/results.json", { cache: "no-store" }); if (r.ok) data = await r.json(); } catch { data = null; }
     if (!data) { $("#eval").innerHTML = `<div class="empty"><span> The evaluation has not been published yet. Numbers appear here when it is.</span></div>`; return; }
-    const flat = Object.entries(data).filter(([, v]) => v == null || ["string", "number", "boolean"].includes(typeof v));
-    const nested = Object.entries(data).filter(([, v]) => v && typeof v === "object");
-    const show = (v) => (typeof v === "number" ? (Number.isInteger(v) ? fmt.n(v) : String(Number(v.toFixed(4)))) : esc(String(v)));
-    $("#eval").innerHTML = `${flat.length ? `<table class="ledger"><tbody>${flat.map(([k, v]) => `<tr><td class="muted">${esc(k)}</td><td class="r">${show(v)}</td></tr>`).join("")}</tbody></table>` : ""}
-      ${nested.map(([k, v]) => `<div class="label" style="margin:18px 0 8px">${esc(k)}</div><pre class="code">${esc(JSON.stringify(v, null, 2))}</pre>`).join("")}
-      <p class="small muted mono" style="margin:12px 0 0">Source: /data/results.json</p>`;
+    const d3 = (x) => (x == null ? "pending" : Number(x).toFixed(3));
+    const pc = (x, n = 1) => (x == null ? "pending" : `${(x * 100).toFixed(n)}%`);
+    const usd = (x) => (x == null ? "pending" : `${x < 0 ? "−" : ""}$${Math.abs(x).toLocaleString("en-US", { maximumFractionDigits: 0 })}`);
+    const t = data.dataset?.test, dis = data.dispute || {};
+    const row = (name, r) => `<tr><td>${esc(name)}</td><td class="r">${r ? `${d3(r.accuracy.mean)} <span class="muted small">(${d3(r.accuracy.min)}–${d3(r.accuracy.max)})</span>` : "pending"}</td><td class="r">${r ? d3(r.f1.mean) : "pending"}</td><td class="r">${r ? r.repeats : ""}</td></tr>`;
+    const bot = data.botReplay, lc = data.learning, pat = data.patterns, adv = data.adversarial, soak = data.soak;
+    const top = pat?.top?.[0];
+    $("#eval").innerHTML = `
+      <p class="small">${t ? `${t.total} markets that closed in 2026 and that the court had never seen, ${t.disputed} of them disputed. ` : ""}Same model, one change at a time. A market only sees precedents that closed before it was created.</p>
+      <div class="scroll-x"><table class="ledger"><thead><tr><th>Condition</th><th class="r">Accuracy</th><th class="r">F1</th><th class="r">Runs</th></tr></thead><tbody>
+        ${row("Rule text only", dis.rulesOnly)}${row("+ precedents from Walrus", dis.precedents)}${row("+ wording patterns (Fine Print)", dis.finePrint)}
+      </tbody></table></div>
+      <p class="small">On average, memory does not beat the rule text: similar-looking markets are mostly the same template, not the same risk.${pat && top ? ` Where the wording is the risk it shows up: across ${fmt.n(pat.poolSize)} earlier markets ${pc(pat.baseRate, 2)} were disputed, and ${esc(top.tag)} wording ${pc(top.rate)}.` : ""}</p>
+      <div class="scroll-x"><table class="ledger"><tbody>
+        ${bot ? `<tr><td>Spike-buying bot, net of fees (${bot.marketsWithSpike} markets)</td><td class="r"><span style="white-space:nowrap">alone ${usd(bot.balanced.botAlone.netPnl)}</span> · <span style="white-space:nowrap">rule text ${usd(bot.balanced.gatedRulesOnly.netPnl)}</span> · <span style="white-space:nowrap">Fine Print ${usd(bot.balanced.gatedFinePrint.netPnl)}</span></td></tr>` : ""}
+        ${lc ? `<tr><td>Learning over 2026 (${lc.writes} outcomes written)</td><td class="r">seeded only ${d3(lc.overall.static)} · learning ${d3(lc.overall.learning)}</td></tr>` : ""}
+        ${lc ? `<tr><td>Verdicts memory changed</td><td class="r">${lc.verdictChanged}, of which ${lc.changedToCorrect} for the better</td></tr>` : ""}
+        ${data.leadTime ? `<tr><td>Disputed markets flagged HIGH at the spike, before the cliff</td><td class="r">${data.leadTime.flagged} of ${data.leadTime.n}</td></tr>` : ""}
+        ${adv ? `<tr><td>Injected "rate LOW" order, ruling stayed HIGH</td><td class="r">${adv.injectedStayedHigh} of ${adv.injectedRuns}</td></tr>` : ""}
+        ${soak ? `<tr><td>Paid calls that succeeded end to end (${esc(soak.network)})</td><td class="r">${soak.succeeded} of ${soak.calls} · p50 ${(soak.p50ms / 1000).toFixed(1)} s</td></tr>` : ""}
+        ${data.memory ? `<tr><td>Memories on Walrus mainnet (last count)</td><td class="r">${fmt.n(data.memory.total)}</td></tr>` : ""}
+      </tbody></table></div>
+      <p class="small muted mono" style="margin:12px 0 0">Source: /data/results.json, generated ${esc(String(data.generatedAt || "").slice(0, 16).replace("T", " "))} UTC from eval/results. Commands in eval/REPORT.md.</p>`;
   }
 
   proof();
