@@ -60,10 +60,13 @@ async function sponsored(owner: Ed25519Keypair, fill: (tx: Transaction) => void)
   throw new Error(`relayer sponsorship failed: ${last}`);
 }
 
+/** A call into the MemWal `account` module (create_account, add_delegate_key, remove_delegate_key). */
+const accountCall = (fn: string) => `${config.memwalPackageId}::account::${fn}`;
+
 export async function createAccount(owner: Ed25519Keypair): Promise<{ accountId: string; digest: string }> {
-  const t = await sponsored(owner, (tx) =>
-    tx.moveCall({ target: `${config.memwalPackageId}::account::create_account`, arguments: [tx.object(config.memwalRegistryId), tx.object(CLOCK)] }),
-  );
+  const t = await sponsored(owner, (tx) => {
+    tx.moveCall({ target: accountCall("create_account"), arguments: [tx.object(config.memwalRegistryId), tx.object(CLOCK)] });
+  });
   const types = (t.objectTypes ?? {}) as Record<string, string>;
   const created = (t.effects?.changedObjects ?? []).filter((o) => o.idOperation === "Created").map((o) => o.objectId);
   const accountId = created.find((id) => (types[id] ?? "").includes("::account::MemWalAccount"));
@@ -74,7 +77,7 @@ export async function createAccount(owner: Ed25519Keypair): Promise<{ accountId:
 export async function addDelegate(owner: Ed25519Keypair, accountId: string, delegate: Ed25519Keypair, label: string) {
   const t = await sponsored(owner, (tx) =>
     tx.moveCall({
-      target: `${config.memwalPackageId}::account::add_delegate_key`,
+      target: accountCall("add_delegate_key"),
       arguments: [tx.object(accountId), tx.object(config.memwalRegistryId), tx.pure.vector("u8", Array.from(delegate.getPublicKey().toRawBytes())), tx.pure.string(label.slice(0, 32)), tx.object(CLOCK)],
     }),
   );
@@ -85,7 +88,7 @@ export async function addDelegate(owner: Ed25519Keypair, accountId: string, dele
 export async function removeDelegate(owner: Ed25519Keypair, accountId: string, delegate: Ed25519Keypair) {
   const t = await sponsored(owner, (tx) =>
     tx.moveCall({
-      target: `${config.memwalPackageId}::account::remove_delegate_key`,
+      target: accountCall("remove_delegate_key"),
       arguments: [tx.object(accountId), tx.object(config.memwalRegistryId), tx.pure.vector("u8", Array.from(delegate.getPublicKey().toRawBytes()))],
     }),
   );

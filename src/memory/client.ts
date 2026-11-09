@@ -17,7 +17,7 @@ export type AccountName = "PRECEDENTS" | "COURT" | "USER";
 
 export interface Memory { text: string; distance: number; blobId: string }
 
-const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
+const sleep = (ms: number) => new Promise<void>((done) => setTimeout(done, ms));
 const clients = new Map<string, MemWal[]>();
 const cursor = new Map<string, number>();
 
@@ -50,28 +50,28 @@ export function keyCount(name: AccountName): number {
   return keysFor(name).length;
 }
 
-function retryAfterMs(err: unknown): number | undefined {
-  const m = /retry_after_seconds"?\s*:\s*(\d+)/.exec((err as Error).message ?? "");
-  return m ? Number(m[1]) * 1000 : undefined;
+/** Errors worth another try: rate limits, server errors, dropped connections, relayer job hiccups. */
+const RETRYABLE = /\b(429|5\d\d)\b|Too Many Requests|rate limit|seal encrypt failed|job failed|ECONNRESET|ETIMEDOUT|fetch failed|timed out|TimeoutError/i;
+
+/** How long the relayer asked us to wait, if it said (429 bodies carry retry_after_seconds). */
+function serverBackoff(message: string): number | null {
+  const hit = message.match(/retry_after_seconds\D{0,4}(\d+)/);
+  return hit ? Number(hit[1]) * 1000 : null;
 }
 
-/** Retries transient relayer failures; honours 429 retry_after. */
+/** Runs a relayer call, retrying retryable failures with exponential backoff (or the relayer's own wait). */
 export async function withRetry<T>(label: string, fn: () => Promise<T>, { tries = 4, maxWaitMs = 90_000 } = {}): Promise<T> {
-  let lastErr: unknown;
-  for (let attempt = 1; attempt <= tries; attempt++) {
+  for (let n = 0; ; n++) {
     try {
       return await fn();
     } catch (err) {
-      lastErr = err;
-      const msg = (err as Error).message ?? "";
-      const transient = /\b(429|5\d\d)\b|Too Many Requests|rate limit|seal encrypt failed|job failed|ECONNRESET|ETIMEDOUT|fetch failed|timed out|TimeoutError/i.test(msg);
-      if (!transient || attempt === tries) throw err;
-      const delay = Math.min(retryAfterMs(err) ?? 2000 * 2 ** (attempt - 1), maxWaitMs);
-      log.warn("memwal.retry", { op: label, attempt, delayMs: delay, error: msg.slice(0, 160) });
-      await sleep(delay);
+      const message = err instanceof Error ? err.message : String(err);
+      if (n + 1 >= tries || !RETRYABLE.test(message)) throw err;
+      const waitMs = Math.min(serverBackoff(message) ?? 2 ** n * 2000, maxWaitMs);
+      log.warn("memwal.retry", { op: label, attempt: n + 1, delayMs: waitMs, error: message.slice(0, 160) });
+      await sleep(waitMs);
     }
   }
-  throw lastErr;
 }
 
 const toMemory = (r: { blob_id: string; text: string; distance: number }): Memory => ({ text: r.text, distance: r.distance, blobId: r.blob_id });

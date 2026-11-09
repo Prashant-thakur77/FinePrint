@@ -55,7 +55,7 @@ if (state) {
   const written = new Map<string, any>(state.written.map((w: any) => [w.id, w]));
   const changes = state.rows.filter((r: any) => r.staticV !== r.learnV && r.learnedCites > 0 && r.learnedCite && r.staticRuling && r.learnRuling).map((r: any) => ({
     market: r.id, question: byId.get(r.id)?.question ?? r.id, old_ruling: r.staticRuling ?? "", old_verdict: r.staticV, new_ruling: r.learnRuling ?? "", new_verdict: r.learnV,
-    cause_blob: r.learnedCite, cause: `learned precedent from market ${written.get(r.learnedCiteMarket)?.id ?? r.learnedCiteMarket ?? "?"}; ${r.label ? "the market was disputed" : "the market resolved cleanly"}`, at: Date.parse(r.rulingTime ?? new Date().toISOString()),
+    cause_blob: r.learnedCite, cause: `learned precedent: market ${written.get(r.learnedCiteMarket)?.id ?? r.learnedCiteMarket ?? "?"}, written during the replay. This market was ${r.label ? "later disputed" : "later resolved without a dispute"}`, at: Date.parse(r.rulingTime ?? new Date().toISOString()),
   }));
   const res = await fetch(`${process.env.FINEPRINT_URL ?? config.publicUrl}/api/admin/changes`, { method: "POST", headers: { "content-type": "application/json", authorization: `Bearer ${config.cronSecret}` }, body: JSON.stringify({ changes }) });
   console.log("changes:", await res.text());

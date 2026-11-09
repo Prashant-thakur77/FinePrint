@@ -1,6 +1,30 @@
 # Submission form: Fine Print
 
-Every field below is ready to paste. Numbers come from `eval/results/` (see `eval/REPORT.md` for the command behind each one).
+Where to submit: https://recall-tatum-walrus.vercel.app/ and press "Submit Project" (it opens the form on that page). Due 10 Nov 2026, 17:00 UTC (22:30 IST).
+
+## The form, field by field (in the form's order)
+
+| Form field | What to enter |
+|---|---|
+| Email | your email |
+| Discord username | yours (optional) |
+| Telegram | yours (optional) |
+| LinkedIn URL | your LinkedIn profile |
+| Tatum dashboard account ID | `6af1ca5c059c9eaaf7a6e334` |
+| Sui address | `0xaca6dfb9f0c6b37e5cd51a82b4261cb1d2ed2087bd0c137c31f8c794e40eea06` |
+| Account ID (MemWal account, "0x3247e3da…" placeholder) | `0x3d46b9637ee3dfc2d297bec29b1bb7d1add07d0c98bd9bea02badabfd5c804b4` |
+| MEMWAL_AGENT_ID ("Public key from Delegate keys") | `48f5418a00a044794707504125eaea08fb4e6c8eaa2c0848156bb9baa5c0ed18` |
+| Repo URL | https://github.com/Prashant-thakur77/FinePrint |
+| Demo video URL ("YouTube or other link") | your YouTube link after uploading `docs/video/fineprint-demo.mp4` |
+| Description ("What it does, how it uses Tatum + Walrus Memory") | the "Description (long)" section below |
+| Additional docs ("Docs, blog, deck URL") | your dev.to link, then a space, then https://fineprint.prashantthakur.dev (live app) and https://github.com/Prashant-thakur77/FinePrint/blob/main/eval/REPORT.md |
+| Social posts ("X, LinkedIn, etc.") | the links to your X and LinkedIn posts from `docs/social.md` |
+| First Web3 project? | your answer |
+| How did you hear about it | your answer |
+| Walrus Memory experience | the "Feedback on Walrus Memory" section below |
+| Walrus friction ("Optional, specific Memory pain point") | Sponsored account creation (`/sponsor`, `/sponsor/execute`) isn't documented; we found it in the playground's code. And recall has no metadata filter, so "closed before date X" has to be applied after over-fetching. |
+| Tatum AI Builder experience | leave blank or "Not used for this project" |
+| Accept terms | tick it |
 
 ## Basics
 
