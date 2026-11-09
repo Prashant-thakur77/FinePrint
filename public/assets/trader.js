@@ -221,11 +221,22 @@
         text: `Same wording in ${year}: disputed ${times}, resolved ${String(twin.outcome).toUpperCase()}.`, when: `${w.from} UTC · replay ruling`, chips, place: "band" });
       out.push({ kind: "band", from: tPin, to: tCliff, label: `2 · ${w.hoursMinutes} at ${Math.round(w.low * 100)}–${Math.round(w.high * 100)}c`,
         text: `${w.hoursMinutes} at ${Math.round(w.low * 100)}–${Math.round(w.high * 100)}c between the warning and the cliff.`, when: `${w.from} → ${w.to} UTC` });
-      const v2 = vers.find((v) => v.n >= 2);
-      const v2t = v2 && inWin(Math.floor(v2.seen / 1000)) ? Math.floor(v2.seen / 1000) : tCliff;
+      // One grey pin per rule version posted on-chain during the day (UMA bulletin board).
       const c = story.cliff;
-      out.push({ kind: "grey", t: v2t, title: `Rules v${v2 ? v2.n : 2} (you bought under v${v2 ? v2.n - 1 : 1})`,
-        text: `YES went from ${fmt.cents(c.fromPrice)} at ${c.from} to ${fmt.cents(c.toPrice)} at ${c.to}.`, when: `${fmt.time(v2t)} UTC · rule version`, chips: [v2 ? chip(v2.blob_id, v2.job_id) : chip(null)], place: "right" });
+      const lastUpdate = (v) => { const m = String(v.text || "").split(/\n\nUpdate [^:]+: /); return m.length > 1 ? m[m.length - 1].trim() : ""; };
+      const later = vers.filter((v) => v.n >= 2 && inWin(Math.floor(v.seen / 1000)));
+      if (!later.length) {
+        out.push({ kind: "grey", t: tCliff, title: "Rules changed (you bought under v1)", text: `YES went from ${fmt.cents(c.fromPrice)} at ${c.from} to ${fmt.cents(c.toPrice)} at ${c.to}.`, when: `${fmt.time(tCliff)} UTC · rule version`, chips: [chip(null)], place: "right" });
+      }
+      later.forEach((v, i) => {
+        const t = Math.floor(v.seen / 1000);
+        const quote = lastUpdate(v);
+        const isLast = i === later.length - 1;
+        const short = quote.length > 140 ? `${quote.slice(0, 137).replace(/\s+\S*$/, "")}…` : quote;
+        out.push({ kind: "grey", t, title: isLast ? `Rules v${v.n} (you bought under v1)` : `Rules v${v.n} · notice`,
+          text: isLast ? `“${short}” YES went from ${fmt.cents(c.fromPrice)} at ${c.from} to ${fmt.cents(c.toPrice)} at ${c.to}.` : `“${short}”`,
+          when: `${fmt.time(t)} UTC · posted on Polygon`, chips: [chip(v.blob_id, v.job_id)], place: isLast ? "right" : "auto" });
+      });
       out.tags = [
         { t: hm(d0, "08:30"), p: story.baselineBefore1145, text: `flat near ${fmt.cents(story.baselineBefore1145)}`, side: "above" },
         { t: hm(d0, story.spike.firstAtOrAbove80c), p: story.spike.price, text: `${fmt.cents(story.spike.price)} by ${story.spike.firstAtOrAbove80c}`, side: "left" },
