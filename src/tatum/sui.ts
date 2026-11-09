@@ -6,12 +6,13 @@
  */
 import { SuiGrpcClient } from "@mysten/sui/grpc";
 import { addresses, config } from "../config.js";
+import { throttledFetch } from "./limit.js";
 
 let tatum: SuiGrpcClient | null = null;
 let publicNode: SuiGrpcClient | null = null;
 
 export function tatumSui(): SuiGrpcClient {
-  tatum ??= new SuiGrpcClient({ network: "mainnet", baseUrl: addresses.sui.tatumGrpc, meta: { "x-api-key": config.tatumKey } });
+  tatum ??= new SuiGrpcClient({ network: "mainnet", baseUrl: addresses.sui.tatumGrpc, meta: { "x-api-key": config.tatumKey }, fetch: throttledFetch });
   return tatum;
 }
 

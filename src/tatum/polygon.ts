@@ -12,6 +12,7 @@
 import { keccak_256 } from "@noble/hashes/sha3.js";
 import { addresses, config } from "../config.js";
 import { timed } from "./latency.js";
+import { tatumSlot } from "./limit.js";
 
 const TOPIC = {
   ancillaryDataUpdated: "0x0059e11815211969c0c4aaf3f498b52b6c2f2d14f286275d0862d70de22a836b",
@@ -22,6 +23,7 @@ let id = 0;
 export async function rpc<T>(method: string, params: unknown[]): Promise<T> {
   return timed("tatum.polygon", method, async () => {
     for (let attempt = 0; ; attempt++) {
+      await tatumSlot();
       const r = await fetch(addresses.polygon.tatumRpc, {
         method: "POST",
         headers: { "content-type": "application/json", "x-api-key": config.tatumKey },

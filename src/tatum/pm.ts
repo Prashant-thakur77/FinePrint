@@ -8,6 +8,7 @@
  */
 import { config } from "../config.js";
 import { timed } from "./latency.js";
+import { tatumSlot } from "./limit.js";
 
 const BASE = "https://api.tatum.io/v4/data/prediction";
 
@@ -23,22 +24,39 @@ export interface PmMarket {
 export interface Candle { timestamp: string; open: number; high: number; low: number; close: number; volume: number }
 export type Interval = "1m" | "5m" | "15m" | "1h" | "4h" | "1d" | "1w";
 
-async function get<T>(path: string, params: Record<string, string | number | undefined> = {}): Promise<T> {
+/**
+ * Free-plan credits are scarce (a history call costs 200), so responses are
+ * cached at the edge when running in the Worker: settled data for a day, live
+ * data for a minute.
+ */
+const edgeCache = (): Cache | null => (typeof caches !== "undefined" && "default" in caches ? (caches as unknown as { default: Cache }).default : null);
+
+async function get<T>(path: string, params: Record<string, string | number | undefined> = {}, ttlS = 60): Promise<T> {
   const q = new URLSearchParams(Object.entries(params).filter(([, v]) => v !== undefined).map(([k, v]) => [k, String(v)]));
   const url = `${BASE}${path}${q.size ? `?${q}` : ""}`;
-  return timed("tatum.pm", path.replace(/0x[0-9a-f]{64}/i, "{id}").replace(/\/\d+/g, "/{id}"), async () => {
+  const cache = edgeCache();
+  const key = new Request(`https://tatum-cache.fineprint.internal${path}${q.size ? `?${q}` : ""}`);
+  if (cache) {
+    const hit = await cache.match(key);
+    if (hit) return (await hit.json()) as T;
+  }
+  const body = await timed("tatum.pm", path.replace(/0x[0-9a-f]{64}/i, "{id}").replace(/\/\d+/g, "/{id}"), async () => {
     for (let attempt = 0; ; attempt++) {
+      await tatumSlot();
       const r = await fetch(url, { headers: { "x-api-key": config.tatumKey, accept: "application/json" }, signal: AbortSignal.timeout(30_000) });
       if ((r.status === 429 || r.status >= 500) && attempt < 3) { await new Promise((s) => setTimeout(s, 800 * 2 ** attempt)); continue; }
       if (!r.ok) throw Object.assign(new Error(`Tatum PM ${r.status} ${path}: ${(await r.text()).slice(0, 200)}`), { status: r.status });
       return (await r.json()) as T;
     }
   });
+  if (cache) await cache.put(key, new Response(JSON.stringify(body), { headers: { "content-type": "application/json", "cache-control": `public, max-age=${ttlS}` } }));
+  return body;
 }
 
 export async function pmMarket(id: string): Promise<PmMarket> {
-  const r = await get<{ data: PmMarket } | PmMarket>(`/markets/${encodeURIComponent(id)}`);
-  return "data" in r ? r.data : r;
+  const r = await get<{ data: PmMarket } | PmMarket>(`/markets/${encodeURIComponent(id)}`, {}, 120);
+  const m = "data" in r ? r.data : r;
+  return m;
 }
 
 export async function pmMarkets(params: { platform?: string; status?: string; search?: string; endingBefore?: string; sort?: string; limit?: number; cursor?: string; minVolume?: number; category?: string }) {
@@ -57,7 +75,9 @@ export async function pmHistory(id: string, interval: Interval, start: Date, end
   const out: Candle[] = [];
   for (let s = start.getTime(); s < end.getTime(); s += cap) {
     const e = Math.min(end.getTime(), s + cap);
-    const r = await get<{ data: { candles: Candle[] } }>(`/markets/${encodeURIComponent(id)}/history`, { interval, start: new Date(s).toISOString(), end: new Date(e).toISOString(), source });
+    // Windows that ended more than an hour ago never change: cache them for a day.
+    const settled = e < Date.now() - 3600_000;
+    const r = await get<{ data: { candles: Candle[] } }>(`/markets/${encodeURIComponent(id)}/history`, { interval, start: new Date(s).toISOString(), end: new Date(e).toISOString(), source }, settled ? 86_400 : 60);
     out.push(...r.data.candles);
   }
   const seen = new Set<string>();
