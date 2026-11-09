@@ -6,7 +6,7 @@ On 1 June a Polymarket MSTR market went 11c to 81c, then a clarification dropped
 
 Fine Print checks rules against past rulings before you buy.
 
-@Tatum_io @WalrusFoundation
+@Tatum_io @WalrusProtocol
 https://youtu.be/hbxfgCPWMHo
 
 ## X (thread)
@@ -15,7 +15,7 @@ https://youtu.be/hbxfgCPWMHo
 
 2/ The 2025 version of that market had the same wording. UMA history: proposed, disputed, proposed, disputed. Resolved NO. The record existed. Nobody put it next to the buy button.
 
-3/ Fine Print does. It recalls precedents from @WalrusFoundation Memory on Sui mainnet, reads rules, prices and on-chain clarifications through @Tatum_io, and pins a cited ruling on the chart. Replayed at 12:20 on 1 June, it rules HIGH and cites the 2025 market.
+3/ Fine Print does. It recalls precedents from @WalrusProtocol Memory on Sui mainnet, reads rules, prices and on-chain clarifications through @Tatum_io, and pins a cited ruling on the chart. Replayed at 12:20 on 1 June, it rules HIGH and cites the 2025 market.
 
 4/ Bots buy the same ruling for 0.02 USDC over x402 (Sui testnet for now). Rulings are sealed before the outcome, graded after, and a wrong LOW ruling is refunded.
 
