@@ -64,7 +64,7 @@ The Prediction Market API gives rules, outcomes and minute price history (the de
 
 ## Feedback on Walrus Memory
 
-The relayer's sponsored transactions (`/sponsor`, `/sponsor/execute`) made account setup free, but they aren't in the docs; we found them by reading the playground's code. A short page on them would help. Writes took 21 to 28 seconds to return a blob ID in our smoke test, and recall found the new memory less than 3 seconds after that. Recall is semantic only, so filters such as "closed before date X" have to be applied after recall, which means asking for more results than you need. A metadata filter on recall would remove that step. `listMemories` was handy for counting what we wrote.
+The relayer's sponsored transactions (`/sponsor`, `/sponsor/execute`) made account setup free, but they aren't in the docs; we found them by reading the playground's code. A short page on them would help. Writes took 20 to 31 seconds to return a blob ID in our smoke test (docs/smoke.md), and recall found the new memory 2 to 3 seconds after that. Recall is semantic only, so filters such as "closed before date X" have to be applied after recall, which means asking for more results than you need. A metadata filter on recall would remove that step. `listMemories` was handy for counting what we wrote.
 
 ## Feedback on Tatum
 
