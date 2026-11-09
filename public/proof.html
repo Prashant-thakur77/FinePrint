@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Proof · Fine Print</title>
+<meta name="description" content="Every Walrus blob, every Sui digest, every count and every Tatum call time behind Fine Print.">
+<link rel="icon" href="/icon.svg" type="image/svg+xml">
+<script>try{var t=localStorage.getItem("fp-theme");if(t)document.documentElement.dataset.theme=t}catch(e){}document.documentElement.classList.add("js")</script>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=Libre+Caslon+Display&family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/site.css">
+</head>
+<body>
+<div data-mast></div>
+<main class="page">
+
+  <section class="caption">
+    <div><div class="in-re">IN RE · THE RECORD</div><h1>Every claim on this site, with its receipt.</h1></div>
+    <div class="paren" aria-hidden="true">)<br>)<br>)<br>)</div>
+    <dl>
+      <dt>Blobs</dt><dd>open on Walruscan</dd>
+      <dt>Digests</dt><dd>open on Suiscan</dd>
+      <dt>Server</dt><dd id="server">–</dd>
+      <dt>As of</dt><dd id="asof">–</dd>
+    </dl>
+  </section>
+
+  <section class="entry" aria-labelledby="live-h">
+    <div class="entry-side">
+      <span class="label">Live counts</span>
+      <h2 id="live-h">What the court has done</h2>
+      <p>Counted from the server's ledger when this page loaded.</p>
+    </div>
+    <div id="counts" style="min-width:0"></div>
+  </section>
+
+  <section class="entry" aria-labelledby="eval-h">
+    <div class="entry-side">
+      <span class="label">Evaluation</span>
+      <h2 id="eval-h">Does memory help?</h2>
+      <p>Measured on markets the court had not seen, judged with and without precedents.</p>
+    </div>
+    <div id="eval" style="min-width:0"></div>
+  </section>
+
+  <section class="entry" aria-labelledby="blob-h">
+    <div class="entry-side">
+      <span class="label">Walrus</span>
+      <h2 id="blob-h">Memory writes</h2>
+      <p>Each write is a job on the memory relayer. When it finishes, it has a blob ID on Walrus mainnet.</p>
+    </div>
+    <div style="min-width:0;display:grid;gap:22px"><div id="jobs"></div><div id="blobs"></div></div>
+  </section>
+
+  <section class="entry" aria-labelledby="dig-h">
+    <div class="entry-side">
+      <span class="label">Sui</span>
+      <h2 id="dig-h">Payments received</h2>
+      <p>Each digest was checked on Sui mainnet through Tatum before a ruling was released.</p>
+    </div>
+    <div id="digests" style="min-width:0"></div>
+  </section>
+
+  <section class="entry" aria-labelledby="lat-h">
+    <div class="entry-side">
+      <span class="label">Tatum</span>
+      <h2 id="lat-h">Call times, last 7 days</h2>
+      <p>Successful calls only, measured by the server.</p>
+    </div>
+    <div id="latency" style="min-width:0"></div>
+  </section>
+
+</main>
+<div data-foot></div>
+<script src="/assets/shell.js"></script>
+<script src="/assets/proof.js"></script>
+</body>
+</html>
