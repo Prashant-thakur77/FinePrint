@@ -1,0 +1,30 @@
+name = "fineprint"
+main = "src/worker.ts"
+compatibility_date = "2026-10-01"
+compatibility_flags = ["nodejs_compat"]
+
+routes = [{ pattern = "fineprint.prashantthakur.dev", custom_domain = true }]
+
+[assets]
+directory = "public"
+binding = "ASSETS"
+html_handling = "drop-trailing-slash"
+run_worker_first = ["/api/*"]
+
+[[d1_databases]]
+binding = "DB"
+database_name = "fineprint"
+database_id = "6e62f939-47f5-4dfb-a491-46c4efe5031e"
+migrations_dir = "migrations"
+
+[triggers]
+crons = ["*/15 * * * *"]
+
+[observability]
+enabled = true
+
+[vars]
+LLM_MODEL = "claude-sonnet-4-5"
+RULING_PRICE_USDC = "0.02"
+MEMWAL_SERVER_URL = "https://relayer.memory.walrus.xyz"
+PUBLIC_URL = "https://fineprint.prashantthakur.dev"

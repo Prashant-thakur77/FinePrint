@@ -1,18 +1,15 @@
 {
   "compilerOptions": {
     "target": "ES2022",
-    "module": "NodeNext",
-    "moduleResolution": "NodeNext",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
     "resolveJsonModule": true,
-    "types": [
-      "node"
-    ]
+    "noEmit": true,
+    "lib": ["ES2022", "DOM"],
+    "types": ["node", "@cloudflare/workers-types"]
   },
-  "include": [
-    "src",
-    "scripts"
-  ]
+  "include": ["src", "scripts", "eval", "config"]
 }
