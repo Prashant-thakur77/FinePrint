@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Memory · Fine Print</title>
+<meta name="description" content="The case law Fine Print remembers on Walrus, the rulings it changed, and the keys that can read it.">
+<link rel="icon" href="/icon.svg" type="image/svg+xml">
+<script>try{var t=localStorage.getItem("fp-theme");if(t)document.documentElement.dataset.theme=t}catch(e){}document.documentElement.classList.add("js")</script>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=Libre+Caslon+Display&family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/site.css">
+</head>
+<body>
+<div data-mast></div>
+<main class="page">
+
+  <section class="caption">
+    <div><div class="in-re">IN RE · THE CASE LAW</div><h1>What the court remembers, and who can read it.</h1></div>
+    <div class="paren" aria-hidden="true">)<br>)<br>)<br>)</div>
+    <dl>
+      <dt>Stored on</dt><dd>Walrus mainnet, encrypted</dd>
+      <dt>Accounts</dt><dd>MemWal on Sui mainnet</dd>
+      <dt>Precedents</dt><dd id="dl-law">–</dd>
+      <dt>All memories</dt><dd id="dl-all">–</dd>
+    </dl>
+  </section>
+
+  <section class="entry" aria-labelledby="law-h">
+    <div class="entry-side">
+      <span class="label">Case law</span>
+      <h2 id="law-h">One square, one precedent</h2>
+      <p>Each square is a resolved market the court can cite: its key clause, how UMA ruled, and the outcome.</p>
+    </div>
+    <div id="law" style="min-width:0;display:grid;gap:18px"></div>
+  </section>
+
+  <section class="entry" aria-labelledby="chg-h">
+    <div class="entry-side">
+      <span class="label">Changed its mind</span>
+      <h2 id="chg-h">New precedent, new ruling</h2>
+      <p>When a market resolves, the result becomes case law. Rulings that depend on it can change.</p>
+    </div>
+    <div id="changes" style="min-width:0"></div>
+  </section>
+
+  <section class="entry" aria-labelledby="acc-h">
+    <div class="entry-side">
+      <span class="label">Accounts</span>
+      <h2 id="acc-h">Three memory accounts</h2>
+      <p>Precedents, the court's own rulings and grades, and a guest account. Each has delegate keys that can read and write it.</p>
+    </div>
+    <div id="accounts" style="min-width:0"></div>
+  </section>
+
+  <section class="entry" aria-labelledby="rev-h">
+    <div class="entry-side">
+      <span class="label">Revoke</span>
+      <h2 id="rev-h">Take a key away</h2>
+      <p>Press the button and the owner removes the guest delegate key on Sui mainnet. A fresh key replaces it. The transaction is public.</p>
+    </div>
+    <div style="min-width:0;display:grid;gap:14px">
+      <div id="revoke-box" style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+        <button class="btn" type="button" id="revoke">Revoke the guest delegate key</button>
+        <span class="small muted mono">Sends a real transaction. One press per minute.</span>
+      </div>
+      <div id="revoke-out" aria-live="polite"></div>
+    </div>
+  </section>
+
+</main>
+<div data-foot></div>
+<script src="/assets/shell.js"></script>
+<script src="/assets/memory.js"></script>
+</body>
+</html>
