@@ -1,0 +1,458 @@
+{
+  "command": "npx tsx scripts/soak.ts 50 2",
+  "endpoint": "https://fineprint.prashantthakur.dev/api/ruling",
+  "network": "sui:testnet",
+  "calls": 50,
+  "succeeded": 42,
+  "successRate": 0.84,
+  "p50ms": 18010,
+  "p95ms": 33134,
+  "usdcSpent": 0.84,
+  "results": [
+    {
+      "i": 0,
+      "market": "665374",
+      "ok": true,
+      "ms": 21396,
+      "digest": "Dra2QCLg2F8189eDmGFxC8KAmVWVdYTT7evBPpqqPuCT",
+      "verdict": "MED",
+      "cited": true
+    },
+    {
+      "i": 1,
+      "market": "703258",
+      "ok": true,
+      "ms": 26008,
+      "digest": "D3AdfSKAowmWyNxwFVGwFrkHjqgTJdiTe671jTAZyaK9",
+      "verdict": "HIGH",
+      "cited": true
+    },
+    {
+      "i": 2,
+      "market": "561251",
+      "ok": true,
+      "ms": 17515,
+      "digest": "DY73H5rCKC8tUWG3qeV1Twpv6D4JUhzW7h8NoqSqMrXF",
+      "verdict": "HIGH",
+      "cited": true
+    },
+    {
+      "i": 3,
+      "market": "559687",
+      "ok": true,
+      "ms": 22531,
+      "digest": "Af9kBR494w8t2zL6rLh9ruib2i7EtpVRW5zmbKtwMF4y",
+      "verdict": "MED",
+      "cited": true
+    },
+    {
+      "i": 4,
+      "market": "559679",
+      "ok": true,
+      "ms": 20135,
+      "digest": "HUDF4JZg74884Gzc19CjsWPakhCC8jX5J9fiiYj6eb5o",
+      "verdict": "MED",
+      "cited": true
+    },
+    {
+      "i": 6,
+      "market": "559688",
+      "ok": false,
+      "ms": 506,
+      "error": "fetch failed"
+    },
+    {
+      "i": 5,
+      "market": "559684",
+      "ok": true,
+      "ms": 19336,
+      "digest": "EbRxXt1ajQ89zDDwDVnBaYCcN3zz29WQvPn46DfWPny5",
+      "verdict": "MED",
+      "cited": true
+    },
+    {
+      "i": 7,
+      "market": "567621",
+      "ok": false,
+      "ms": 13211,
+      "error": "fetch failed"
+    },
+    {
+      "i": 9,
+      "market": "561247",
+      "ok": false,
+      "ms": 18139,
+      "error": "fetch failed"
+    },
+    {
+      "i": 10,
+      "market": "559682",
+      "ok": false,
+      "ms": 10489,
+      "error": "fetch failed"
+    },
+    {
+      "i": 8,
+      "market": "703257",
+      "ok": true,
+      "ms": 37677,
+      "digest": "FLmsBfozP4CnvTmqcwVFtJyNXTYbBA3pu1E4qyX7LUDn",
+      "verdict": "HIGH",
+      "cited": true
+    },
+    {
+      "i": 11,
+      "market": "561986",
+      "ok": false,
+      "ms": 10490,
+      "error": "fetch failed"
+    },
+    {
+      "i": 13,
+      "market": "559666",
+      "ok": false,
+      "ms": 10489,
+      "error": "fetch failed"
+    },
+    {
+      "i": 12,
+      "market": "559677",
+      "ok": false,
+      "ms": 19313,
+      "error": "fetch failed"
+    },
+    {
+      "i": 15,
+      "market": "559683",
+      "ok": true,
+      "ms": 25444,
+      "digest": "7dZEVdXzmYwKFGtcVrasqMDwUAodqca9TXvRf3YBLdH7",
+      "verdict": "MED",
+      "cited": true
+    },
+    {
+      "i": 14,
+      "market": "559681",
+      "ok": true,
+      "ms": 28917,
+      "digest": "HLyd5Cap5nwuW346XLC9VRmfhJczdFPXVppmLZ2Asudj",
+      "verdict": "HIGH",
+      "cited": true
+    },
+    {
+      "i": 16,
+      "market": "561995",
+      "ok": true,
+      "ms": 18105,
+      "digest": "2Z4dyRw2s5mFRYvdDBAVaqpEd4ZpP9vgAbbZ4nTGgVK3",
+      "verdict": "LOW",
+      "cited": true
+    },
+    {
+      "i": 17,
+      "market": "559689",
+      "ok": true,
+      "ms": 18010,
+      "digest": "GDoKNu6bofHypvTmHeTnixb9frepsvEzM8wqr3sJNXQk",
+      "verdict": "MED",
+      "cited": true
+    },
+    {
+      "i": 19,
+      "market": "559690",
+      "ok": true,
+      "ms": 15451,
+      "digest": "ABRKqUVxUfSxboFxAs6JqUwxcqM2YZLUuD1XJV2hpRC3",
+      "verdict": "MED",
+      "cited": true
+    },
+    {
+      "i": 18,
+      "market": "559680",
+      "ok": true,
+      "ms": 18455,
+      "digest": "B3cinZfWdKG2Wtxut3DQETasVDvJWLpjXD343B2kvwe1",
+      "verdict": "MED",
+      "cited": true
+    },
+    {
+      "i": 21,
+      "market": "559685",
+      "ok": true,
+      "ms": 16057,
+      "digest": "FmQi45v9TbbKvVbobRoqQZApNNXu2giYUxQ3g3tdmSkR",
+      "verdict": "MED",
+      "cited": true
+    },
+    {
+      "i": 20,
+      "market": "2772194",
+      "ok": true,
+      "ms": 22158,
+      "digest": "FqWreGhTdYGAkeqF4QANQnDzZvDKdh9mVc9h2QHp2UfM",
+      "verdict": "LOW",
+      "cited": true
+    },
+    {
+      "i": 22,
+      "market": "561254",
+      "ok": true,
+      "ms": 16280,
+      "digest": "DoWLxC5mwkJypDpbNiKV32omHUgFh8FaDXk4TGp6xq6N",
+      "verdict": "MED",
+      "cited": true
+    },
+    {
+      "i": 23,
+      "market": "559671",
+      "ok": true,
+      "ms": 17049,
+      "digest": "DdgrgfMY1Z8pdVb17QgovpLtEF2GAGrZ3Kk5Febzs1CM",
+      "verdict": "MED",
+      "cited": true
+    },
+    {
+      "i": 24,
+      "market": "559678",
+      "ok": true,
+      "ms": 17624,
+      "digest": "G7amEpM7bdnZgKe8JJPno51M4QiLyMCZNrri5k3LCjks",
+      "verdict": "MED",
+      "cited": true
+    },
+    {
+      "i": 26,
+      "market": "703258",
+      "ok": false,
+      "ms": 506,
+      "error": "fetch failed"
+    },
+    {
+      "i": 25,
+      "market": "665374",
+      "ok": true,
+      "ms": 20028,
+      "digest": "6gNuhFJJvAiuzi4SmovbUH3CJw6BG6gZ4eEghDi3ZB1n",
+      "verdict": "HIGH",
+      "cited": true
+    },
+    {
+      "i": 27,
+      "market": "561251",
+      "ok": true,
+      "ms": 16902,
+      "digest": "3Z7WpDGQBs5i97bemkQNodxDdA9U9eUZWzda9kY593gZ",
+      "verdict": "HIGH",
+      "cited": true
+    },
+    {
+      "i": 28,
+      "market": "559687",
+      "ok": true,
+      "ms": 13553,
+      "digest": "HtZP7VPKRkiPzC9Y1TxJyvbow947N6TBFEfDkFXy6Zjq",
+      "verdict": "MED",
+      "cited": true
+    },
+    {
+      "i": 30,
+      "market": "559684",
+      "ok": true,
+      "ms": 16734,
+      "digest": "8MkVRoXc7CGrKNmUdhhUikgdLX21LX29jNdVTVBY2dca",
+      "verdict": "MED",
+      "cited": true
+    },
+    {
+      "i": 29,
+      "market": "559679",
+      "ok": true,
+      "ms": 30783,
+      "digest": "Fc4ebqSfJaPYcWjcotQD842rxtq8dwhrPqLDM62XqXyu",
+      "verdict": "MED",
+      "cited": true
+    },
+    {
+      "i": 31,
+      "market": "559688",
+      "ok": true,
+      "ms": 20838,
+      "digest": "EAtkyjbSD1dTgPPt6ZmEEesrDgvw1v7DAMh9pdxCdqhd",
+      "verdict": "MED",
+      "cited": true
+    },
+    {
+      "i": 32,
+      "market": "567621",
+      "ok": true,
+      "ms": 33134,
+      "digest": "9bcxSDPcz7B8fBNxD4g77H6j4QmXxVNTv28DhTuFPjXH",
+      "verdict": "MED",
+      "cited": true
+    },
+    {
+      "i": 33,
+      "market": "703257",
+      "ok": true,
+      "ms": 38739,
+      "digest": "9XxXUreQxHm88JRGJH6C9mCYHhk5fmBVrGZUnbEUUv5f",
+      "verdict": "HIGH",
+      "cited": true
+    },
+    {
+      "i": 34,
+      "market": "561247",
+      "ok": true,
+      "ms": 18179,
+      "digest": "ER3ogMVtziVR2gZBSc6jkYEEoe4FG9nNYQ8rsTqqkUsS",
+      "verdict": "MED",
+      "cited": true
+    },
+    {
+      "i": 35,
+      "market": "559682",
+      "ok": true,
+      "ms": 16358,
+      "digest": "6YF6WUKSVzshJfdTfCoVc5ZX5VhD3gtb6NnG25jh8VWr",
+      "verdict": "LOW",
+      "cited": true
+    },
+    {
+      "i": 36,
+      "market": "561986",
+      "ok": true,
+      "ms": 15809,
+      "digest": "82CRJ4NvrzzW4ewzCD6kccSZvtAh2xjvxTCkRmgV6efC",
+      "verdict": "LOW",
+      "cited": true
+    },
+    {
+      "i": 37,
+      "market": "559677",
+      "ok": true,
+      "ms": 17618,
+      "digest": "Dfe9KRPaDrSyjhtTatxVd1Q1Y5rEPQJY1Ba3mx5yBDNw",
+      "verdict": "MED",
+      "cited": true
+    },
+    {
+      "i": 38,
+      "market": "559666",
+      "ok": true,
+      "ms": 16515,
+      "digest": "H1ZHM22scaZcEUZRhKXupk4dnozhoFfvfrv4bgiyccze",
+      "verdict": "MED",
+      "cited": true
+    },
+    {
+      "i": 39,
+      "market": "559681",
+      "ok": true,
+      "ms": 15934,
+      "digest": "toDkniH1NYN6H8gCteZTD4pdTm3RTVSRjQtkmAGwBZx",
+      "verdict": "HIGH",
+      "cited": true
+    },
+    {
+      "i": 40,
+      "market": "559683",
+      "ok": true,
+      "ms": 16589,
+      "digest": "8RWEedzFkZkpqFjT49Q7aWjaNvptwztzu3fSSJjNJ7fA",
+      "verdict": "MED",
+      "cited": true
+    },
+    {
+      "i": 41,
+      "market": "561995",
+      "ok": true,
+      "ms": 15706,
+      "digest": "4t8LSvg4Ktd4phSb5cMi5YNadiBZ79KFXncaYH4exKoD",
+      "verdict": "LOW",
+      "cited": true
+    },
+    {
+      "i": 42,
+      "market": "559689",
+      "ok": true,
+      "ms": 17953,
+      "digest": "De1HWm1AdscMGEoQWz6LpzkNMsZdPpSqkeR8m4dh8K5t",
+      "verdict": "MED",
+      "cited": true
+    },
+    {
+      "i": 43,
+      "market": "559680",
+      "ok": true,
+      "ms": 17344,
+      "digest": "4F498xu13oD7govd6Ww2MCbyWKoYqwufvQWiBkz92jzE",
+      "verdict": "MED",
+      "cited": true
+    },
+    {
+      "i": 44,
+      "market": "559690",
+      "ok": true,
+      "ms": 16929,
+      "digest": "ETQQUX4sPBZF9hQtMYfxwWafTMCTnFegmsidMddxTgK1",
+      "verdict": "MED",
+      "cited": true
+    },
+    {
+      "i": 45,
+      "market": "2772194",
+      "ok": true,
+      "ms": 18010,
+      "digest": "DwfxWib59obU6vzsz2eyjA8iLytyU37QixRnhUg7HJpD",
+      "verdict": "LOW",
+      "cited": true
+    },
+    {
+      "i": 46,
+      "market": "559685",
+      "ok": true,
+      "ms": 18504,
+      "digest": "4RtUHb6jffL1zTq3X4AUQQnrwVrVpCVKAxFwakGjrkW1",
+      "verdict": "MED",
+      "cited": true
+    },
+    {
+      "i": 47,
+      "market": "561254",
+      "ok": true,
+      "ms": 14963,
+      "digest": "3WyyNgwG3fRRgVUK2iN8xvHX4jwR3WLJrrpZjhB82zpu",
+      "verdict": "MED",
+      "cited": true
+    },
+    {
+      "i": 48,
+      "market": "559671",
+      "ok": true,
+      "ms": 14011,
+      "digest": "9FeQT74ZNTUycWjkkBqaqMrCLwgpwnJvbFWJE1URMLK8",
+      "verdict": "MED",
+      "cited": true
+    },
+    {
+      "i": 49,
+      "market": "559678",
+      "ok": true,
+      "ms": 18488,
+      "digest": "7BJsuAKhU7TF9cWnthdMQkZw9bHKcvrfG3TobEBsSykA",
+      "verdict": "MED",
+      "cited": true
+    }
+  ],
+  "serverAudit": {
+    "command": "npx tsx scripts/soak_audit.ts",
+    "paymentsInFeed": 50,
+    "paymentsWithoutRuling": 0,
+    "soakDigestsFound": 42,
+    "failedCalls": 8,
+    "failedCallErrors": [
+      "fetch failed"
+    ],
+    "note": "failed calls never settled a payment when paymentsWithoutRuling is 0; the errors are the test machine's connection failures"
+  }
+}
