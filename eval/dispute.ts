@@ -32,8 +32,11 @@ export async function runDispute(level: Level, repeats: number, limit: number, c
     for (const r of test) {
       if (cache[r.id]) continue;
       const m = { id: r.id, question: r.question, rules: r.rules, createdAt: r.createdAt };
-      const hits = (await recall("PRECEDENTS", NS.precedents, `${m.question}\n${m.rules.slice(0, 600)}`, 40)).filter((h) => seeded.has(fields(h.text).market));
-      cache[r.id] = { precedents: filterPrecedents(hits, { asOf: r.createdAt ?? r.closedTime, k: 8, excludeMarket: r.id }), patterns: await recallPatterns(r.patterns) };
+      const patient = async <T>(fn: () => Promise<T>): Promise<T> => {
+        for (let i = 0; ; i++) { try { return await fn(); } catch (err) { if (i >= 4) throw err; console.error(`recall retry ${i + 1}: ${(err as Error).message.slice(0, 80)}`); await new Promise((s) => setTimeout(s, 10_000 * (i + 1))); } }
+      };
+      const hits = (await patient(() => recall("PRECEDENTS", NS.precedents, `${m.question}\n${m.rules.slice(0, 600)}`, 40))).filter((h) => seeded.has(fields(h.text).market));
+      cache[r.id] = { precedents: filterPrecedents(hits, { asOf: r.createdAt ?? r.closedTime, k: 8, excludeMarket: r.id }), patterns: await patient(() => recallPatterns(r.patterns)) };
       if (++n % 10 === 0) { writeJson(RECALL, cache); console.log(`recalled ${n}`); }
     }
     writeJson(RECALL, cache);
