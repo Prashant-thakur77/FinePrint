@@ -13,7 +13,8 @@ import "dotenv/config";
 import { appendFileSync, mkdirSync } from "node:fs";
 import { Ed25519Keypair } from "@mysten/sui/keypairs/ed25519";
 import { config } from "../config.js";
-import { pmHistory, pmMarkets, type PmMarket } from "../tatum/pm.js";
+import { pmHistory } from "../tatum/pm.js";
+import { gammaMarkets } from "../polymarket/gamma.js";
 import { buyRuling } from "./client.js";
 import { payExplorerTx } from "../pay/network.js";
 
@@ -41,18 +42,28 @@ export async function decide(market: string, side: "YES", price: number, reason:
   return { verdict: v, action, digest: r.payment.digest, ms: r.ms };
 }
 
-async function spikeOf(m: PmMarket, jump: number) {
+async function spikeOf(m: { conditionId: string }, jump: number) {
   const end = new Date(), start = new Date(Date.now() - 70 * 60_000);
-  const c = await pmHistory(m.id, "1m", start, end);
+  const c = await pmHistory(m.conditionId, "1m", start, end);
   if (c.length < 10) return null;
   const now = c[c.length - 1].close;
   const low = Math.min(...c.map((x) => x.low));
   return now - low >= jump && now >= 0.5 && now <= 0.95 ? { now, low } : null;
 }
 
+/**
+ * Live markets closing within the next hours. Discovery uses Polymarket's Gamma
+ * listing (Tatum's "active" filter also returns markets whose close time has
+ * passed); rules, prices and rulings then go through Tatum as usual.
+ */
 async function liveMarkets(hoursAhead: number, limit = 100) {
-  const r = await pmMarkets({ platform: "polymarket", status: "active", sort: "endingSoon", endingBefore: new Date(Date.now() + hoursAhead * 3600_000).toISOString(), minVolume: 5000, limit });
-  return r.data.filter((m) => m.chain?.conditionId && m.closeTime && Date.parse(m.closeTime) > Date.now());
+  const now = Date.now();
+  const rows = await gammaMarkets({ closed: false, active: true, limit, order: "volumeNum", ascending: false, end_date_min: new Date(now + 30 * 60_000).toISOString(), end_date_max: new Date(now + hoursAhead * 3600_000).toISOString() });
+  // Skip markets that are already effectively decided: a ruling there says nothing.
+  return rows.filter((m) => m.conditionId && m.outcomes.length === 2 && m.description.length > 40 && m.outcomePrices.every((p) => p > 0.03 && p < 0.97)).map((m) => ({
+    id: m.id, question: m.question, closeTime: m.endDate, conditionId: m.conditionId,
+    outcomes: m.outcomes.map((name, i) => ({ name, price: m.outcomePrices[i] ?? 0.5 })),
+  }));
 }
 
 async function watch(minutes: number, jump = 0.15) {
@@ -77,6 +88,8 @@ async function forward(n: number) {
   console.log(`forward set: ${markets.length} live markets closing within 20h`);
   for (const m of markets) {
     const yes = m.outcomes.find((o) => /^yes$/i.test(o.name))?.price ?? m.outcomes[0]?.price ?? 0.5;
+    // Watch it too, so the rule-version feed snapshots it every poll until it closes.
+    if (config.cronSecret) await fetch(`${BASE}/api/watch/${m.id}`, { method: "POST", headers: { authorization: `Bearer ${config.cronSecret}` } }).catch(() => null);
     try { await decide(m.id, "YES", yes, `forward set: ${m.question.slice(0, 80)} (closes ${m.closeTime})`); }
     catch (err) { console.error(`${m.id}: ${(err as Error).message.slice(0, 200)}`); }
   }
