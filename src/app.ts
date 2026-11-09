@@ -102,7 +102,8 @@ app.get("/api/ruling", async (c) => {
   }
   try {
     const crowd = Number(c.req.query("yes"));
-    const ruling = await issue(c.env.DB, m, "patterns", { price: Number(paid.amount), payer: paid.payer, digest: paid.digest }, Number.isFinite(crowd) && crowd > 0 ? crowd : null);
+    const asOf = c.req.query("asOf");
+    const ruling = await issue(c.env.DB, m, "patterns", { price: Number(paid.amount), payer: paid.payer, digest: paid.digest }, Number.isFinite(crowd) && crowd > 0 ? crowd : null, asOf && !Number.isNaN(Date.parse(asOf)) ? new Date(asOf).toISOString() : null);
     c.header(X402_PAYMENT_RESPONSE_HEADER, encodeX402Response({ success: true, network: "sui:mainnet", transaction: paid.digest, payer: paid.payer }));
     return c.json({ ruling, payment: paid });
   } catch (err) {

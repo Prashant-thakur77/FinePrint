@@ -37,8 +37,8 @@ function toIssued(id: string, r: RulingResult, at: number, jobId: string | null,
 }
 
 /** Runs the pipeline for a market and seals the result. `sale` is null for UI previews. */
-export async function issue(db: D1Database, market: MarketInfo, level: Level, sale: Sale | null, crowdYes: number | null = null): Promise<IssuedRuling> {
-  const r = await rule({ id: market.id, question: market.question, rules: market.rules, createdAt: market.createdAt }, level, { track: (tags) => trackFor(db, tags) });
+export async function issue(db: D1Database, market: MarketInfo, level: Level, sale: Sale | null, crowdYes: number | null = null, asOf: string | null = null): Promise<IssuedRuling & { asOf: string | null }> {
+  const r = await rule({ id: market.id, question: market.question, rules: market.rules, createdAt: market.createdAt }, level, { asOf, track: (tags) => trackFor(db, tags) });
   const id = crypto.randomUUID();
   const at = Date.now();
   let jobId: string | null = null;
@@ -58,7 +58,7 @@ export async function issue(db: D1Database, market: MarketInfo, level: Level, sa
     JSON.stringify(r.reasons), r.clause, crowdYes, at, sale ? String(sale.price) : null, sale?.payer ?? null, sale?.digest ?? null, jobId,
   ).run();
   if (sale) await db.prepare("UPDATE payments SET ruling_id = ? WHERE digest = ?").bind(id, sale.digest).run();
-  return toIssued(id, r, at, jobId, sale);
+  return { ...toIssued(id, r, at, jobId, sale), asOf };
 }
 
 /** A recent preview for the same market and level, so page views do not each cost an LLM call. */
