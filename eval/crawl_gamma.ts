@@ -20,19 +20,32 @@ const todo = days.filter((d) => !done.has(d));
 console.log(`${todo.length} of ${days.length} days to crawl`);
 
 let total = 0, disputed = 0, finished = 0;
-async function crawlDay(day: string) {
-  const next = new Date(Date.parse(day) + 86400_000).toISOString().slice(0, 10);
-  let offset = 0, n = 0;
-  for (;;) {
-    const page = await gammaMarkets({ closed: true, limit: 100, offset, end_date_min: `${day}T00:00:00Z`, end_date_max: `${next}T00:00:00Z`, order: "id", ascending: true });
-    // Gamma's end_date_max is inclusive; keep each market in exactly one day.
-    const mine = page.filter((m) => m.endDate && m.endDate.slice(0, 10) === day);
-    if (mine.length) appendFileSync(OUT, mine.map((m) => JSON.stringify(m)).join("\n") + "\n");
-    n += mine.length; disputed += mine.filter((m) => m.uma.includes("disputed")).length;
+const MAX_OFFSET = 2000; // Gamma answers 422 beyond this
+
+/** Pages through one end-date window; splits it in half when it holds more than Gamma will page. */
+async function crawlWindow(startMs: number, endMs: number): Promise<number> {
+  const startIso = new Date(startMs).toISOString(), endIso = new Date(endMs).toISOString();
+  const rows: Awaited<ReturnType<typeof gammaMarkets>> = [];
+  for (let offset = 0; ; offset += 100) {
+    if (offset > MAX_OFFSET - 100) {
+      if (endMs - startMs <= 15 * 60_000) break; // 15-minute windows are as fine as it gets
+      const mid = startMs + Math.floor((endMs - startMs) / 2);
+      return (await crawlWindow(startMs, mid)) + (await crawlWindow(mid, endMs));
+    }
+    const page = await gammaMarkets({ closed: true, limit: 100, offset, end_date_min: startIso, end_date_max: endIso, order: "id", ascending: true });
+    rows.push(...page);
     if (page.length < 100) break;
-    offset += 100;
   }
-  total += n;
+  // Gamma's end_date_max is inclusive; keep each market in exactly one window.
+  const mine = rows.filter((m) => m.endDate && Date.parse(m.endDate) >= startMs && Date.parse(m.endDate) < endMs);
+  if (mine.length) appendFileSync(OUT, mine.map((m) => JSON.stringify(m)).join("\n") + "\n");
+  disputed += mine.filter((m) => m.uma.includes("disputed")).length;
+  return mine.length;
+}
+
+async function crawlDay(day: string) {
+  const start = Date.parse(`${day}T00:00:00Z`);
+  total += await crawlWindow(start, start + 86_400_000);
   appendFileSync(DONE, day + "\n");
   if (++finished % 20 === 0) console.log(`${finished}/${todo.length} days, ${total} markets, ${disputed} disputed`);
 }
