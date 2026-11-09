@@ -125,7 +125,14 @@ export async function gradeOpen(db: D1Database, max = 10) {
     if (!g.closed || !g.closedTime || finalStatus !== "resolved" && !(g.outcomePrices.some((p) => p >= 0.99))) continue;
     const outcome = g.outcomes[g.outcomePrices.findIndex((p) => p >= 0.99)] ?? "unknown";
     const disputed = g.uma.includes("disputed");
-    for (const r of rulings) {
+    const closedAt = Date.parse(g.closedTime);
+    // Only live forecasts count: a ruling issued after the market closed, or a
+    // replay ruling (asOf), is never graded and never moves prices.
+    const live = rulings.filter((r) => !r.asof && r.at < closedAt);
+    for (const r of rulings.filter((x) => !live.includes(x))) {
+      await db.prepare("UPDATE rulings SET status = ?, outcome = ?, disputed = ?, graded_at = ? WHERE id = ?").bind(r.asof ? "replay" : "after-close", outcome, disputed ? 1 : 0, Date.now(), r.id).run();
+    }
+    for (const r of live) {
       const predictedDispute = r.verdict === "HIGH";
       const correct = predictedDispute === disputed;
       const yesWon = /^yes$/i.test(outcome);
@@ -145,13 +152,15 @@ export async function gradeOpen(db: D1Database, max = 10) {
       await recordGrade(db, pats, correct);
       graded.push({ ruling: r.id, market: marketId, correct, refund: refundDigest });
     }
-    // The resolution becomes case law.
+    // The resolution becomes case law, once per market, when a live ruling preceded it.
+    const already = await db.prepare("SELECT 1 FROM memory_jobs WHERE kind = 'precedent' AND ref = ?").bind(g.id).first();
+    if (!live.length || already) continue;
     try {
       const pats = tagMarket(g.question, g.description);
       const text = precedentText({ market: g.id, question: g.question, closed: g.closedTime, pattern: pats, wording: g.description.slice(0, 220), source: g.resolutionSource || "per rules", crowdBefore: rulings[0].crowd_yes, uma: g.uma, outcome, disputed });
       const job = await rememberAsync("PRECEDENTS", NS.precedents, text);
       await trackJob(db, job, "PRECEDENTS", NS.precedents, "precedent", g.id);
-      const prev = rulings[rulings.length - 1];
+      const prev = live[live.length - 1];
       await db.prepare("INSERT INTO changes (market, question, old_ruling, old_verdict, new_ruling, new_verdict, cause_blob, cause, at) VALUES (?, ?, ?, ?, NULL, NULL, ?, ?, ?)")
         .bind(g.id, g.question, prev.blob_id ?? prev.id, prev.verdict, `job:${job}`, `resolved ${outcome}${disputed ? " after a dispute" : ""}`, Date.now()).run();
     } catch (err) { log.error("precedent.write_failed", err, { market: marketId }); }
