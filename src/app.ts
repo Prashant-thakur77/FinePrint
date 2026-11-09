@@ -15,6 +15,8 @@ import { challenge, PaymentError, settle } from "./pay/x402.js";
 import { refund } from "./pay/refund.js";
 import { snapshotRules } from "./rules/poll.js";
 import { drainSamples, summarise } from "./tatum/latency.js";
+import { listAll, type AccountName } from "./memory/client.js";
+import { lastRevoke, revokeGuest } from "./memory/revoke.js";
 
 export type Env = { DB: D1Database; ASSETS: Fetcher };
 export type AppContext = { Bindings: Env };
@@ -161,6 +163,38 @@ app.post("/api/watch/:ref", async (c) => {
   const m = await loadMarket(c.req.param("ref"));
   await c.env.DB.prepare("INSERT OR REPLACE INTO watch (market, question, ends_at, added_at) VALUES (?, ?, ?, ?)").bind(m.id, m.question, m.endDate ? Date.parse(m.endDate) : null, Date.now()).run();
   return c.json({ ok: true, market: m.id });
+});
+
+let statsCache: { at: number; body: unknown } | null = null;
+app.get("/api/memory/stats", async (c) => {
+  if (statsCache && Date.now() - statsCache.at < 5 * 60_000) return c.json(statsCache.body);
+  const accounts: Record<string, unknown> = {};
+  let total = 0;
+  for (const name of ["PRECEDENTS", "COURT", "USER"] as AccountName[]) {
+    const id = config.account(name).accountId;
+    const delegates = (process.env[`MEMWAL_DELEGATES_${name}`] ?? "").split(",").filter(Boolean);
+    let byNamespace: Record<string, number> | null = null, count: number | null = null;
+    try {
+      const all = await listAll(name, undefined, 3000);
+      byNamespace = {};
+      for (const m of all) { const ns = m.namespace.startsWith("rules/") ? "rules/*" : m.namespace; byNamespace[ns] = (byNamespace[ns] ?? 0) + 1; }
+      count = all.length; total += all.length;
+    } catch (err) { log.warn("stats.list_failed", { account: name, error: (err as Error).message.slice(0, 120) }); }
+    accounts[name] = { accountId: id || null, delegates, total: count, byNamespace };
+  }
+  const caseLaw = (accounts.PRECEDENTS as { byNamespace?: Record<string, number> })?.byNamespace?.precedents ?? null;
+  const body = { accounts, totalMemories: total, caseLaw, lastRevoke: await lastRevoke(c.env.DB), at: Date.now() };
+  statsCache = { at: Date.now(), body };
+  return c.json(body);
+});
+
+app.post("/api/revoke", async (c) => {
+  try { return c.json(await revokeGuest(c.env.DB)); }
+  catch (err) {
+    const status = (err as { status?: number }).status === 429 ? 429 : 500;
+    if (status === 500) log.error("revoke.failed", err);
+    return c.json({ error: (err as Error).message.slice(0, 200) }, status);
+  }
 });
 
 export async function runCron(env: Env, which: "poll" | "grade" | "all" = "all") {
