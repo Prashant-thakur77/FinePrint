@@ -1,0 +1,332 @@
+{
+  "generatedAt": "2026-11-09T16:34:56.736Z",
+  "source": "eval/results/*.json via scripts/export_results.ts",
+  "dataset": {
+    "crawledUnique": 3125517,
+    "kept": 2381339,
+    "pool": {
+      "total": 159502,
+      "disputed": 749,
+      "closedBefore": "2026-01-01"
+    },
+    "testWindow": {
+      "total": 2221350,
+      "disputed": 2010,
+      "from": "2026-01-01",
+      "to": "2026-11-01"
+    },
+    "test": {
+      "total": 200,
+      "disputed": 100
+    },
+    "crawlGapDays": 49
+  },
+  "patterns": {
+    "baseRate": 0.004695865882559466,
+    "poolSize": 159502,
+    "top": [
+      {
+        "tag": "deadline+confirmation-lag",
+        "rule": "Event must happen by a deadline, but proof (filings, official statements, reporting) can arrive after it. Disputes follow when the act and its confirmation straddle the deadline.",
+        "disputed": 73,
+        "total": 2084,
+        "rate": 0.03502879078694818
+      },
+      {
+        "tag": "announcement-vs-action",
+        "rule": "Title asks about an action (sells, launches, signs, releases) while rules accept an announcement, or the reverse. The gap between saying and doing gets disputed.",
+        "disputed": 7,
+        "total": 218,
+        "rate": 0.03211009174311927
+      },
+      {
+        "tag": "consensus-of-reporting",
+        "rule": "Resolves on 'a consensus of credible reporting'. Who counts as credible, and when consensus formed, are open to argument.",
+        "disputed": 168,
+        "total": 13654,
+        "rate": 0.012304086714515893
+      },
+      {
+        "tag": "official-source-only",
+        "rule": "Only an official source counts. Disputes follow when the official source is late, silent or contradicts the press.",
+        "disputed": 170,
+        "total": 15464,
+        "rate": 0.01099327470253492
+      }
+    ]
+  },
+  "recall": {
+    "seeded": 401,
+    "recallRate": 1,
+    "twinRank": 3
+  },
+  "dispute": {
+    "model": "claude-sonnet-4-5",
+    "rulesOnly": {
+      "accuracy": {
+        "mean": 0.51,
+        "min": 0.505,
+        "max": 0.515
+      },
+      "f1": {
+        "mean": 0.16,
+        "min": 0.139,
+        "max": 0.185
+      },
+      "topBucketPrecision": {
+        "mean": 0.492,
+        "min": 0.475,
+        "max": 0.525
+      },
+      "n": 200,
+      "repeats": 3,
+      "command": "npx tsx eval/run_baseline.ts rules 3 200"
+    },
+    "precedents": {
+      "accuracy": {
+        "mean": 0.497,
+        "min": 0.497,
+        "max": 0.497
+      },
+      "f1": {
+        "mean": 0.275,
+        "min": 0.275,
+        "max": 0.275
+      },
+      "topBucketPrecision": {
+        "mean": 0.475,
+        "min": 0.475,
+        "max": 0.475
+      },
+      "n": 200,
+      "repeats": 1,
+      "command": "npx tsx eval/run_fineprint.ts precedents 1 200"
+    },
+    "finePrint": {
+      "accuracy": {
+        "mean": 0.492,
+        "min": 0.482,
+        "max": 0.497
+      },
+      "f1": {
+        "mean": 0.191,
+        "min": 0.18,
+        "max": 0.205
+      },
+      "topBucketPrecision": {
+        "mean": 0.483,
+        "min": 0.475,
+        "max": 0.5
+      },
+      "n": 200,
+      "repeats": 3,
+      "command": "npx tsx eval/run_fineprint.ts patterns 3 200"
+    }
+  },
+  "botReplay": {
+    "marketsWithSpike": 120,
+    "balanced": {
+      "botAlone": {
+        "trades": 120,
+        "skipped": 0,
+        "skippedLosers": 0,
+        "skippedWinners": 0,
+        "grossPnl": -7260.33,
+        "fees": 0,
+        "netPnl": -7260.33
+      },
+      "gatedRulesOnly": {
+        "trades": 112,
+        "skipped": 8,
+        "skippedLosers": 4,
+        "skippedWinners": 4,
+        "grossPnl": -7193.21,
+        "fees": 2.4,
+        "netPnl": -7195.61
+      },
+      "gatedFinePrint": {
+        "trades": 106,
+        "skipped": 14,
+        "skippedLosers": 7,
+        "skippedWinners": 7,
+        "grossPnl": -7048.01,
+        "fees": 2.4,
+        "netPnl": -7050.41
+      }
+    },
+    "reweighted": {
+      "baseRate": 0.0009,
+      "botAlone": {
+        "trades": 120,
+        "skipped": 0,
+        "skippedLosers": 0,
+        "skippedWinners": 0,
+        "grossPnl": -8218.81,
+        "fees": 0,
+        "netPnl": -8218.81
+      },
+      "gatedRulesOnly": {
+        "trades": 113.2,
+        "skipped": 6.8,
+        "skippedLosers": 4.5,
+        "skippedWinners": 2.3,
+        "grossPnl": -7944.21,
+        "fees": 2.4,
+        "netPnl": -7946.61
+      },
+      "gatedFinePrint": {
+        "trades": 101.9,
+        "skipped": 18.1,
+        "skippedLosers": 13.6,
+        "skippedWinners": 4.5,
+        "grossPnl": -7123.39,
+        "fees": 2.4,
+        "netPnl": -7125.79
+      }
+    }
+  },
+  "leadTime": {
+    "n": 32,
+    "flagged": 0,
+    "medianLeadHours": null,
+    "medianFlagPrice": null,
+    "medianCliffMinutes": 9.9
+  },
+  "learning": {
+    "writes": 150,
+    "overall": {
+      "static": 0.503,
+      "learning": 0.487
+    },
+    "perMonth": [
+      {
+        "month": "2026-01",
+        "n": 21,
+        "staticAccuracy": 0.238,
+        "learningAccuracy": 0.238,
+        "learnedPrecedentsAvailable": 0,
+        "rulingsCitingLearned": 0
+      },
+      {
+        "month": "2026-02",
+        "n": 9,
+        "staticAccuracy": 0.333,
+        "learningAccuracy": 0.333,
+        "learnedPrecedentsAvailable": 18,
+        "rulingsCitingLearned": 4
+      },
+      {
+        "month": "2026-03",
+        "n": 22,
+        "staticAccuracy": 0.364,
+        "learningAccuracy": 0.318,
+        "learnedPrecedentsAvailable": 29,
+        "rulingsCitingLearned": 6
+      },
+      {
+        "month": "2026-04",
+        "n": 17,
+        "staticAccuracy": 0.529,
+        "learningAccuracy": 0.529,
+        "learnedPrecedentsAvailable": 52,
+        "rulingsCitingLearned": 10
+      },
+      {
+        "month": "2026-05",
+        "n": 22,
+        "staticAccuracy": 0.455,
+        "learningAccuracy": 0.5,
+        "learnedPrecedentsAvailable": 67,
+        "rulingsCitingLearned": 5
+      },
+      {
+        "month": "2026-06",
+        "n": 15,
+        "staticAccuracy": 0.8,
+        "learningAccuracy": 0.733,
+        "learnedPrecedentsAvailable": 90,
+        "rulingsCitingLearned": 8
+      },
+      {
+        "month": "2026-07",
+        "n": 32,
+        "staticAccuracy": 0.531,
+        "learningAccuracy": 0.531,
+        "learnedPrecedentsAvailable": 105,
+        "rulingsCitingLearned": 21
+      },
+      {
+        "month": "2026-08",
+        "n": 36,
+        "staticAccuracy": 0.556,
+        "learningAccuracy": 0.5,
+        "learnedPrecedentsAvailable": 136,
+        "rulingsCitingLearned": 27
+      },
+      {
+        "month": "2026-09",
+        "n": 18,
+        "staticAccuracy": 0.778,
+        "learningAccuracy": 0.778,
+        "learnedPrecedentsAvailable": 150,
+        "rulingsCitingLearned": 14
+      },
+      {
+        "month": "2026-10",
+        "n": 5,
+        "staticAccuracy": 0.2,
+        "learningAccuracy": 0.2,
+        "learnedPrecedentsAvailable": 150,
+        "rulingsCitingLearned": 3
+      }
+    ],
+    "rulings": 197,
+    "verdictChanged": 60,
+    "changedCitingLearned": 51,
+    "changedSealedOnWalrus": 49,
+    "changedToCorrect": 29
+  },
+  "memory": {
+    "total": 761,
+    "PRECEDENTS": 565,
+    "COURT": 183,
+    "USER": 13
+  },
+  "soak": {
+    "calls": 50,
+    "succeeded": 42,
+    "successRate": 0.84,
+    "p50ms": 18010,
+    "p95ms": 33134,
+    "network": "sui:testnet"
+  },
+  "adversarial": {
+    "injectedRuns": 5,
+    "injectedStayedHigh": 5,
+    "injectedCited": 5
+  },
+  "story": {
+    "window": {
+      "from": "12:20",
+      "to": "16:59",
+      "minutes": 279.06666666666666,
+      "hoursMinutes": "4h 39m",
+      "low": 0.4115,
+      "high": 0.823
+    },
+    "cliff": {
+      "from": "16:59",
+      "fromPrice": 0.532,
+      "to": "17:01",
+      "toPrice": 0.006,
+      "minutes": 2.066666666666667,
+      "at1659": 0.532,
+      "at1700": 0.411,
+      "at1701": 0.006
+    },
+    "spike": {
+      "firstAtOrAbove80c": "12:12",
+      "price": 0.8105
+    }
+  }
+}

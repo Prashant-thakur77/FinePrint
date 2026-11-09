@@ -17,7 +17,7 @@ const lc = readJson<any>(new URL("learning_curve.json", RESULTS), null);
 if (!lc) throw new Error("run eval/learning_curve.ts first");
 const rows: { month: string; n: number; staticAccuracy: number; learningAccuracy: number; learnedPrecedentsAvailable: number }[] = lc.perMonth.filter((m: any) => m.n > 0);
 
-const W = 760, H = 380, m = { l: 56, r: 128, t: 56, b: 52 };
+const W = 760, H = 400, m = { l: 56, r: 128, t: 88, b: 52 };
 const pw = W - m.l - m.r, ph = H - m.t - m.b;
 const x = (i: number) => m.l + (rows.length === 1 ? pw / 2 : (i / (rows.length - 1)) * pw);
 const y = (v: number) => m.t + (1 - v) * ph;
@@ -33,7 +33,7 @@ const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" wid
 <desc id="d">${rows.map((r) => `${r.month}: static ${r.staticAccuracy.toFixed(3)}, learning ${r.learningAccuracy.toFixed(3)}, ${r.n} markets`).join("; ")}</desc>
 <rect width="${W}" height="${H}" fill="${C.surface}"/>
 <text x="${m.l}" y="26" ${font} font-size="13" fill="${C.ink}">Dispute-prediction accuracy per replayed month, 2026</text>
-<text x="${m.l}" y="44" ${font} font-size="11" fill="${C.ink3}">Same model, same moment for each market. Overall: static ${lc.overall.static.toFixed(3)}, learning ${lc.overall.learning.toFixed(3)} (${lc.writes} outcomes written to Walrus)</text>
+<text x="${m.l}" y="44" ${font} font-size="11" fill="${C.ink3}">Overall: seeded only ${lc.overall.static.toFixed(3)}, learning ${lc.overall.learning.toFixed(3)} · ${lc.writes} outcomes written to Walrus</text>
 ${[0, 0.25, 0.5, 0.75, 1].map((v) => `<line x1="${m.l}" x2="${m.l + pw}" y1="${y(v)}" y2="${y(v)}" stroke="${C.grid}" stroke-width="1" ${v === 0.5 ? 'stroke-dasharray="4 4"' : ""}/><text x="${m.l - 8}" y="${y(v) + 4}" text-anchor="end" ${font} font-size="11" fill="${C.ink3}">${v.toFixed(2)}</text>`).join("\n")}
 <text x="${m.l + 4}" y="${y(0.5) - 6}" ${font} font-size="10" fill="${C.ink3}">chance</text>
 ${rows.map((r, i) => `<text x="${x(i)}" y="${H - m.b + 18}" text-anchor="middle" ${font} font-size="11" fill="${C.ink3}">${r.month.slice(5)}</text><text x="${x(i)}" y="${H - m.b + 32}" text-anchor="middle" ${font} font-size="9" fill="${C.ink3}">n=${r.n}</text>`).join("\n")}
@@ -43,7 +43,7 @@ ${dots("staticAccuracy", C.s1)}
 ${dots("learningAccuracy", C.s2)}
 <text x="${x(last) + 10}" y="${la + 4}" ${font} font-size="11" fill="${C.ink2}">seeded only</text>
 <text x="${x(last) + 10}" y="${lb + 4}" ${font} font-size="11" fill="${C.ink2}">learning</text>
-<g transform="translate(${m.l + pw - 230},${m.t - 4})"><rect x="0" y="-6" width="10" height="2" fill="${C.s1}"/><text x="16" y="0" ${font} font-size="10" fill="${C.ink2}">seeded precedents only</text><rect x="0" y="10" width="10" height="2" fill="${C.s2}"/><text x="16" y="16" ${font} font-size="10" fill="${C.ink2}">+ outcomes learned in the replay</text></g>
+<g transform="translate(${m.l},66)"><rect x="0" y="-4" width="12" height="2" fill="${C.s1}"/><text x="18" y="0" ${font} font-size="10" fill="${C.ink2}">seeded precedents only</text><rect x="200" y="-4" width="12" height="2" fill="${C.s2}"/><text x="218" y="0" ${font} font-size="10" fill="${C.ink2}">+ outcomes learned during the replay</text></g>
 </svg>
 `;
 writeFileSync(new URL("../docs/learning-curve.svg", import.meta.url), svg);

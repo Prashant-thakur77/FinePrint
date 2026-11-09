@@ -60,9 +60,13 @@ I also replayed a news-spike bot that buys $100 of YES on the first sharp rise. 
 
 ## How it learned over time
 
-<!-- learning:start -->
-Pending.
-<!-- learning:end -->
+To test whether the court gets better as case law piles up, I replayed 2026 in order. Each test market was ruled three days before it closed (or when it opened, if later), using only precedents that had closed before that moment. After each month, the outcomes of test markets that closed that month were written to Walrus on mainnet, 150 in all, so later months could recall them. Two courts ruled every market side by side: one with only the seeded precedents, one that also saw what it had learned.
+
+![Accuracy per replayed month, seeded precedents only vs learning](https://raw.githubusercontent.com/Prashant-thakur77/FinePrint/main/docs/learning-curve.png)
+
+It didn't learn its way to better calls. Over 197 rulings each, the court with only seeded precedents scored 0.503 and the learning court 0.487. Learning changed the verdict on 60 markets, 51 of them citing a precedent it had just written, and 29 of those 60 changes were for the better. Both lines climb through the year together, which tells you the climb comes from the mix of markets in each month, not from memory.
+
+When the court did change its mind, both rulings were sealed on Walrus, so each change is checkable: the old ruling, the precedent that moved it, and the new ruling, all by blob ID. 49 of them are on the memory page of the app.
 
 ## What didn't work
 

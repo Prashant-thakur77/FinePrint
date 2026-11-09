@@ -1,0 +1,47 @@
+{
+  "command": "npx tsx scripts/count_blobs.ts",
+  "at": "2026-11-09T16:34:29.353Z",
+  "PRECEDENTS": {
+    "accountId": "0x3d46b9637ee3dfc2d297bec29b1bb7d1add07d0c98bd9bea02badabfd5c804b4",
+    "total": 565,
+    "byNamespace": {
+      "smoke": 2,
+      "precedents": 553,
+      "patterns": 10
+    },
+    "sample": [
+      "xZZewmjcVxByW6tD53Ve9DF13qVMIw6AMcOQBUVACEg",
+      "3FeDbn6o43nmoW_3RvhJPuXccBWOuJ-rFER2VZL9CWc",
+      "w_s2XdSKBUXyZygDEX25pxeiCCi9XS6TJiTTABODtJ0"
+    ]
+  },
+  "COURT": {
+    "accountId": "0x948ae9d2bf8f29ac62cd89bd90307db8f4d7cc5c4323aed20862eb09e18cf658",
+    "total": 183,
+    "byNamespace": {
+      "smoke": 2,
+      "rulings": 77,
+      "track": 2,
+      "replay-rulings": 102
+    },
+    "sample": [
+      "5a57w5r4OblvYNynDf6KQa1FnX8pnT1bYfDucJUToxM",
+      "5l8EdxPfYQX9MWifTf3Grk72y71ri5xumu-1FbCeEmo",
+      "-ftgk5bjboxvXxRBHqZUvUa78qwcyZI3UUkyLbEskFY"
+    ]
+  },
+  "USER": {
+    "accountId": "0xe5510c4e27315d3c0f10337bf6dd0495d5c33eca4215e8ebaa128420a83fb4ee",
+    "total": 13,
+    "byNamespace": {
+      "smoke": 2,
+      "rules/*": 11
+    },
+    "sample": [
+      "-ABHklhC-HPHm1MxRJp47joRBhSKoNiG10cpXiU2K_k",
+      "8BX_1kTDcDIvrHpHKqfbQY_AkIGsOaRwjuAV2lpKUJc",
+      "90_apVOUBP8bEtVDIGWJuoUGqNbeINth72WjM3Mx_mQ"
+    ]
+  },
+  "total": 761
+}

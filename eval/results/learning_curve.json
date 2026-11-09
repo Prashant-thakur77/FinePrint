@@ -1,0 +1,992 @@
+{
+  "command": "npx tsx eval/learning_curve.ts 150",
+  "writes": 150,
+  "overall": {
+    "static": 0.503,
+    "learning": 0.487
+  },
+  "perMonth": [
+    {
+      "month": "2026-01",
+      "n": 21,
+      "staticAccuracy": 0.238,
+      "learningAccuracy": 0.238,
+      "learnedPrecedentsAvailable": 0,
+      "rulingsCitingLearned": 0
+    },
+    {
+      "month": "2026-02",
+      "n": 9,
+      "staticAccuracy": 0.333,
+      "learningAccuracy": 0.333,
+      "learnedPrecedentsAvailable": 18,
+      "rulingsCitingLearned": 4
+    },
+    {
+      "month": "2026-03",
+      "n": 22,
+      "staticAccuracy": 0.364,
+      "learningAccuracy": 0.318,
+      "learnedPrecedentsAvailable": 29,
+      "rulingsCitingLearned": 6
+    },
+    {
+      "month": "2026-04",
+      "n": 17,
+      "staticAccuracy": 0.529,
+      "learningAccuracy": 0.529,
+      "learnedPrecedentsAvailable": 52,
+      "rulingsCitingLearned": 10
+    },
+    {
+      "month": "2026-05",
+      "n": 22,
+      "staticAccuracy": 0.455,
+      "learningAccuracy": 0.5,
+      "learnedPrecedentsAvailable": 67,
+      "rulingsCitingLearned": 5
+    },
+    {
+      "month": "2026-06",
+      "n": 15,
+      "staticAccuracy": 0.8,
+      "learningAccuracy": 0.733,
+      "learnedPrecedentsAvailable": 90,
+      "rulingsCitingLearned": 8
+    },
+    {
+      "month": "2026-07",
+      "n": 32,
+      "staticAccuracy": 0.531,
+      "learningAccuracy": 0.531,
+      "learnedPrecedentsAvailable": 105,
+      "rulingsCitingLearned": 21
+    },
+    {
+      "month": "2026-08",
+      "n": 36,
+      "staticAccuracy": 0.556,
+      "learningAccuracy": 0.5,
+      "learnedPrecedentsAvailable": 136,
+      "rulingsCitingLearned": 27
+    },
+    {
+      "month": "2026-09",
+      "n": 18,
+      "staticAccuracy": 0.778,
+      "learningAccuracy": 0.778,
+      "learnedPrecedentsAvailable": 150,
+      "rulingsCitingLearned": 14
+    },
+    {
+      "month": "2026-10",
+      "n": 5,
+      "staticAccuracy": 0.2,
+      "learningAccuracy": 0.2,
+      "learnedPrecedentsAvailable": 150,
+      "rulingsCitingLearned": 3
+    }
+  ],
+  "writtenBlobs": [
+    {
+      "id": "1225451",
+      "blobId": "ceouI0oDVk2nDY_M-lHuk1OaI6napb0XeTNsbJYgnAA",
+      "closed": "2026-01-22T05:37:46.000Z",
+      "at": "2026-11-09T15:41:17.212Z"
+    },
+    {
+      "id": "1253381",
+      "blobId": "xZ-oSVQU4hz1FFtV7xo91qqivYudEBdBbuAoiWU_PBw",
+      "closed": "2026-01-31T01:16:12.000Z",
+      "at": "2026-11-09T15:41:17.212Z"
+    },
+    {
+      "id": "1140009",
+      "blobId": "__46MPNQRv-OkwODTi6buFEik-m45L0zME3m6AYj-K4",
+      "closed": "2026-01-10T08:47:58.000Z",
+      "at": "2026-11-09T15:41:17.212Z"
+    },
+    {
+      "id": "1128746",
+      "blobId": "k16Jlzg7OR4-6mc0-_N-Gr2vj1g4975AGKjyOwtNfH0",
+      "closed": "2026-01-09T15:14:12.000Z",
+      "at": "2026-11-09T15:41:17.212Z"
+    },
+    {
+      "id": "1170484",
+      "blobId": "H7Cd9zoRyr1BOHbGloBzyp1WhVwKV7TQXZ2VBPD8jC4",
+      "closed": "2026-01-16T06:57:36.000Z",
+      "at": "2026-11-09T15:41:17.212Z"
+    },
+    {
+      "id": "1253378",
+      "blobId": "tFwDlwfH10MmqwxbEIsNZtJGqYhZdJJ9tBZFEj-oTVk",
+      "closed": "2026-01-31T00:32:46.000Z",
+      "at": "2026-11-09T15:41:17.212Z"
+    },
+    {
+      "id": "1226507",
+      "blobId": "MVIKaO6T1Mpx6CLFdJzuNO0OXWyFTpSdhqFC5cv0_AQ",
+      "closed": "2026-01-22T08:31:52.000Z",
+      "at": "2026-11-09T15:41:17.212Z"
+    },
+    {
+      "id": "1235284",
+      "blobId": "xeGi79glSOpQLIH8gbOKs0TmdgOcv73hn6WDQ8rNkWw",
+      "closed": "2026-01-23T15:47:58.000Z",
+      "at": "2026-11-09T15:41:17.212Z"
+    },
+    {
+      "id": "1167609",
+      "blobId": "mAIzVsmMN5mVnuPR9wGEYwT5jbXBJtNhfEf3DxrT0RQ",
+      "closed": "2026-01-16T08:17:00.000Z",
+      "at": "2026-11-09T15:41:17.212Z"
+    },
+    {
+      "id": "1111125",
+      "blobId": "dzQIvpUaAcAXmPcpfAvGuR7bbDnj9BmNRXGdmCp07zg",
+      "closed": "2026-01-06T00:39:55.000Z",
+      "at": "2026-11-09T15:41:17.212Z"
+    },
+    {
+      "id": "1112268",
+      "blobId": "TrW10K65D-bn6_DvQVZtJDdccV8kFNEsfx8uB18GEGM",
+      "closed": "2026-01-18T21:29:14.000Z",
+      "at": "2026-11-09T15:41:48.065Z"
+    },
+    {
+      "id": "1270656",
+      "blobId": "xTvjzvQ7VU8QjculKkIBbYKUaRipGP-9EV652Sg6iwQ",
+      "closed": "2026-01-29T03:53:10.000Z",
+      "at": "2026-11-09T15:41:48.065Z"
+    },
+    {
+      "id": "1114512",
+      "blobId": "njAJ0IZJ6vDMBX0ILam5FJ6mEHK67ugDCpvEqDvQ9yk",
+      "closed": "2026-01-07T18:07:11.000Z",
+      "at": "2026-11-09T15:41:48.065Z"
+    },
+    {
+      "id": "1120935",
+      "blobId": "NohpR5oItyxDeUfVGuroteTePRz8OVStt8kUHTlipuw",
+      "closed": "2026-01-09T11:43:38.000Z",
+      "at": "2026-11-09T15:41:48.065Z"
+    },
+    {
+      "id": "1142363",
+      "blobId": "vNBbodRECdz6XLyrRb0xdt1spnh8Wr8cA1fflHTBIkw",
+      "closed": "2026-01-11T13:07:42.000Z",
+      "at": "2026-11-09T15:41:48.065Z"
+    },
+    {
+      "id": "1231388",
+      "blobId": "tta8GDcIt5iR2IBZACrcpvpaLj_ccCYtn0fciTDzTfA",
+      "closed": "2026-01-25T00:50:06.000Z",
+      "at": "2026-11-09T15:41:48.065Z"
+    },
+    {
+      "id": "1137314",
+      "blobId": "3xvPvQb_muIZsoRqwoVjX3KjwM5NYUmauAp6vDGkqh8",
+      "closed": "2026-01-09T01:39:30.000Z",
+      "at": "2026-11-09T15:41:48.065Z"
+    },
+    {
+      "id": "1080382",
+      "blobId": "zR9TCKkbQVYIS7zMwE8Su5ggVLTfh_S6EICiRyKaG5U",
+      "closed": "2026-01-04T09:07:59.000Z",
+      "at": "2026-11-09T15:41:48.065Z"
+    },
+    {
+      "id": "1094963",
+      "blobId": "OJxzYb2XQ4cOVe6bpZUwKa3YUKjF8LMTuOgNUJUY7hU",
+      "closed": "2026-02-03T11:47:56.000Z",
+      "at": "2026-11-09T15:44:44.924Z"
+    },
+    {
+      "id": "1329063",
+      "blobId": "q_tlME7oq6ucztFsAYffj2zjzyGNS_DUAzpIpuj21S8",
+      "closed": "2026-02-04T01:35:04.000Z",
+      "at": "2026-11-09T15:44:44.924Z"
+    },
+    {
+      "id": "1311726",
+      "blobId": "9L3gIuh-FpseXn925fdoDazWDAjPKiGmxG2qly0w6sw",
+      "closed": "2026-02-02T07:33:42.000Z",
+      "at": "2026-11-09T15:44:44.924Z"
+    },
+    {
+      "id": "1258597",
+      "blobId": "qjFHT19CX3AzUZfj3AN0zdadjH0Qolm_Y7S8Q1t1wx4",
+      "closed": "2026-02-12T03:10:05.000Z",
+      "at": "2026-11-09T15:44:44.924Z"
+    },
+    {
+      "id": "1419237",
+      "blobId": "w8au53P3CX26icrkCwGb-kNjLwIJknj027gBH2wjRZQ",
+      "closed": "2026-02-25T05:30:20.000Z",
+      "at": "2026-11-09T15:44:44.924Z"
+    },
+    {
+      "id": "1345401",
+      "blobId": "sWhmqYW06vXyY603nxAOoCMg7bCxQ6Ro9J1v54CVFB8",
+      "closed": "2026-02-13T03:20:17.000Z",
+      "at": "2026-11-09T15:44:44.924Z"
+    },
+    {
+      "id": "1252262",
+      "blobId": "SxYXjeaTJr1MCm0OVrqscObfXZWvoBL6cNflGBPBxJ4",
+      "closed": "2026-02-27T16:48:27.000Z",
+      "at": "2026-11-09T15:44:44.924Z"
+    },
+    {
+      "id": "1272563",
+      "blobId": "UTZnqT47CbhEwKAYl4gFyCOB5LqseRVR2NzhYjQy68Q",
+      "closed": "2026-02-16T08:50:59.000Z",
+      "at": "2026-11-09T15:44:44.924Z"
+    },
+    {
+      "id": "1303387",
+      "blobId": "dFk8QApj47tuHYSzc0VgVc0_bv9T5ZmUF46DIkjiygs",
+      "closed": "2026-02-01T08:05:44.000Z",
+      "at": "2026-11-09T15:44:44.924Z"
+    },
+    {
+      "id": "1385201",
+      "blobId": "s6izDLRs1JVqOQmDduzhNSCJ-B_ycW1X-3Slro4fnUg",
+      "closed": "2026-02-24T08:25:16.000Z",
+      "at": "2026-11-09T15:44:44.924Z"
+    },
+    {
+      "id": "1193321",
+      "blobId": "1YkbksdEwAeO_MHquQEmOG_nHqlEJ9rPLvFvMvjr4oM",
+      "closed": "2026-02-02T18:31:58.000Z",
+      "at": "2026-11-09T15:45:13.596Z"
+    },
+    {
+      "id": "1363896",
+      "blobId": "VEbaMABbp8RNyyaiRhimZkdpOegwrgb0tCFLKtOkoyo",
+      "closed": "2026-03-14T01:46:23.000Z",
+      "at": "2026-11-09T15:49:11.041Z"
+    },
+    {
+      "id": "1672608",
+      "blobId": "LQvtKRc0nQW59V5klvMPDBLwr7Rra4SfTxEW8elhncY",
+      "closed": "2026-03-21T18:36:45.000Z",
+      "at": "2026-11-09T15:49:11.041Z"
+    },
+    {
+      "id": "1542991",
+      "blobId": "9KP-Gt2UNgTXnj3iFO9nWnODz74bWAeb7hlg0sn-Pa0",
+      "closed": "2026-03-24T19:47:29.000Z",
+      "at": "2026-11-09T15:49:11.041Z"
+    },
+    {
+      "id": "1691557",
+      "blobId": "SlTYsvqwR6C45rXwkU0pzMvshyyr1uHrL8mKPfHUg78",
+      "closed": "2026-03-23T21:56:37.000Z",
+      "at": "2026-11-09T15:49:11.041Z"
+    },
+    {
+      "id": "1577678",
+      "blobId": "6cnJyNxdFbt6CBKAB4X3yw5SpfZ-utydvAbvUK5pJ0g",
+      "closed": "2026-03-20T01:34:29.000Z",
+      "at": "2026-11-09T15:49:11.041Z"
+    },
+    {
+      "id": "1437700",
+      "blobId": "dCe9OwPgWdxNKZsrJUzGTpCKwLiD6PQbsMdvM64cMCY",
+      "closed": "2026-03-04T23:32:53.000Z",
+      "at": "2026-11-09T15:49:11.041Z"
+    },
+    {
+      "id": "1559236",
+      "blobId": "XSRg_KAobEpG-4G8PycXRQn_CwN_vSpBkUx30M9j-rc",
+      "closed": "2026-03-13T07:06:53.000Z",
+      "at": "2026-11-09T15:49:11.041Z"
+    },
+    {
+      "id": "1575483",
+      "blobId": "89HiLGfPB8zZz9Fd3UJYOjvf_C2SxPqFmAYGnj0ag_I",
+      "closed": "2026-03-15T15:25:07.000Z",
+      "at": "2026-11-09T15:49:11.041Z"
+    },
+    {
+      "id": "1289204",
+      "blobId": "9-9EPIguLA6213nuzJwCliMzYr8eyIWggYJaVPDFgDY",
+      "closed": "2026-03-03T12:24:09.000Z",
+      "at": "2026-11-09T15:49:11.041Z"
+    },
+    {
+      "id": "1724799",
+      "blobId": "zONi5azay6BndjNpYWOwbhpMJhfKAOPczRV9a8plmfQ",
+      "closed": "2026-03-26T20:10:43.000Z",
+      "at": "2026-11-09T15:49:11.041Z"
+    },
+    {
+      "id": "1525011",
+      "blobId": "DOabP4-9dJ-0Dvrlj8KjN3vi1WzTL92r5rlzBhGEq5g",
+      "closed": "2026-03-14T18:46:09.000Z",
+      "at": "2026-11-09T15:49:44.765Z"
+    },
+    {
+      "id": "1456134",
+      "blobId": "Pu6jEUh9IOzFnycMt4cpTUS34kcrL_0vBkDro5ByJdY",
+      "closed": "2026-03-12T00:05:35.000Z",
+      "at": "2026-11-09T15:49:44.765Z"
+    },
+    {
+      "id": "1542761",
+      "blobId": "m-EwXSPuDZire419XUMwtOh00v5vAym_Iu6zv5CBu0A",
+      "closed": "2026-03-20T23:30:15.000Z",
+      "at": "2026-11-09T15:49:44.765Z"
+    },
+    {
+      "id": "1431657",
+      "blobId": "qeAAwxq6Qf76s1GVD4q6iRo6nl3OrqPByZ31SLNbcdQ",
+      "closed": "2026-03-09T21:36:29.000Z",
+      "at": "2026-11-09T15:49:44.765Z"
+    },
+    {
+      "id": "1498418",
+      "blobId": "UO5ImSw_3r9H7P2iqtFsE1Ev7HV6pTINlriqqucZf1A",
+      "closed": "2026-03-07T05:59:29.000Z",
+      "at": "2026-11-09T15:49:44.765Z"
+    },
+    {
+      "id": "1718373",
+      "blobId": "DRNv6R53xC5qSewpVV2-diiTc4eJww1EpkYyFwBNdc4",
+      "closed": "2026-03-25T20:37:43.000Z",
+      "at": "2026-11-09T15:49:44.765Z"
+    },
+    {
+      "id": "1542769",
+      "blobId": "FoSFJp8P9e4HOpyDCzk4LvaGqSD58Cw-uhTiXYjGaWk",
+      "closed": "2026-03-20T23:30:11.000Z",
+      "at": "2026-11-09T15:49:44.765Z"
+    },
+    {
+      "id": "1456396",
+      "blobId": "3c8viltqxsWRPZo__HkxfQZi7PBMBPwiHmXBAYQrjDY",
+      "closed": "2026-03-13T12:00:55.000Z",
+      "at": "2026-11-09T15:49:44.765Z"
+    },
+    {
+      "id": "1491777",
+      "blobId": "YTuJv_Wii4Y--2VLdRX-2XNL0dZK2LNbdLud-rZnYlw",
+      "closed": "2026-03-04T04:19:35.000Z",
+      "at": "2026-11-09T15:49:44.765Z"
+    },
+    {
+      "id": "1695794",
+      "blobId": "s6Ds8MMAaiDP6LwXbT-Qaxqq9Zq7UUeHrlf2u6kLRq4",
+      "closed": "2026-03-27T01:38:47.000Z",
+      "at": "2026-11-09T15:49:44.765Z"
+    },
+    {
+      "id": "1366301",
+      "blobId": "ygv7NpvrtE2qIMPBbQNgGsgSvBclJ6UXNwbcXhTXYR0",
+      "closed": "2026-03-06T17:08:33.000Z",
+      "at": "2026-11-09T15:50:13.435Z"
+    },
+    {
+      "id": "1227362",
+      "blobId": "n48j-MvA_VW-yoKwWHIetbAVfzg0vowReL33gubu4Qs",
+      "closed": "2026-03-14T00:35:41.000Z",
+      "at": "2026-11-09T15:50:13.435Z"
+    },
+    {
+      "id": "1456420",
+      "blobId": "fKf1jiozjzE54b_WbmMIFQWA9JnHSa4Ra7_YyPlfNGo",
+      "closed": "2026-03-13T11:52:51.000Z",
+      "at": "2026-11-09T15:50:13.435Z"
+    },
+    {
+      "id": "1778028",
+      "blobId": "BZYEJEbp_rBOgfHdrFI0rrJWVGvwpgS6Y0bVMudEGsY",
+      "closed": "2026-04-26T17:33:16.000Z",
+      "at": "2026-11-09T15:54:33.208Z"
+    },
+    {
+      "id": "1902859",
+      "blobId": "POPMng8tzCOSYeOUCz7fd1-HPVEXP-nMLSjDZ3iiGMQ",
+      "closed": "2026-04-08T05:27:39.000Z",
+      "at": "2026-11-09T15:54:33.208Z"
+    },
+    {
+      "id": "1957983",
+      "blobId": "G9nHEbldmsCGxIC-F-psHHVGJHVw22FxhYxt8-NXp08",
+      "closed": "2026-04-16T12:49:32.000Z",
+      "at": "2026-11-09T15:54:33.208Z"
+    },
+    {
+      "id": "2043742",
+      "blobId": "i4pv8iMrzq9rs2g8xYUo2DASBRa75BRThDwQJFXC3N8",
+      "closed": "2026-04-29T00:32:56.000Z",
+      "at": "2026-11-09T15:54:33.208Z"
+    },
+    {
+      "id": "2035530",
+      "blobId": "ieId_-pjOLIcio8dsb4vqt-WMZaqTYBs7z7RxI1fLio",
+      "closed": "2026-04-21T08:44:54.000Z",
+      "at": "2026-11-09T15:54:33.208Z"
+    },
+    {
+      "id": "2090160",
+      "blobId": "1M3_6e3lQbJWsT2eGuEkQo5shRLw3oo6aCWlCOp-8g0",
+      "closed": "2026-04-27T18:46:04.000Z",
+      "at": "2026-11-09T15:54:33.208Z"
+    },
+    {
+      "id": "2102451",
+      "blobId": "Z4WVQYwAN1l2HoeU-Ii-aODyFMu4ghOAoA7zDJZVD7s",
+      "closed": "2026-04-30T19:38:44.000Z",
+      "at": "2026-11-09T15:54:33.208Z"
+    },
+    {
+      "id": "1911185",
+      "blobId": "JNp1IcJf6hPYc-JMmh2-HmNjqEol48jR9E3MviaC-dA",
+      "closed": "2026-04-24T03:05:28.000Z",
+      "at": "2026-11-09T15:54:33.208Z"
+    },
+    {
+      "id": "2065438",
+      "blobId": "IIjizxaFzSO-MYi1_wvtCDddluJTi8XIIqlBFQ3cNmY",
+      "closed": "2026-04-25T13:49:18.000Z",
+      "at": "2026-11-09T15:54:33.208Z"
+    },
+    {
+      "id": "1942237",
+      "blobId": "rolill66La0JUnEExkaC1w1QPVFCGNMoHTCSFwH5340",
+      "closed": "2026-04-11T13:33:25.000Z",
+      "at": "2026-11-09T15:54:33.208Z"
+    },
+    {
+      "id": "2103669",
+      "blobId": "L1VMFXhi1Rf5hcc1D4M3iGHCe1LCzTe2unn7TelXzYc",
+      "closed": "2026-04-29T15:55:30.000Z",
+      "at": "2026-11-09T15:54:59.872Z"
+    },
+    {
+      "id": "1949796",
+      "blobId": "v63BAPz2UQpSxfS0HlvhbobgQqdJ9mP12t_oU5r5a6I",
+      "closed": "2026-04-17T02:39:58.000Z",
+      "at": "2026-11-09T15:54:59.872Z"
+    },
+    {
+      "id": "2076525",
+      "blobId": "F7bPzgS5mVqQaPXF2JUeAJ8IV2kWoHK-a_x8XNwMmJU",
+      "closed": "2026-04-25T13:26:58.000Z",
+      "at": "2026-11-09T15:54:59.872Z"
+    },
+    {
+      "id": "2049725",
+      "blobId": "UNScaCe-3LS-cw3z-oWuusUS6IJCC5MEhHvOkyT27O8",
+      "closed": "2026-04-24T08:43:28.000Z",
+      "at": "2026-11-09T15:54:59.872Z"
+    },
+    {
+      "id": "2032627",
+      "blobId": "vn0DOmFASCu4Bv3f6fUZgoNm-LWBBJGvKgxixBG0jMU",
+      "closed": "2026-04-22T01:35:36.000Z",
+      "at": "2026-11-09T15:54:59.872Z"
+    },
+    {
+      "id": "2367886",
+      "blobId": "tcmBiWYJN1JC3CPu-BQzXOZOlkTUg1U4U8F3ieAlJ54",
+      "closed": "2026-05-27T06:15:30.000Z",
+      "at": "2026-11-09T15:58:59.188Z"
+    },
+    {
+      "id": "2205939",
+      "blobId": "R0hOgtRYVq2CsdkY00tB9od4OfENAh7DQYh2tljqCAA",
+      "closed": "2026-05-11T03:02:12.000Z",
+      "at": "2026-11-09T15:58:59.188Z"
+    },
+    {
+      "id": "2212311",
+      "blobId": "gCaPo-XxLcEooRYmOoAfQNWvcu86mdiQbAQXT-uMmNM",
+      "closed": "2026-05-14T03:31:13.000Z",
+      "at": "2026-11-09T15:58:59.188Z"
+    },
+    {
+      "id": "2395322",
+      "blobId": "xKV11prDhxdSMMXL9AfY9AvNrji3xokxNGR8r2FEek8",
+      "closed": "2026-05-30T18:12:53.000Z",
+      "at": "2026-11-09T15:58:59.188Z"
+    },
+    {
+      "id": "2324374",
+      "blobId": "Q5e6pZJ0-R3EQxB49vhjLToVpGy1zI1wzZoyatJ3e2A",
+      "closed": "2026-05-25T20:16:38.000Z",
+      "at": "2026-11-09T15:58:59.188Z"
+    },
+    {
+      "id": "1991889",
+      "blobId": "AxwOsCFdZM0_YSzqbBo9QvhRXZZovZWy3zBEFSGkUVI",
+      "closed": "2026-05-13T03:29:48.000Z",
+      "at": "2026-11-09T15:58:59.188Z"
+    },
+    {
+      "id": "2212688",
+      "blobId": "uGN6Nb32X4T-XN-MXlhGsPBHWE5J67AG522E5Mx2xK4",
+      "closed": "2026-05-13T04:09:45.000Z",
+      "at": "2026-11-09T15:58:59.188Z"
+    },
+    {
+      "id": "2212673",
+      "blobId": "erNfMLQpaB9ot45K8nW9kqjDeVnEhABlwsSaHDl_EEI",
+      "closed": "2026-05-13T04:04:46.000Z",
+      "at": "2026-11-09T15:58:59.188Z"
+    },
+    {
+      "id": "2179187",
+      "blobId": "bGPzN9Nj8WE3LHoQpny0uDfbbMLXYoBkkiaLvql6N3s",
+      "closed": "2026-05-10T07:21:20.000Z",
+      "at": "2026-11-09T15:58:59.188Z"
+    },
+    {
+      "id": "2117153",
+      "blobId": "k2jekm680kqdB953lhlQIXwZmpJjXovDUTb9BAD5oZs",
+      "closed": "2026-05-24T15:58:27.000Z",
+      "at": "2026-11-09T15:58:59.188Z"
+    },
+    {
+      "id": "2205082",
+      "blobId": "O-nh5R5LEm75hdwlEmPfAKnnFsKOr4bJCysz0H0kT90",
+      "closed": "2026-05-16T03:07:50.000Z",
+      "at": "2026-11-09T15:59:34.173Z"
+    },
+    {
+      "id": "2122382",
+      "blobId": "gd21cry19c_QFl48znofujMgyTyoG8mMF74CIEhqpiY",
+      "closed": "2026-05-02T02:39:56.000Z",
+      "at": "2026-11-09T15:59:34.173Z"
+    },
+    {
+      "id": "2324370",
+      "blobId": "Oh3Alge3r-_sCReGPNORAhT39FrHHXRHWU6eivJOS_o",
+      "closed": "2026-05-25T20:16:34.000Z",
+      "at": "2026-11-09T15:59:34.173Z"
+    },
+    {
+      "id": "1831356",
+      "blobId": "TAEaoAGw8h_EC4V4nc35kcCEX-mkF3iXN7Kkt8Q2WuQ",
+      "closed": "2026-05-28T20:53:32.000Z",
+      "at": "2026-11-09T15:59:34.173Z"
+    },
+    {
+      "id": "2152563",
+      "blobId": "bxcw7RSijUJ7xH_9erjpIoM0eOAxsPSxEcfOR-P3o3w",
+      "closed": "2026-05-07T06:43:00.000Z",
+      "at": "2026-11-09T15:59:34.173Z"
+    },
+    {
+      "id": "2331668",
+      "blobId": "qPoudRddP6kp85n66kq4B2x9MoSS1qtihLeOEL6hqL4",
+      "closed": "2026-05-23T04:36:28.000Z",
+      "at": "2026-11-09T15:59:34.173Z"
+    },
+    {
+      "id": "1571780",
+      "blobId": "hkYIv03G8FQ2LGdYJ-8_Lvuaz2duHPApRk3sW-4g6q8",
+      "closed": "2026-05-11T18:01:16.000Z",
+      "at": "2026-11-09T15:59:34.173Z"
+    },
+    {
+      "id": "2209073",
+      "blobId": "5x9gjqY7YbzAknWVuSehLEd50dccEC061b90H-dehZE",
+      "closed": "2026-05-17T18:27:14.000Z",
+      "at": "2026-11-09T15:59:34.173Z"
+    },
+    {
+      "id": "2132941",
+      "blobId": "FGRT-t-VQlNWo1DAdt2zA7Vu-i1EhF6N5z8Ww5gah7Y",
+      "closed": "2026-05-11T06:46:37.000Z",
+      "at": "2026-11-09T15:59:34.173Z"
+    },
+    {
+      "id": "2116590",
+      "blobId": "nuXcNsqm1DDrQJP_DULcpLkruljkSPTN5dmDgsSZitc",
+      "closed": "2026-05-01T18:54:54.000Z",
+      "at": "2026-11-09T15:59:34.173Z"
+    },
+    {
+      "id": "2172090",
+      "blobId": "3T8t0BWjEaiy41fFVFhvC3wzZULDWCsngultI9pYs1w",
+      "closed": "2026-05-08T14:53:58.000Z",
+      "at": "2026-11-09T16:00:04.064Z"
+    },
+    {
+      "id": "2324355",
+      "blobId": "1MQM2dLJOvY8u5sliWdEP9LU6V_7ZJOK9EPwUIaGrFw",
+      "closed": "2026-05-25T20:16:36.000Z",
+      "at": "2026-11-09T16:00:04.064Z"
+    },
+    {
+      "id": "2194428",
+      "blobId": "OKLxCZASjsjNmY_BPW_SPJXuNYsb8Idzo1E8owNoljY",
+      "closed": "2026-05-12T22:00:36.000Z",
+      "at": "2026-11-09T16:00:04.065Z"
+    },
+    {
+      "id": "2410289",
+      "blobId": "o57zWk_gKMbLJg4x-SKi3chBEb0c4LsY9haJJ0H7uGQ",
+      "closed": "2026-06-05T18:28:51.000Z",
+      "at": "2026-11-09T16:04:42.249Z"
+    },
+    {
+      "id": "2506578",
+      "blobId": "TvBp2mZw-UbUNYjcpA7EsN3b2jxSlpKXxdbNyrqzdkc",
+      "closed": "2026-06-12T00:41:33.000Z",
+      "at": "2026-11-09T16:04:42.250Z"
+    },
+    {
+      "id": "2531652",
+      "blobId": "VlALPvynJu5Olqp3fNNFz-488Z03ujShU_K-xq3babk",
+      "closed": "2026-06-13T16:19:43.000Z",
+      "at": "2026-11-09T16:04:42.250Z"
+    },
+    {
+      "id": "2597713",
+      "blobId": "N_EdezjUgCOf9_T6fL4bVDiIzSzR6zg6bPJibT8bnR4",
+      "closed": "2026-06-19T04:12:49.000Z",
+      "at": "2026-11-09T16:04:42.250Z"
+    },
+    {
+      "id": "2518274",
+      "blobId": "aUSi_TZzPX6_He5w5_ITYhI4CovF5HR8JomjcBxvXJ8",
+      "closed": "2026-06-14T16:13:43.000Z",
+      "at": "2026-11-09T16:04:42.250Z"
+    },
+    {
+      "id": "2363860",
+      "blobId": "tQaGW9_yQURJQVyO0wLTpogIVucGqoiHWjmBC6p1fHg",
+      "closed": "2026-06-04T00:33:12.000Z",
+      "at": "2026-11-09T16:04:42.250Z"
+    },
+    {
+      "id": "2648555",
+      "blobId": "Nyd-RzeZ51vtn5IUk2OiJgdpzdwqmpDSXQkyQfDQGiM",
+      "closed": "2026-06-23T14:52:35.000Z",
+      "at": "2026-11-09T16:04:42.250Z"
+    },
+    {
+      "id": "2638750",
+      "blobId": "Gis1h2lVX9NOy2pOsOejXp0EDMziaRSDuZbPFQaI7Vw",
+      "closed": "2026-06-23T20:19:31.000Z",
+      "at": "2026-11-09T16:04:42.250Z"
+    },
+    {
+      "id": "2675897",
+      "blobId": "M6e9Gzzc8a3YGwB0EGDejPCyFHHF3VtvTbIv1Kz50I8",
+      "closed": "2026-06-25T09:31:02.000Z",
+      "at": "2026-11-09T16:04:42.250Z"
+    },
+    {
+      "id": "2250107",
+      "blobId": "OEn2qyMO_chbf8Sk3PgoLW6Fe-WMHf9aEE_U09kK_D4",
+      "closed": "2026-06-12T00:32:01.000Z",
+      "at": "2026-11-09T16:04:42.250Z"
+    },
+    {
+      "id": "2209942",
+      "blobId": "Oj9la8OH_2gJOmDijRYqvnqGXsgAI9bkfqdwoL7JE6o",
+      "closed": "2026-06-06T19:43:39.000Z",
+      "at": "2026-11-09T16:05:15.481Z"
+    },
+    {
+      "id": "2622584",
+      "blobId": "IuCmcMaeynFt2knzm56-uFBZYKM8EN5duG43SFZM8rY",
+      "closed": "2026-06-22T01:15:17.000Z",
+      "at": "2026-11-09T16:05:15.481Z"
+    },
+    {
+      "id": "1698911",
+      "blobId": "RIZAwv_UjTz5G-FS1Octy8bjCCHZ0Qhqfd8yuqxX17s",
+      "closed": "2026-06-01T13:15:11.000Z",
+      "at": "2026-11-09T16:05:15.481Z"
+    },
+    {
+      "id": "2413571",
+      "blobId": "7sxSKZrzPDR2puc4VhRBXNo450AGxVyY7GiTdAHx-TY",
+      "closed": "2026-06-18T00:38:25.000Z",
+      "at": "2026-11-09T16:05:15.481Z"
+    },
+    {
+      "id": "2611391",
+      "blobId": "zeyHmasVM5lyMbOgeRlGQiyQvIc5s3cHQwaEbtnZE2E",
+      "closed": "2026-06-22T14:01:58.000Z",
+      "at": "2026-11-09T16:05:15.481Z"
+    },
+    {
+      "id": "2689578",
+      "blobId": "4pLneJZN63h9rNWnDNdYZZT5ctEEtpGxj-nDg6xpiCQ",
+      "closed": "2026-07-09T23:02:25.000Z",
+      "at": "2026-11-09T16:11:10.205Z"
+    },
+    {
+      "id": "2877053",
+      "blobId": "Xtn9Y3wKE4c8afvesZLqcK1SZLvnBqcfcN3aPP-pUQ4",
+      "closed": "2026-07-12T03:06:01.000Z",
+      "at": "2026-11-09T16:11:10.205Z"
+    },
+    {
+      "id": "2967837",
+      "blobId": "k-YsrcQ8s2BXgUohZmdjpj7g2XIlPnnqIkfaylCwrbA",
+      "closed": "2026-07-30T00:31:12.000Z",
+      "at": "2026-11-09T16:11:10.205Z"
+    },
+    {
+      "id": "2868133",
+      "blobId": "_QB2IkrBL1Q9rtloU2x_b9KXsp-6SFWUPXKRHynrr9I",
+      "closed": "2026-07-11T03:15:10.000Z",
+      "at": "2026-11-09T16:11:10.205Z"
+    },
+    {
+      "id": "2966954",
+      "blobId": "IsvzYQN40AtoI2g9LY5mBNNRjou3fa8gb9WJhX0V_bo",
+      "closed": "2026-07-30T22:17:56.000Z",
+      "at": "2026-11-09T16:11:10.205Z"
+    },
+    {
+      "id": "2892406",
+      "blobId": "opl7PHNSIuuLRd3MAUR9NZ8TFhK-P36xgKBwlfGr_mQ",
+      "closed": "2026-07-14T01:05:56.000Z",
+      "at": "2026-11-09T16:11:10.205Z"
+    },
+    {
+      "id": "2723888",
+      "blobId": "9zNcqqUrzPy63bLlagWGrhAjps8Srl6gn_YljijTd5I",
+      "closed": "2026-07-12T14:40:49.000Z",
+      "at": "2026-11-09T16:11:10.205Z"
+    },
+    {
+      "id": "3088869",
+      "blobId": "a7FzQlVm4jyxBjBuOKja534AIVbwpaEEPSZOg2-YqYU",
+      "closed": "2026-07-25T07:51:58.000Z",
+      "at": "2026-11-09T16:11:10.205Z"
+    },
+    {
+      "id": "996893",
+      "blobId": "jTzNI_5tC8GEXGGUDwSaIRKAjzAfG2oP1wauz0-rTMc",
+      "closed": "2026-07-01T06:06:25.000Z",
+      "at": "2026-11-09T16:11:10.205Z"
+    },
+    {
+      "id": "2788775",
+      "blobId": "1sfLuWRHGJJo2xB6qNfYM6JLMylcnlQ0Ie_C0t1QftM",
+      "closed": "2026-07-08T02:03:13.000Z",
+      "at": "2026-11-09T16:11:10.205Z"
+    },
+    {
+      "id": "2768180",
+      "blobId": "4o0blG7YpUySeEN_SAcdIm9Vmu6yZ5gPajSY89Vk1BQ",
+      "closed": "2026-07-03T01:23:07.000Z",
+      "at": "2026-11-09T16:11:45.514Z"
+    },
+    {
+      "id": "3039903",
+      "blobId": "mCorr7JKuumbYqIr4LmDvD5iI-Z19DDKGCn-T1hw9Jo",
+      "closed": "2026-07-23T21:33:18.000Z",
+      "at": "2026-11-09T16:11:45.514Z"
+    },
+    {
+      "id": "2802991",
+      "blobId": "KCnexwnFfMiATFkvYll9ZXaVZtwdwQfy0DfESrxhago",
+      "closed": "2026-07-06T20:04:11.000Z",
+      "at": "2026-11-09T16:11:45.514Z"
+    },
+    {
+      "id": "2774708",
+      "blobId": "hxPGPQDtN755YOlp6Jfc-eAvqzKPcplQwneCkL0R1Fk",
+      "closed": "2026-07-24T01:19:42.000Z",
+      "at": "2026-11-09T16:11:45.514Z"
+    },
+    {
+      "id": "2913517",
+      "blobId": "JRJxlWoTZ7_wQ6WftncHTufOinOSfgv506RN3MA49Ig",
+      "closed": "2026-07-14T16:08:41.000Z",
+      "at": "2026-11-09T16:11:45.514Z"
+    },
+    {
+      "id": "2584948",
+      "blobId": "NgcCPxv6m0iaBbqpGnwHA9aFsDLwvhbfKgW3X093rXA",
+      "closed": "2026-07-04T02:47:55.000Z",
+      "at": "2026-11-09T16:11:45.514Z"
+    },
+    {
+      "id": "3095557",
+      "blobId": "ncLkW48mtoasPMReNtEx2ogRKPTq6i87XcfoL9CJqDQ",
+      "closed": "2026-07-26T04:08:57.000Z",
+      "at": "2026-11-09T16:11:45.514Z"
+    },
+    {
+      "id": "3192578",
+      "blobId": "j6P-j9Et6-kA4h0iX58TXLC54Ih7yMjl2UmKUS9rrVs",
+      "closed": "2026-07-30T16:49:42.000Z",
+      "at": "2026-11-09T16:11:45.514Z"
+    },
+    {
+      "id": "2898488",
+      "blobId": "skZ7T4Mk15CxFVrNDvNi-f--XXhPYbJn9qKTbmD6Pss",
+      "closed": "2026-07-26T16:08:51.000Z",
+      "at": "2026-11-09T16:11:45.514Z"
+    },
+    {
+      "id": "3077253",
+      "blobId": "QILJBh84dpyOzJL5VIz1R336JgNBC2dHqK0AHbXDLlI",
+      "closed": "2026-07-24T16:20:00.000Z",
+      "at": "2026-11-09T16:11:45.514Z"
+    },
+    {
+      "id": "3229837",
+      "blobId": "frVAOlXiknzyDPkV7F5CbI1Uq0O_vHU5kbvdoXA5uK0",
+      "closed": "2026-07-31T18:23:12.000Z",
+      "at": "2026-11-09T16:12:30.694Z"
+    },
+    {
+      "id": "3148374",
+      "blobId": "HYMPmjmu81OKOQt0QxOKS9fPTFK0wkYN5HovpL6CUWs",
+      "closed": "2026-07-28T15:39:14.000Z",
+      "at": "2026-11-09T16:12:30.694Z"
+    },
+    {
+      "id": "2796829",
+      "blobId": "AZmOeKTjLLNUmdd1USe2DCB1Otg26bze7HyCciUAvyE",
+      "closed": "2026-07-07T14:17:14.000Z",
+      "at": "2026-11-09T16:12:30.694Z"
+    },
+    {
+      "id": "3219020",
+      "blobId": "YIDtAaQgruzrzr4CkGsSY7P7H7oe0tCB0WCUab0r-AE",
+      "closed": "2026-07-31T04:23:15.000Z",
+      "at": "2026-11-09T16:12:30.694Z"
+    },
+    {
+      "id": "2903295",
+      "blobId": "biP5UYSYpuqZ5RfrB_TGVNxr8zqFIGkF9dKJ8jRigTY",
+      "closed": "2026-07-25T21:05:43.000Z",
+      "at": "2026-11-09T16:12:30.694Z"
+    },
+    {
+      "id": "2963746",
+      "blobId": "PBVraWPVsYopxDGzbiQfpTQIDggSGhxdCwp_dwjOw6k",
+      "closed": "2026-07-23T21:27:18.000Z",
+      "at": "2026-11-09T16:12:30.694Z"
+    },
+    {
+      "id": "3085084",
+      "blobId": "AzSAgXhR0LNDZ8s4s7AbDj6jg8Ss2Wg8cQQWYMqi3SM",
+      "closed": "2026-07-26T13:21:16.000Z",
+      "at": "2026-11-09T16:12:30.694Z"
+    },
+    {
+      "id": "3028674",
+      "blobId": "OIwKEHCRxgOoutVZa_q2tRRnKOwbdokDZRcaeKSZppQ",
+      "closed": "2026-07-22T15:06:18.000Z",
+      "at": "2026-11-09T16:12:30.694Z"
+    },
+    {
+      "id": "2775800",
+      "blobId": "HGrJ2gRY560q3YtGhHb6pFF4Q3GdUhVNAt0bZO1va9o",
+      "closed": "2026-07-05T18:21:28.000Z",
+      "at": "2026-11-09T16:12:30.694Z"
+    },
+    {
+      "id": "3093886",
+      "blobId": "Hz2f22Fqg6-_IJ1USe6hM_Fp0JgiY3pNRkvjEvlGDEE",
+      "closed": "2026-07-28T16:26:11.000Z",
+      "at": "2026-11-09T16:12:30.694Z"
+    },
+    {
+      "id": "2913513",
+      "blobId": "eqQSVHAp4FiGKuxJyP_sQK0BfwzbwummlXb-aDiVJes",
+      "closed": "2026-07-14T16:11:20.411Z",
+      "at": "2026-11-09T16:12:48.751Z"
+    },
+    {
+      "id": "3181484",
+      "blobId": "YjPDPB56-ZWePuumjO8XUNsyg1kqtc50yXQJcoqjkVw",
+      "closed": "2026-08-10T19:50:28.000Z",
+      "at": "2026-11-09T16:24:54.860Z"
+    },
+    {
+      "id": "3466792",
+      "blobId": "DVwUbR_Pdg6a1J-SUs84kZ-BU6aIsikKAo45Vq0TiBQ",
+      "closed": "2026-08-12T06:38:12.000Z",
+      "at": "2026-11-09T16:24:54.860Z"
+    },
+    {
+      "id": "2992415",
+      "blobId": "vEhBJxH4s8nN7i1TRwmCD1-wy9C_Tz9Zbn4SB4QIdoQ",
+      "closed": "2026-08-02T01:06:03.000Z",
+      "at": "2026-11-09T16:24:54.860Z"
+    },
+    {
+      "id": "3839699",
+      "blobId": "JYd1dO_d8uowPeo3vp5Z4jdEpPi1-JJ6YENIJv8XICM",
+      "closed": "2026-08-26T18:54:58.000Z",
+      "at": "2026-11-09T16:24:54.860Z"
+    },
+    {
+      "id": "3475259",
+      "blobId": "dig85k2d8Hcp6C2TJ87kldl1ukeXRABAdiiSnLUqRTg",
+      "closed": "2026-08-11T04:14:03.000Z",
+      "at": "2026-11-09T16:24:54.860Z"
+    },
+    {
+      "id": "3867665",
+      "blobId": "UkygBgxkxkVAmzn2pJrpoGsaIz7D59QKTBTkChGEIZE",
+      "closed": "2026-08-27T22:43:45.000Z",
+      "at": "2026-11-09T16:24:54.860Z"
+    },
+    {
+      "id": "3510037",
+      "blobId": "PYgoCja5LxeFgJ4dom5c5e1kkfx_0Mq-pD2hEAL_ZkU",
+      "closed": "2026-08-12T04:22:15.000Z",
+      "at": "2026-11-09T16:24:54.860Z"
+    },
+    {
+      "id": "2676498",
+      "blobId": "bHrv9I2us10_JuaWbne3b75Tcq_EMCCx380utgKRHnU",
+      "closed": "2026-08-01T06:03:26.000Z",
+      "at": "2026-11-09T16:24:54.860Z"
+    },
+    {
+      "id": "3935908",
+      "blobId": "pu3wGjT5Rg39z2XJDFAo5MsjWeawyW_Nu5uxUGA1GdA",
+      "closed": "2026-08-30T19:56:19.000Z",
+      "at": "2026-11-09T16:24:54.860Z"
+    },
+    {
+      "id": "3192161",
+      "blobId": "5K5CkmOHp9WQLKMa8_grbhKYMvbizU4uGCevNU8bTM0",
+      "closed": "2026-08-28T22:19:43.000Z",
+      "at": "2026-11-09T16:24:54.860Z"
+    },
+    {
+      "id": "3756199",
+      "blobId": "J0E1Cm9kCrM606G4bw5MfBckficsbs6sEpgKcNwURXI",
+      "closed": "2026-08-23T18:51:13.000Z",
+      "at": "2026-11-09T16:25:21.249Z"
+    },
+    {
+      "id": "3341681",
+      "blobId": "yE4j8VgpZrtMAqB8AqkLKPlqhsmoS0ldf1nGDE8SK5Y",
+      "closed": "2026-08-11T20:19:30.000Z",
+      "at": "2026-11-09T16:25:21.249Z"
+    },
+    {
+      "id": "3749459",
+      "blobId": "mjeXkrI6cOaJ7E0I8txyc9t-rPe-pPFEBRGkJ1HahHE",
+      "closed": "2026-08-21T18:08:12.000Z",
+      "at": "2026-11-09T16:25:21.249Z"
+    },
+    {
+      "id": "3915665",
+      "blobId": "bGDOcj6rIOyAEf_xpJTaHAy-WobUco7kGqaV8BuFGAQ",
+      "closed": "2026-08-28T20:50:15.000Z",
+      "at": "2026-11-09T16:25:21.249Z"
+    }
+  ]
+}
