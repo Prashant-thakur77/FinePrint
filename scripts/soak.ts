@@ -9,13 +9,15 @@ import "dotenv/config";
 import { Ed25519Keypair } from "@mysten/sui/keypairs/ed25519";
 import { config } from "../src/config.js";
 import { buyRuling } from "../src/bot/client.js";
-import { pmMarkets } from "../src/tatum/pm.js";
+import { gammaMarkets } from "../src/polymarket/gamma.js";
+import { payNetwork } from "../src/pay/network.js";
 import { RESULTS, round, writeJson } from "../eval/lib.js";
 
 const calls = Number(process.argv[2] ?? 50), conc = Number(process.argv[3] ?? 2);
 const base = process.env.FINEPRINT_URL ?? config.publicUrl;
 const bot = Ed25519Keypair.fromSecretKey(config.botKey);
-const markets = (await pmMarkets({ platform: "polymarket", status: "active", sort: "volume_desc", limit: 20 })).data.filter((m) => m.chain?.conditionId).map((m) => m.id);
+// Open markets by volume (Gamma listing); rulings go through Tatum as usual.
+const markets = (await gammaMarkets({ closed: false, active: true, order: "volumeNum", ascending: false, limit: 40 })).filter((m) => m.conditionId && m.outcomes.length === 2).map((m) => m.id).slice(0, 25);
 const results: { i: number; market: string; ok: boolean; ms: number; digest?: string; verdict?: string; cited?: boolean; error?: string }[] = [];
 let next = 0;
 await Promise.all(Array.from({ length: conc }, async () => {
@@ -31,6 +33,6 @@ await Promise.all(Array.from({ length: conc }, async () => {
 }));
 const ok = results.filter((r) => r.ok).map((r) => r.ms).sort((a, b) => a - b);
 const pct = (p: number) => ok[Math.min(ok.length - 1, Math.floor(p * ok.length))];
-const out = { command: `npx tsx scripts/soak.ts ${calls} ${conc}`, endpoint: `${base}/api/ruling`, calls, succeeded: ok.length, successRate: round(ok.length / calls), p50ms: pct(0.5), p95ms: pct(0.95), usdcSpent: round(results.filter((r) => r.ok).length * config.rulingPriceUsdc, 3), results };
+const out = { command: `npx tsx scripts/soak.ts ${calls} ${conc}`, endpoint: `${base}/api/ruling`, network: `sui:${payNetwork()}`, calls, succeeded: ok.length, successRate: round(ok.length / calls), p50ms: pct(0.5), p95ms: pct(0.95), usdcSpent: round(results.filter((r) => r.ok).length * config.rulingPriceUsdc, 3), results };
 writeJson(new URL("soak.json", RESULTS), out);
 console.log(JSON.stringify({ ...out, results: undefined }, null, 2));
