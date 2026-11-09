@@ -117,12 +117,15 @@ export async function resolveJobs(db: D1Database, max = 25) {
  * likely at ruling time, is refunded in USDC. Each resolution is also written
  * back as a new precedent, which is how the court learns.
  */
-export async function gradeOpen(db: D1Database, max = 10) {
+export async function gradeOpen(db: D1Database, max = 8) {
   const open = (await db.prepare("SELECT * FROM rulings WHERE status = 'open' AND level != 'rules' ORDER BY at LIMIT 200").all<RulingRow>()).results;
   const byMarket = new Map<string, RulingRow[]>();
   for (const r of open) byMarket.set(r.market, [...(byMarket.get(r.market) ?? []), r]);
   const graded: { ruling: string; market: string; correct: boolean; refund: string | null }[] = [];
-  for (const [marketId, rulings] of [...byMarket].slice(0, max)) {
+  // Check a random sample each run: a Worker run has a small subrequest budget,
+  // and markets that have not closed yet must not starve the ones that have.
+  const sample = [...byMarket].sort(() => Math.random() - 0.5).slice(0, max);
+  for (const [marketId, rulings] of sample) {
     let g;
     try { g = await gammaMarket(marketId); } catch { continue; }
     const finalStatus = g.uma[g.uma.length - 1];
