@@ -19,11 +19,13 @@
     "optimisticOracleV2": "0xee3afe347d5c74317041e2618c49534daf887c24",
     "conditionalTokens": "0x4d97dcd97ec945f40cf65f87097ace5ea0476045",
     "sources": {
-      "adapters": "resolvedBy field of Gamma markets 2169995 (v3) and 516926 (v2); negRisk adapter from github.com/Polymarket/neg-risk-ctf-adapter; 0x157ce2d6 and 0xb21182d0 found as resolvedBy values in the crawl, both return OptimisticOracleV2 from optimisticOracle()",
+      "adapters": "resolvedBy field of Gamma markets 2169995 (v3) and 516926 (v2); negRisk adapter from github.com/Polymarket/neg-risk-ctf-adapter; 0x157ce2d6 and 0xb21182d0 found as resolvedBy values in the crawl, both return OptimisticOracleV2 from optimisticOracle(); 0x69c47de9 resolves most 2026 markets in the crawl and returns the managed OptimisticOracleV2 from optimisticOracle()",
       "oracles": "optimisticOracle() view called on each adapter on Polygon mainnet",
       "events": "AncillaryDataUpdated(bytes32,address,bytes) is emitted by the adapter's BulletinBoard (github.com/Polymarket/uma-ctf-adapter); DisputePrice is emitted by UMA's OptimisticOracleV2 (github.com/UMAprotocol/protocol)"
     },
     "umaCtfAdapterV2b": "0x157ce2d672854c848c9b79c49a8cc6cc89176a49",
-    "umaCtfAdapterV1": "0xb21182d0494521cf45dbbeebb5a3acaab6d22093"
+    "umaCtfAdapterV1": "0xb21182d0494521cf45dbbeebb5a3acaab6d22093",
+    "umaCtfAdapterV3b": "0x69c47de9d4d3dad79590d61b9e05918e03775f24",
+    "conditionalTokensV3b": "0x661992aebf6becf7ba5abb66f6b0bf62aa7a2e93"
   }
 }

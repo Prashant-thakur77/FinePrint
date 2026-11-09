@@ -22,7 +22,7 @@ import { DATA, readJson, readJsonl, RESULTS, rng, shuffle, writeJson } from "./l
 
 const perClass = Number(process.argv[2] ?? 150);
 const nPrecedents = Number(process.argv[3] ?? 400);
-const ADAPTERS = new Set(["0x65070be91477460d8a7aeeb94ef92fe056c2f2a7", "0x6a9d222616c90fca5754cd1333cfd9b7fb6a4f74", "0x2f5e3684cb1f318ec51b00edba38d79ac2c0aa9d", "0x157ce2d672854c848c9b79c49a8cc6cc89176a49", "0xb21182d0494521cf45dbbeebb5a3acaab6d22093"]);
+const ADAPTERS = new Set(["0x65070be91477460d8a7aeeb94ef92fe056c2f2a7", "0x6a9d222616c90fca5754cd1333cfd9b7fb6a4f74", "0x2f5e3684cb1f318ec51b00edba38d79ac2c0aa9d", "0x157ce2d672854c848c9b79c49a8cc6cc89176a49", "0xb21182d0494521cf45dbbeebb5a3acaab6d22093", "0x69c47de9d4d3dad79590d61b9e05918e03775f24"]);
 const TWIN = "516926";
 const DEMO = "2169995";
 

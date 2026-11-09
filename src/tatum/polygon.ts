@@ -88,7 +88,7 @@ const addr = (topic: string) => `0x${topic.slice(-40)}`;
 
 export interface BulletinUpdate { questionId: string; owner: string; text: string; block: number; tx: string; at?: number }
 
-export async function bulletinUpdates(questionId: string, fromBlock: number, toBlock: number, adapters = [addresses.polygon.umaCtfAdapterV3, addresses.polygon.umaCtfAdapterV2, addresses.polygon.umaCtfAdapterV2b, addresses.polygon.umaCtfAdapterV1, addresses.polygon.negRiskUmaCtfAdapter]): Promise<BulletinUpdate[]> {
+export async function bulletinUpdates(questionId: string, fromBlock: number, toBlock: number, adapters = [addresses.polygon.umaCtfAdapterV3, addresses.polygon.umaCtfAdapterV2, addresses.polygon.umaCtfAdapterV2b, addresses.polygon.umaCtfAdapterV1, addresses.polygon.umaCtfAdapterV3b, addresses.polygon.negRiskUmaCtfAdapter]): Promise<BulletinUpdate[]> {
   const logs = await getLogs({ address: adapters, topics: [TOPIC.ancillaryDataUpdated, questionId.toLowerCase()] }, fromBlock, toBlock);
   return logs.map((l) => ({ questionId: l.topics[1], owner: addr(l.topics[2]), text: utf8(abiBytes(l.data, 0)), block: parseInt(l.blockNumber, 16), tx: l.transactionHash }));
 }
@@ -98,7 +98,7 @@ export interface Dispute { questionId: string; requester: string; proposer: stri
 /** All disputes raised against Polymarket adapters' price requests in a block range. */
 export async function disputes(fromBlock: number, toBlock: number, step = 50_000): Promise<Dispute[]> {
   const p = addresses.polygon;
-  const requesters = [p.umaCtfAdapterV3, p.umaCtfAdapterV2, p.umaCtfAdapterV2b, p.umaCtfAdapterV1, p.negRiskUmaCtfAdapter].map((a) => `0x000000000000000000000000${a.slice(2).toLowerCase()}`);
+  const requesters = [p.umaCtfAdapterV3, p.umaCtfAdapterV2, p.umaCtfAdapterV2b, p.umaCtfAdapterV1, p.umaCtfAdapterV3b, p.negRiskUmaCtfAdapter].map((a) => `0x000000000000000000000000${a.slice(2).toLowerCase()}`);
   const logs = await getLogs({ address: [p.optimisticOracleV2, p.managedOptimisticOracleV2], topics: [TOPIC.disputePrice, requesters] }, fromBlock, toBlock, step);
   return logs.map((l) => {
     // data: identifier (bytes32), timestamp (uint256), ancillaryData (bytes, offset), proposedPrice (int256)
