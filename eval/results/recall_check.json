@@ -1,0 +1,32 @@
+{
+  "command": "npx tsx scripts/check_recall.ts 60",
+  "seeded": 401,
+  "listedInNamespace": 403,
+  "seededAndListed": 401,
+  "recallSample": 60,
+  "recalledByOwnQuestion": 60,
+  "recallRate": 1,
+  "estimatedRecallable": 401,
+  "twin": {
+    "blobId": "xPylFoZWSadMKzBSaPOlSbsX11Vu0s8NVzpbxLVMW0s",
+    "query": "sells any Bitcoin by date confirmation",
+    "rank": 3,
+    "top": [
+      {
+        "blobId": "Qsz0-u9h76l_V9VONI_Tn3E3d-V0csrm8eMbtBGz6hU",
+        "distance": 0.45747398303271913,
+        "market": "2169995"
+      },
+      {
+        "blobId": "TFuiw4_LII0PFqjeHck-EEg1grxmKyMWf5tcohc_QAk",
+        "distance": 0.45922891220837436,
+        "market": "2169995"
+      },
+      {
+        "blobId": "xPylFoZWSadMKzBSaPOlSbsX11Vu0s8NVzpbxLVMW0s",
+        "distance": 0.4865070529012696,
+        "market": "516926"
+      }
+    ]
+  }
+}

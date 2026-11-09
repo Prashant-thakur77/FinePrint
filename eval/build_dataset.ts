@@ -13,7 +13,7 @@
  *
  *   npx tsx eval/build_dataset.ts [testPerClass=150] [precedents=400]
  */
-import { createReadStream } from "node:fs";
+import { createReadStream, existsSync, readFileSync } from "node:fs";
 import { createInterface } from "node:readline";
 import { categoryOf, outcomeOf, type MarketRecord } from "../src/polymarket/gamma.js";
 import { PATTERNS } from "../src/patterns/patterns.js";
@@ -133,7 +133,12 @@ const catMix = (xs: Row[]) => Object.fromEntries([...xs.reduce((m, r) => m.set(r
 const poolBase = poolCount.total ? poolCount.disputed / poolCount.total : 0;
 writeJson(new URL("pattern_evidence.json", DATA), { poolSize: poolCount.total, poolDisputed: poolCount.disputed, baseRate: poolBase, patterns: PATTERNS.map((p) => { const e = evidence.get(p.tag) ?? { disputed: 0, total: 0 }; return { tag: p.tag, rule: p.rule, ...e, rate: e.total ? e.disputed / e.total : 0 }; }) });
 writeJson(new URL("test.json", DATA), test);
-writeJson(new URL("precedents.json", DATA), precedents);
+// Once precedents are seeded on Walrus, the seeded list is canonical: never re-sample it.
+const seededAlready = readJson<{ kind: string; status: string }[]>(new URL("seed_log.json", RESULTS), []).some((e) => e.kind === "precedent" && e.status === "done");
+if (!seededAlready) writeJson(new URL("precedents.json", DATA), precedents);
+const doneDays = new Set(existsSync(new URL("crawl_done.txt", DATA)) ? readFileSync(new URL("crawl_done.txt", DATA), "utf8").split("\n").filter(Boolean) : []);
+const missingDays: string[] = [];
+for (let d = new Date("2024-01-01"); d < new Date(TEST_END); d.setUTCDate(d.getUTCDate() + 1)) if (!doneDays.has(d.toISOString().slice(0, 10))) missingDays.push(d.toISOString().slice(0, 10));
 const summary = {
   command: "npx tsx eval/build_dataset.ts " + process.argv.slice(2).join(" "),
   crawledUnique: crawled, kept, dropped: drop,
@@ -145,6 +150,8 @@ const summary = {
   precedents: { ...count(precedents), categories: catMix(precedents), includesTwin: picked.has(TWIN) || Boolean(twin) },
   labelSources: test.reduce((m, r) => ({ ...m, [r.labelSource]: (m[r.labelSource] ?? 0) + 1 }), {} as Record<string, number>),
   demoInTest: test.some((r) => r.id === DEMO), demoFound: Boolean(demo), twinFound: Boolean(twin),
+  precedentsSource: seededAlready ? "eval/data/precedents.json as seeded (see eval/results/seed_log.json)" : "selected now",
+  crawlGaps: { missingEndDateDays: missingDays.length, days: missingDays, note: "end-date days Gamma rate-limited (HTTP 429) or refused (HTTP 422) on every crawl pass" },
 };
 writeJson(new URL("dataset_summary.json", RESULTS), summary);
 console.log(JSON.stringify(summary, null, 2));

@@ -10,7 +10,9 @@
  */
 import "dotenv/config";
 import { judge, type Level } from "../src/court/judge.js";
-import { recallPatterns, recallPrecedents } from "../src/court/ruling.js";
+import { filterPrecedents, recallPatterns } from "../src/court/ruling.js";
+import { recall } from "../src/memory/client.js";
+import { fields, NS } from "../src/memory/types.js";
 import { DATA, metrics, readJson, RESULTS, round, writeJson, type Metrics } from "./lib.js";
 import type { Row } from "./build_dataset.js";
 
@@ -22,12 +24,16 @@ export async function runDispute(level: Level, repeats: number, limit: number, c
   const test = readJson<Row[]>(new URL("test.json", DATA), []).slice(0, limit);
   if (!test.length) throw new Error("no test set: run eval/build_dataset.ts");
   const cache = readJson<Record<string, { precedents: any[]; patterns: any[] }>>(RECALL, {});
+  // Only the seeded precedent pool (closed before 2026) is eligible, so the
+  // A/B never sees outcomes the live court wrote back later.
+  const seeded = new Set(readJson<{ kind: string; ref: string; status: string }[]>(new URL("seed_log.json", RESULTS), []).filter((e) => e.kind === "precedent" && e.status === "done").map((e) => e.ref));
   if (level !== "rules") {
     let n = 0;
     for (const r of test) {
       if (cache[r.id]) continue;
       const m = { id: r.id, question: r.question, rules: r.rules, createdAt: r.createdAt };
-      cache[r.id] = { precedents: await recallPrecedents(m, { asOf: r.createdAt ?? r.closedTime, k: 8 }), patterns: await recallPatterns(r.patterns) };
+      const hits = (await recall("PRECEDENTS", NS.precedents, `${m.question}\n${m.rules.slice(0, 600)}`, 40)).filter((h) => seeded.has(fields(h.text).market));
+      cache[r.id] = { precedents: filterPrecedents(hits, { asOf: r.createdAt ?? r.closedTime, k: 8, excludeMarket: r.id }), patterns: await recallPatterns(r.patterns) };
       if (++n % 10 === 0) { writeJson(RECALL, cache); console.log(`recalled ${n}`); }
     }
     writeJson(RECALL, cache);

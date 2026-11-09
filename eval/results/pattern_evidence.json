@@ -1,0 +1,78 @@
+{
+  "command": "npx tsx eval/build_dataset.ts",
+  "poolSize": 159502,
+  "poolDisputed": 749,
+  "baseRate": 0.004695865882559466,
+  "patterns": [
+    {
+      "tag": "deadline+confirmation-lag",
+      "rule": "Event must happen by a deadline, but proof (filings, official statements, reporting) can arrive after it. Disputes follow when the act and its confirmation straddle the deadline.",
+      "disputed": 73,
+      "total": 2084,
+      "rate": 0.03502879078694818
+    },
+    {
+      "tag": "consensus-of-reporting",
+      "rule": "Resolves on 'a consensus of credible reporting'. Who counts as credible, and when consensus formed, are open to argument.",
+      "disputed": 168,
+      "total": 13654,
+      "rate": 0.012304086714515893
+    },
+    {
+      "tag": "official-source-only",
+      "rule": "Only an official source counts. Disputes follow when the official source is late, silent or contradicts the press.",
+      "disputed": 170,
+      "total": 15464,
+      "rate": 0.01099327470253492
+    },
+    {
+      "tag": "announcement-vs-action",
+      "rule": "Title asks about an action (sells, launches, signs, releases) while rules accept an announcement, or the reverse. The gap between saying and doing gets disputed.",
+      "disputed": 7,
+      "total": 218,
+      "rate": 0.03211009174311927
+    },
+    {
+      "tag": "appearance/subjective",
+      "rule": "Relies on what someone says, wears, mentions or how something looks. Interpretation is subjective.",
+      "disputed": 40,
+      "total": 6080,
+      "rate": 0.006578947368421052
+    },
+    {
+      "tag": "date-in-title-timezone",
+      "rule": "A date or time in the title with a timezone cut-off (ET/UTC, 11:59 PM). Events near midnight or across timezones get disputed.",
+      "disputed": 241,
+      "total": 65932,
+      "rate": 0.003655281198810896
+    },
+    {
+      "tag": "price-feed-threshold",
+      "rule": "Resolves on a specific price feed or candle (exchange, pair, interval). Feed outages, wicks and pair choice get disputed.",
+      "disputed": 99,
+      "total": 50595,
+      "rate": 0.001956715090423955
+    },
+    {
+      "tag": "ambiguity-fallback",
+      "rule": "Rules spell out a 50-50 or 'other' fallback for unclear cases. Markets that need it often end in a dispute over whether the case is unclear.",
+      "disputed": 113,
+      "total": 55939,
+      "rate": 0.002020057562702229
+    },
+    {
+      "tag": "sports-postponement",
+      "rule": "Sports result with postponement, cancellation or overtime clauses. Disputes follow schedule changes and stat corrections.",
+      "disputed": 250,
+      "total": 81929,
+      "rate": 0.0030514225732036276
+    },
+    {
+      "tag": "counting-threshold",
+      "rule": "Counts things (tweets, votes, deaths, units) against a threshold. The counting method and source revisions get disputed.",
+      "disputed": 5,
+      "total": 1485,
+      "rate": 0.003367003367003367
+    }
+  ]
+}

@@ -1,0 +1,117 @@
+{
+  "command": "npx tsx eval/build_dataset.ts 100",
+  "crawledUnique": 3125517,
+  "kept": 2381339,
+  "dropped": {
+    "no UMA status history": 33844,
+    "no clear outcome": 50374,
+    "not resolved by a UMA adapter": 659747,
+    "no close time": 209,
+    "no rules text": 4
+  },
+  "disputeRateAll": {
+    "total": 2381339,
+    "disputed": 2762
+  },
+  "pool": {
+    "total": 159502,
+    "disputed": 749,
+    "closedBefore": "2026-01-01"
+  },
+  "testWindow": {
+    "total": 2221350,
+    "disputed": 2010,
+    "from": "2026-01-01",
+    "to": "2026-11-01"
+  },
+  "sampling": "all disputed markets kept; clean markets reservoir-sampled (400 per stratum, seed 3) before selection",
+  "test": {
+    "total": 200,
+    "disputed": 100,
+    "categories": {
+      "sports": 126,
+      "other": 34,
+      "politics": 16,
+      "crypto": 10,
+      "economics": 6,
+      "tech": 4,
+      "culture": 4
+    }
+  },
+  "precedents": {
+    "total": 401,
+    "disputed": 201,
+    "categories": {
+      "sports": 129,
+      "other": 94,
+      "politics": 83,
+      "crypto": 63,
+      "culture": 24,
+      "tech": 6,
+      "economics": 2
+    },
+    "includesTwin": true
+  },
+  "labelSources": {
+    "gamma:umaResolutionStatuses": 200
+  },
+  "demoInTest": false,
+  "demoFound": true,
+  "twinFound": true,
+  "precedentsSource": "eval/data/precedents.json as seeded (see eval/results/seed_log.json)",
+  "crawlGaps": {
+    "missingEndDateDays": 49,
+    "days": [
+      "2025-12-30",
+      "2025-12-31",
+      "2026-09-15",
+      "2026-09-16",
+      "2026-09-17",
+      "2026-09-18",
+      "2026-09-19",
+      "2026-09-20",
+      "2026-09-21",
+      "2026-09-22",
+      "2026-09-23",
+      "2026-09-24",
+      "2026-09-25",
+      "2026-09-26",
+      "2026-09-27",
+      "2026-09-28",
+      "2026-09-29",
+      "2026-09-30",
+      "2026-10-01",
+      "2026-10-02",
+      "2026-10-03",
+      "2026-10-04",
+      "2026-10-05",
+      "2026-10-06",
+      "2026-10-07",
+      "2026-10-08",
+      "2026-10-09",
+      "2026-10-10",
+      "2026-10-11",
+      "2026-10-12",
+      "2026-10-13",
+      "2026-10-14",
+      "2026-10-15",
+      "2026-10-16",
+      "2026-10-17",
+      "2026-10-18",
+      "2026-10-19",
+      "2026-10-20",
+      "2026-10-21",
+      "2026-10-22",
+      "2026-10-23",
+      "2026-10-24",
+      "2026-10-25",
+      "2026-10-26",
+      "2026-10-27",
+      "2026-10-28",
+      "2026-10-29",
+      "2026-10-30",
+      "2026-10-31"
+    ],
+    "note": "end-date days Gamma rate-limited (HTTP 429) or refused (HTTP 422) on every crawl pass"
+  }
+}
